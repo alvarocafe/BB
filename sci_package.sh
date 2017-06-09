@@ -20,6 +20,7 @@ echo Instalar dependencias:
 #sudo add-apt-repository ppa:webupd8team/atom #retirado para a eficiencia.
 echo Atualizar repositorios
 sudo apt-get update
+sudo apt-get upgrade-y
 echo Instalar pacotes:
 sudo apt-get install texlive-latex-base
 #sudo apt-get install atom
@@ -30,6 +31,6 @@ sudo apt-get install git
 echo Fim da instalacao dos pacotes
 echo Atualizar os softwares
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get upgrade-y
 echo Clonar programas de BEM pelo GitHub.
 git clone https://github.com/alvarocafe/BEM_base.git
