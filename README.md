@@ -1,5 +1,5 @@
 # BEM_base
-=========
+
 This is a Julia language implementation of the boundary element method (BEM) using different Lagrangian elements.
 The elements uses shape functions which are linear and quadratic.
 The goal of the $BEM_base project is to provide a platform that can be used alongside FreeCad and Gmsh to quickly solve bidimensional boundary element problems.
