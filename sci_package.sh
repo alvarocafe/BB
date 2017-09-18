@@ -3,7 +3,7 @@
 #para analise numerica utilizando o metodo dos elementos de contorno.
 #Tambem pretende-se instalar e clonar o repositorio base do metodo dos elementos 
 #de contorno.
-#Autor: Alvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
+#Autor: Alvaro Campos Ferreira - alvaro.cafe@hotmail.com
 
 echo Instalar dependencias:
 echo **********************Atualizar repositorios**********************
