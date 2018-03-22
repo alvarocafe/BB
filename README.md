@@ -29,4 +29,4 @@ If you are having issues, you can e-mail me at alvaro.cafe@hotmail.com
 
 ## License
 ---
-This project is currently unlicensed.
+This project is currently licensed under GNU GPL v.3
