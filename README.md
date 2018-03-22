@@ -25,7 +25,7 @@ This project is still in a very early stage and contributions are welcome.
 
 ## Support
 ---
-If you are having issues, you can e-mail me at alvaro.cafe@hotmail.com
+If you are having issues, you can e-mail me at alvaro.campos.ferreira@gmail.com
 
 ## License
 ---
