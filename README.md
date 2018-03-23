@@ -12,9 +12,9 @@ To solve a problem with a geometry file 'file.msh' and boundary conditions in ea
 where k is the thermal condutivity in the Laplace equation and the wavenumber in the Helmholtz equation.
 BEM_base will analyse the mesh and choose the solver accordingly, for linear and quadratic elements.
 
-## Instalation
+## Installation
 ---
-The project runs on Julia 0.5.2. To include the dependecies, simply clone the repository and include the files.  
+The project runs on Julia 0.6.2. To include the dependecies, simply clone the repository and include the files.  
 
     git clone https://github.com/alvarocafe/BEM_base  
 And run the code given above.
