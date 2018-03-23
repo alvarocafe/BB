@@ -7,8 +7,8 @@ Initially, this implementation will solve the Helmholtz and Laplace equations.
 
 To solve a problem with a geometry file 'file.msh' and boundary conditions in each face described by an array 'BCFace', to use the BEM_base to solve the problem, simply run:  
     `include("BEM_base.jl")`  
-    `T,qT = BEM_base('file.msh',BCFace, k, 'Laplace') # For solving the Laplace equation`  
-    `phi,qphi = BEM_base('file.msh',BCFace, k, 'Helmholtz') # For solving the Helmholtz equation`  
+    `T,qT = BEM_base("file.msh",BCFace, k, "Laplace") # For solving the Laplace equation`  
+    `phi,qphi = BEM_base("file.msh",BCFace, k, "Helmholtz") # For solving the Helmholtz equation`  
 where k is the thermal condutivity in the Laplace equation and the wavenumber in the Helmholtz equation.
 BEM_base will analyse the mesh and choose the solver accordingly, for linear and quadratic elements.
 
