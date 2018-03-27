@@ -8,7 +8,7 @@ include("dad_1.jl") # Includes the data file containing the geometry and physica
 include("beminterp.jl") # H-Matrices using Lagrange polynomial interpolation
 include("ACA.jl") # H-Matrices using ACA
 
-i =  40# Number of elements for half circle
+i =  100# Number of elements for half circle
 FR = 20 # Frequency of the problem [Hz]
 CW = 343 # Wave propagation speed [m/s]
 k = FR/CW # Wave number
@@ -34,7 +34,7 @@ println("error = $erro %")
 ## H-Matrix - Interpolation using Lagrange polynomial
 
 println("Building Tree and blocks using H-Matrices.")
-Tree,block = cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
+@time Tree,block = cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
 println("Building A and b matrices using H-Matrix with interpolation.")
 @time Ai,bi = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
 xi = gmres(vet->matvec(Ai,vet,block,Tree),bi,5,tol=1e-5,maxIter=1000,out=0) #GMRES nas matrizes do ACA
@@ -44,3 +44,5 @@ println("Evaluating values at internal points.")
 println("Calculating the error.")
 @time erro = abs((sum((phi_pinti - phi_analytical).^2))/sum(phi_analytical))   # Calcula a norma em comparação com a solução analítica.
 println("error = $erro %")
+@time erroi = abs((sum((phi_pinti - phi_pint).^2))/sum(phi_pint))   # Calcula a norma em comparação com a solução analítica.
+println("error against conventional bie = $erroi %")
