@@ -369,7 +369,7 @@ function matvec(hmat,b,block,Tree)
       v[Tree[block[i,1]]]+=hmat[i,1]*b[Tree[block[i,2]]]
     end
   end
-  v
+return  v
 end
 function montacheia(hmat,block,Tree,n)
 A=zeros(n,n)
@@ -391,5 +391,5 @@ A=0
       A+=length(hmat[i,1])
     end
   end
-  A
+return  A
 end

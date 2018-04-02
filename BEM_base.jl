@@ -39,7 +39,7 @@ println("Construindo A e B usando o BEM tradicional.")
 # o método de colocação e aplica as condições de contorno.
 b = B*CDC[:,3]  # Constroi o vetor b para o sistema linear
 x = A\b # Resolve o sistema linear.
-phi,qphi = monta_Teq(CDC,x) # Aplica as condições de contorno para obter as variáveis no contorno.
+phi,qphi = monta_Teq(CDC,x) # Aplica as cond	ições de contorno para obter as variáveis no contorno.
 println("Obtendo os valores nos pontos internos.")
 @time phi_pint = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,CW,FR,fc,finc,qsi,w) # Obtem os valores nos pontos internos
 println("Calculando o erro.")
