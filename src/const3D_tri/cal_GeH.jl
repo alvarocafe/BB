@@ -31,8 +31,7 @@ for i=1:nnos # La�o sobre os pontos fontes
 		    y3=NOS_GEO[no3,3]; # Coordenada y do n� geom�trico 3
 		    z3=NOS_GEO[no3,4]; # Coordenada z do n� geom�trico 3
 
-		    n = calc_vetnormal(x1,y1,z1,x2,y2,z2,x3,y3,z3); # vetor unit�rio
-		    # normal ao elemento
+		    n = calc_vetnormal(x1,y1,z1,x2,y2,z2,x3,y3,z3); # vetor unit�rio normal ao elemento
 		        if i==no1||i==no2||i==no3 # O ponto fonte pertence ao elemento
 		            #G[i,j],H[i,j]=calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,qsi,w,FR,CW); # Integra��o singular
 			    #G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsi,w,FR,CW); # Integra��o singular

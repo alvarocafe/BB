@@ -17,3 +17,14 @@ J = sqrt(g1^2.0 + g2^2.0 + g3^2.0);
 return J
 end
 
+function cal_Jacobiano3D(x,y,z,dN)
+    # Calcula o Jacobiano para elementos com 3 funções de forma 3D
+    dxdqsi = dN[1]*x[1] + dN[2]*x[2] + dN[3]*x[3]
+    dxdeta = dN[4]*x[1] + dN[5]*x[2] + dN[6]*x[3]
+    dydqsi = dN[1]*y[1] + dN[2]*y[2] + dN[3]*y[3]
+    dydeta = dN[4]*y[1] + dN[5]*y[2] + dN[6]*y[3]
+    dzdqsi = dN[1]*z[1] + dN[2]*z[2] + dN[3]*z[3]
+    dzdeta = dN[4]*z[1] + dN[5]*z[2] + dN[6]*z[3]
+    J = sqrt((dydqsi*dzdeta - dzdqsi*dydeta)^2 + (dzdqsi*dxdeta - dxdqsi*dzdeta)^2 + (dxdqsi*dydeta - dydqsi*dxdeta)^2)
+    return J
+end

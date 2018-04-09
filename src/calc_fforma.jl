@@ -67,7 +67,6 @@ function calc_fforma_triconst(qsi, eta)
   return N
 end
 function calc_dfforma_triconst(qsi, eta)
-  zeta = 1 - qsi - eta
   # Calcula as derivadas para as funções de forma triangulares lineares contínuas
   dN1dqsi=1
   dN1deta=0

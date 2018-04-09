@@ -8,7 +8,7 @@ include("dad_1.jl") # Includes the data file containing the geometry and physica
 include("beminterp.jl") # H-Matrices using Lagrange polynomial interpolation
 include("ACA.jl") # H-Matrices using ACA
 
-i =  100# Number of elements for half circle
+i =  500# Number of elements for half circle
 FR = 20 # Frequency of the problem [Hz]
 CW = 343 # Wave propagation speed [m/s]
 k = FR/CW # Wave number

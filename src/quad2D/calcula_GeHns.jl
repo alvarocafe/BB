@@ -16,9 +16,9 @@ function calcula_GeHns(x1,y1,x2,y2,x3,y3,xd,yd,CW,qsi,w,FR)
   sy=dy/dgamadqsi # y component of the tangent vector
   nx=sy; # x component of the normal vector
   ny=-sx; # y component of the normal vector
-  phiast,qast =calc_solfund(xx,yy,xd,yd,nx,ny,CW,FR); # Evaluation of the fundamental solutions
-#	phiast = 1	#uncomment these lines to obtain the length of the boundary
-#	qast = 1
+#  phiast,qast =calc_solfund(xx,yy,xd,yd,nx,ny,CW,FR); # Evaluation of the fundamental solutions
+	phiast = 1	#uncomment these lines to obtain the length of the boundary
+	qast = 1
   g=g+N'*phiast*w[kk]*dgamadqsi # Evaluation of integral for g term
   h=h+N'*qast*w[kk]*dgamadqsi # Evaluation of integral for h term
   end
