@@ -33,7 +33,7 @@ for i = 1:nelem
 #     xlabel ('{\it x}')
 #     ylabel ('{\it y}')
 #     zlabel ('{\it z}')
-     plot3D(xnos,ynos,znos,linestyle="none",marker="o");	#Parte do programa que mostra geometria
+#     plot3D(xnos,ynos,znos,linestyle="none",marker="o");	#Parte do programa que mostra geometria
 #     axis equal
 #     axis([xmin xmax ymin ymax zmin zmax])
 #     hold on;

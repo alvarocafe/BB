@@ -23,6 +23,10 @@ And run the code given above.
 ---
 This project is still in a very early stage and contributions are welcome.
 
+## NOTICE
+---
+The program is not yet usable in its current form, I'll keep updating it and I'll update this notice when the program is usable. You can still use the subroutines to build BEM models and run them, but that's harder than the intended usage of the package. 
+
 ## Support
 ---
 If you are having issues, you can e-mail me at alvaro.campos.ferreira@gmail.com

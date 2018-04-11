@@ -60,7 +60,7 @@ for kk=1:3
             # ponto campo
             zc = z1t*N1+z2t*N2+z3t*N3+z4t*N4; # coordenada z do
             # ponto campo
-            J = calc_jacobiano(x1t,y1t,z1t,x2t,y2t,z2t,x3t,y3t,z3t,x4t,y4t,z4t,qsi[ii],qsi[jj]); # jacobiano(varia ao longo
+            J = calc_jacobiano_quad(x1t,y1t,z1t,x2t,y2t,z2t,x3t,y3t,z3t,x4t,y4t,z4t,qsi[ii],qsi[jj]); # jacobiano(varia ao longo
                          #  do elemento desgenerado)
             Tast,qast = calc_solfund_POT(xd,yd,zd, xc, yc, zc, [0 0 0], k); # Sol.
             # fudamental de temperatura

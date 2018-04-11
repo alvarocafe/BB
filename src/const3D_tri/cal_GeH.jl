@@ -1,10 +1,11 @@
-function cal_GeH(NOS,NOS_GEO,ELEM,FR,CW,qsi,w,inc)
+function cal_GeH(NOS,NOS_GEO,ELEM,k,qsi,w,inc)
 # Evaluates the G and H matrices for the linear system H phi = G q, where phi is a vector containing the values of the velocity potential and q is a vector containing the values of the flux at the boundary of the problem.
 
 nelem=size(ELEM,1); # N�mero de elementos (n�mero de linhas da
 #  matriz ELEM)
 qsitelles,Jtelles = telles(qsi,0); # Evaluates the Telles' points and Jacobian
-
+npg=4; # Number of integration points
+qsiquad,wquad = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
 nnos=nelem; # N�mero de n�s
 G=complex(zeros(nnos,nnos)); # Inicializa��o da matriz G
 H=complex(zeros(nnos,nnos)); # Inicializa��o da matriz H
@@ -32,22 +33,23 @@ for i=1:nnos # La�o sobre os pontos fontes
 		    z3=NOS_GEO[no3,4]; # Coordenada z do n� geom�trico 3
 
 		    n = calc_vetnormal(x1,y1,z1,x2,y2,z2,x3,y3,z3); # vetor unit�rio normal ao elemento
-		        if i==no1||i==no2||i==no3 # O ponto fonte pertence ao elemento
+		        if i==j # O ponto fonte pertence ao elemento
 		            #G[i,j],H[i,j]=calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,qsi,w,FR,CW); # Integra��o singular
-			    #G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsi,w,FR,CW); # Integra��o singular
-			    G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,qsitelles,w.*Jtelles,FR,CW); # Integra��o singular
+			   G[i,j],H[i,j]= calcula_HeGs_POT(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,qsiquad,wquad,k)# Integra��o singular
+			    #G[i,j],H[i,j]=calcula_GeHns_POT(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,qsi,w,k); # Integra��o singular
+			    #G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,qsitelles,w.*Jtelles,FR,CW); # Integra��o singular
 #G[i,j]=1
-#H[i,j]= 1
+#H[i,j]= -0.5
 #			erro = (G[i,j] - Gtelles)
 #			println("diferença entre g e gtelles= $erro")
 		        else # O ponto fonte n�o pertence ao elemento
-		            G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,qsi,w,FR,CW); # Integra��o
+		            G[i,j],H[i,j]=calcula_HeGns_POT(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,qsi,w,k); # Integra��o
 		            #  regular
 		        end
 		    end
 				if inc[1,1] != 0
 			#Vamos incluir um termo de onda incidente
-						phi_inc[i,1] = calc_inc(xd,yd,zd,FR,CW,inc[1,:]);
+					phi_inc[i,1] = calc_inc(xd,yd,zd,FR,CW,inc[1,:]);
 				end
 end
 

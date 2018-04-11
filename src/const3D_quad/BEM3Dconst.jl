@@ -11,7 +11,7 @@ k = FR/CW # Wave number
 npg=16; # Number of integration points
 qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
 println("Importing mesh...")
-NOS_GEO,ELEM,elemint,CDC = lermsh("../../dados/cilindro_5x10mm.msh",3) #Read the mesh generated using Gmsh
+NOS_GEO,ELEM,elemint,CDC = lermsh("../../dados/cilindro_10x100mm.msh",3) #Read the mesh generated using Gmsh
 NOS = mostra_geo(NOS_GEO,ELEM) #Generate the physical nodes for constant elements
 nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
 CCFace = [1 1 1
