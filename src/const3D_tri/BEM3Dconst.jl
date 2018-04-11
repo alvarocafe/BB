@@ -4,18 +4,19 @@
 using SpecialFunctions
 using PyPlot
 include("dep.jl") # Includes the dependencies
-include("dad4.jl")
-FR = 20 # Frequency of the problem [Hz]
+#include("dad4.jl")
+FR = 343*100 # Frequency of the problem [Hz]
 CW = 343*1000 # Wave propagation speed [mm/s]
 k = FR/CW # Wave number
 # Gaussian quadrature - generation of points and weights [-1,1]
 npg=4; # Number of integration points
 qsi,w = Gauss_Legendre(0,1,npg) # Generation of the points and weights
 println("Importing mesh...")
-#NOS_GEO,ELEM,elemint,CDC = lermsh("../../dados/viga.msh",3) #Read the mesh generated using Gmsh
-NOS_GEO, ELEM, CCFace, fc, k = dad4()
-FR = k
-CW = k
+@time NOS_GEO,ELEM,elemint,CDC = lermsh("../../dados/vocal_tract.msh",3) #Read the mesh generated using Gmsh
+CCFace = [1 0 0; 2 0 1; 3 1 0;4 1 0]
+#NOS_GEO, ELEM, CCFace, fc, k = dad4()
+#FR = k
+#CW = k
 #NOS_GEO = [1 0 0 0
 #	   2 1 0 0
 #	   3 1 1 0
@@ -28,7 +29,7 @@ CDC = gera_CDC(ELEM,CCFace); #Monta a matriz de condicoes de contorno
 n_pint = 100
 PONTOS_int = zeros(n_pint,4)
 for i = 1:n_pint
-	PONTOS_int[i,:] = [i 0.5 0.5 (1/n_pint)*i]
+	PONTOS_int[i,:] = [i 0 0 (100/n_pint)*i]
 end
 println("Building G and H matrices...")
 @time G,H,phi_inc = cal_GeH(NOS,NOS_GEO,ELEM,k,qsi,w,0) #Compute the G and H matrices
@@ -39,4 +40,4 @@ println("Solving the linear system...")
 println("Separating acoustic pressure from flux...")
 @time phi,q = monta_Teq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
 println("Solving for domain points.")
-T_pint=calc_T_pint(PONTOS_int,NOS_GEO,ELEM,phi,q,CW,FR,qsi,w,0)
+T_pint=calc_T_pint(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
