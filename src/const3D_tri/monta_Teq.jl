@@ -6,6 +6,7 @@ function monta_Teq(CDC,x)
 # q = vetor que cont�m o fluxo nos n�s
 
 ncdc = length(CDC[:,1]);
+nnos = ncdc
 T = complex(zeros(nnos,1))
 q = complex(zeros(nnos,1))
 for i=1:ncdc # La�o sobre as condi��es de contorno

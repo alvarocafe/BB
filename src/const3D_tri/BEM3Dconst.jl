@@ -5,7 +5,7 @@ using SpecialFunctions
 using PyPlot
 include("dep.jl") # Includes the dependencies
 #include("dad4.jl")
-FR = 343*100 # Frequency of the problem [Hz]
+FR = 774*100 # Frequency of the problem [Hz]
 CW = 343*1000 # Wave propagation speed [mm/s]
 k = FR/CW # Wave number
 # Gaussian quadrature - generation of points and weights [-1,1]
@@ -13,7 +13,10 @@ npg=4; # Number of integration points
 qsi,w = Gauss_Legendre(0,1,npg) # Generation of the points and weights
 println("Importing mesh...")
 @time NOS_GEO,ELEM,elemint,CDC = lermsh("../../dados/vocal_tract.msh",3) #Read the mesh generated using Gmsh
-CCFace = [1 0 0; 2 0 1; 3 1 0;4 1 0]
+CCFace = ones(28,3);
+for i = 1:28
+	CCFace[i,:] = [i 1 1]
+end
 #NOS_GEO, ELEM, CCFace, fc, k = dad4()
 #FR = k
 #CW = k
@@ -29,7 +32,7 @@ CDC = gera_CDC(ELEM,CCFace); #Monta a matriz de condicoes de contorno
 n_pint = 100
 PONTOS_int = zeros(n_pint,4)
 for i = 1:n_pint
-	PONTOS_int[i,:] = [i 0 0 (100/n_pint)*i]
+	PONTOS_int[i,:] = [i 0 0 (140/n_pint)*i]
 end
 println("Building G and H matrices...")
 @time G,H,phi_inc = cal_GeH(NOS,NOS_GEO,ELEM,k,qsi,w,0) #Compute the G and H matrices

@@ -17,7 +17,7 @@ for l=1:n_pint # La�o sobre os pontos de integra��o
        J = calc_jacobiano(x1,y1,z1,x2,y2,z2,x3,y3,z3,xi,qsi[m]);# jacobiano
         #Tast,qast=calc_solfund(x,y,z,xd,yd,zd,n,FR,CW); # Solu��es
         #  fundamentais
-	Tast,qast=calc_solfund(x,y,z,xd,yd,zd,n,FR,CW); # Solu��es
+	Tast,qast=calc_solfund(x,y,z,xd,yd,zd,n,k,k); # Solu��es
         #  fundamentais
 	
 	#Tast = 1 #To test the numerical integration, the value of the fundamental solutions is set to 1. In this special case, the value of the sum of the rows of matrices H or G should equal the surface area of the model.

@@ -1,4 +1,4 @@
-function calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,qsi,w,CW,FR)
+function calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,qsi,w,k)
 
 # Integra��o singular das matrizes H e G. No caso da matriz G, o elemento
 # triangular � decomposto em tr�s quadril�teros degenerados na forma
@@ -8,7 +8,7 @@ function calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,qsi,w,CW,FR)
 # centr�ide do elemento. Isto faz com que haja uma concentra��o de pontos
 # de integra��o junto � singularidade, al�m do jacobiano ser igual a zero
 # na singularidade. No caso da matriz H, a integra��o � anal�tica e sempre
-# ser� igual a -1/2.
+# ser� igual a 1/2.
 
 npg=length(qsi); # N�mero de pontos de integra��o
 g = 0.0; # inicializa��o da matriz G
@@ -62,7 +62,7 @@ for kk=1:3
             # ponto campo
             J = calc_jacobiano_quad(x1t,y1t,z1t,x2t,y2t,z2t,x3t,y3t,z3t,x4t,y4t,z4t,qsi[ii],qsi[jj]); # jacobiano(varia ao longo
                          #  do elemento desgenerado)
-            Tast,qast = calc_solfund(xd,yd,zd, xc, yc, zc, [0 0 0], CW,FR); # Sol.
+            Tast,qast = calc_solfund(xd,yd,zd, xc, yc, zc, [0 0 0], k,k); # Sol.
             # fudamental de temperatura
             g = g + w[jj]*w[ii]*J*Tast; # integra��o num�rica da matriz G
         end
