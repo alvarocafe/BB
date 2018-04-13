@@ -4,7 +4,7 @@
 using SpecialFunctions
 using PyPlot
 include("dep.jl") # Includes the dependencies
-#include("dad4.jl")
+include("dad4.jl")
 FR = 774*100 # Frequency of the problem [Hz]
 CW = 343*1000 # Wave propagation speed [mm/s]
 k = FR/CW # Wave number
@@ -12,12 +12,12 @@ k = FR/CW # Wave number
 npg=4; # Number of integration points
 qsi,w = Gauss_Legendre(0,1,npg) # Generation of the points and weights
 println("Importing mesh...")
-@time NOS_GEO,ELEM,elemint,CDC = lermsh("../../dados/vocal_tract.msh",3) #Read the mesh generated using Gmsh
-CCFace = ones(28,3);
-for i = 1:28
-	CCFace[i,:] = [i 1 1]
-end
-#NOS_GEO, ELEM, CCFace, fc, k = dad4()
+#@time NOS_GEO,ELEM,elemint,CDC = lermsh("../../dados/vocal_tract.msh",3) #Read the mesh generated using Gmsh
+#CCFace = ones(28,3);
+#for i = 1:28
+#	CCFace[i,:] = [i 1 1]
+#end
+NOS_GEO, ELEM, CCFace, fc, k = dad4()
 #FR = k
 #CW = k
 #NOS_GEO = [1 0 0 0
@@ -35,7 +35,7 @@ for i = 1:n_pint
 	PONTOS_int[i,:] = [i 0 0 (140/n_pint)*i]
 end
 println("Building G and H matrices...")
-@time G,H,phi_inc = cal_GeH(NOS,NOS_GEO,ELEM,k,qsi,w,0) #Compute the G and H matrices
+@time G,H,phi_inc = cal_GeH_POT(NOS,NOS_GEO,ELEM,k,qsi,w,0) #Compute the G and H matrices
 println("Applying boundary conditions to build A and b for the linear system...")
 @time A,b = aplica_cdc(G,H,CDC) #Applies the boundary conditions and returns matrix A and vector b for the linear system
 println("Solving the linear system...")
