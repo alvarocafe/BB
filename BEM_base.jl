@@ -18,9 +18,16 @@
 
 # This is the main program of the BEM_base.
 
-function BEM_base()
+function BEM_base(file,BCFace = [], k = 1, equation = "wave")
+println("Importing mesh...")
+NOS_GEO,ELEM,elemint,CDC = lermsh(file,3) #Read the mesh generated 
 
-
-
-return
+if equation == "wave"
+	u,q,uint,qint = const3D_tri(file,BCFace,k)
+elseif equation == "heat"
+	u,q,uint,qint = const3D_tri_POT(file,BCFace,k)
+elseif typeof(equation) != String
+	println("Error: the equation which will be solved must be specified.")
+end
+return u,q,uint,qint
 end
