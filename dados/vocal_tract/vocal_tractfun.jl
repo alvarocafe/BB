@@ -59,7 +59,7 @@ function vocal_tract(Ac,file,BEMfun)
 		end
 	end
 	println("Generating mesh...")
-	run(`gmsh -2 $filegeo`)
-	BEMfun(string(file,".msh"))
+	@time run(`gmsh -2 $filegeo`)
+	@time BEMfun(string(file,".msh"))
 return
 end
