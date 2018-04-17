@@ -2,28 +2,11 @@
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
 # Modules necessary: SpecialFunctions.jl
 include("../../src/const3D_tri/dep.jl") # Includes the dependencies
-function const3D_tri(file)
-	FR = 774*100 # Frequency of the problem [Hz]
-	CW = 343*1000 # Wave propagation speed [mm/s]
-	k = FR/CW # Wave number
+function const3D_tri(info,BCFace,k)
+	NOS_GEO,ELEM,elemint,CDC = info
 	# Gaussian quadrature - generation of points and weights [-1,1]
 	npg=4; # Number of integration points
 	qsi,w = Gauss_Legendre(0,1,npg) # Generation of the points and weights
-	println("Importing mesh...")
-	@time NOS_GEO,ELEM,elemint,CDC = lermsh(file,3) #Read the mesh generated using Gmsh
-	CCFace = ones(28,3);
-	for i = 1:28
-		CCFace[i,:] = [i 1 1]
-	end
-	#NOS_GEO, ELEM, CCFace, fc, k = dad4()
-	#FR = k
-	#CW = k
-	#NOS_GEO = [1 0 0 0
-	#	   2 1 0 0
-	#	   3 1 1 0
-	#	   4 0 1 0]
-	#ELEM = [1 1 2 3 1
-	#	2 2 3 4 1]
 	NOS = mostra_geoTRI(NOS_GEO,ELEM) #Generate the physical nodes for constant elements
 	nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
 	CDC = gera_CDC(ELEM,CCFace); #Monta a matriz de condicoes de contorno

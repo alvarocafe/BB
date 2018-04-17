@@ -20,12 +20,20 @@
 
 function BEM_base(file,BCFace = [], k = 1, equation = "wave")
 println("Importing mesh...")
-NOS_GEO,ELEM,elemint,CDC = lermsh(file,3) #Read the mesh generated 
+mshinfo = lermsh(file,3) #Read the mesh generated 
 
 if equation == "wave"
-	u,q,uint,qint = const3D_tri(file,BCFace,k)
+	if size(ELEM,2) == 5
+		u,q,uint,qint = const3D_tri(mshinfo,BCFace,k)
+	else
+		u,q,uint,qint = const3D_quad(mshinfo,BCFace,k)
+	end
 elseif equation == "heat"
-	u,q,uint,qint = const3D_tri_POT(file,BCFace,k)
+	if size(ELEM,2) == 5
+		u,q,uint,qint = const3D_tri_POT(mshinfo,BCFace,k)
+	else
+		u,q,uint,qint = const3D_quad_POT(mshinfo,BCFace,k)
+	end
 elseif typeof(equation) != String
 	println("Error: the equation which will be solved must be specified.")
 end

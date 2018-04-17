@@ -3,7 +3,8 @@ function lermsh(nome,dim=2,CCSeg=false)
     index=findn(dados.=="\$Nodes")
     if(isempty(index[1]))
       index=findn(dados.=="\$ParametricNodes")
-  end
+     end
+  CDC = zeros(size(ELEM,1),3)
   npontos=dados[index[1][1]+1,1]
   pontos=Array{Float64}(dados[index[1][1]+2:index[1][1]+npontos+1,2:4])
   index[1][1]=index[1][1]+4+npontos
@@ -41,7 +42,10 @@ elseif dim==3
 end
 if CCSeg==false
     # return pontos,elemcont,elemint
-    return [1:size(pontos,1) pontos],[1:size(elemcont,1) elemcont],[1:size(elemint,1) elemint],elemtipo
+	for i=1:size(ELEM,1)
+	     CDC[i,:]= [i 1 0]
+	end
+    return [1:size(pontos,1) pontos],[1:size(elemcont,1) elemcont],[1:size(elemint,1) elemint],CDC
 
 
 else
