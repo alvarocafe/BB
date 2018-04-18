@@ -1,4 +1,4 @@
-function calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,qsi,w,FR,CW)
+function calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,qsi,w,k)
 
 # Integra��o singular das matrizes H e G. No caso da matriz G, o elemento
 # quadrilateral � decomposto em quatro quadril�teros degenerados na forma
@@ -68,7 +68,7 @@ for kk=1:4
             # ponto campo
             J = calc_jacobiano(x1t,y1t,z1t,x2t,y2t,z2t,x3t,y3t,z3t,x4t,y4t,z4t,qsi[ii],qsi[jj]); # jacobiano(varia ao longo
                          #  do elemento desgenerado)
-            Tast,qast = calc_solfund(xd,yd,zd, xc, yc, zc, [0 0 0],FR,CW); # Sol.
+            Tast,qast = calc_solfund(xd,yd,zd, xc, yc, zc, [0 0 0],k); # Sol.
             # fudamental de temperatura
             g = g + complex(w[ii] * w[jj] * J,0) * Tast; # integra��o num�rica da matriz G
 	    h = h + complex(w[ii] * w[jj] * J,0) * qast; # integra��o num�rica da matriz H

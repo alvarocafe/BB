@@ -1,4 +1,4 @@
-function calc_T_pint(PONTOS_int,NOS_GEO,ELEM,T,q,CW,FR,qsi,w,inc)
+function calc_T_pint(PONTOS_int,NOS_GEO,ELEM,T,q,k,qsi,w,inc)
 # Calcula a temperatura nos pontos internos
 n_pint=length(PONTOS_int[:,1]); # Numero de pontos internos
 n_elem=length(T); # Numero de elementos
@@ -33,7 +33,7 @@ for i=1:n_pint # La�o sobre os pontos internos
         z4=NOS_GEO[no4,4]; # Coordenada z do n� geom�trico 4
 
         n = calc_vetnormal(x1,y1,z1,x2,y2,z2,x3,y3,z3); # vetor unit�rio
-        G_int[i,j],H_int[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,x_fonte,y_fonte,z_fonte,n,qsi,w,FR,CW); # Chama a functio para calculo de H e G
+        G_int[i,j],H_int[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,x_fonte,y_fonte,z_fonte,n,qsi,w,k); # Chama a functio para calculo de H e G
         # quando o ponto fonte nao pertence ao elemento
     end
     if(inc[1,1]!=0)

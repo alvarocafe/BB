@@ -17,6 +17,10 @@
  # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 # This is the main program of the BEM_base.
+# The dependencies are declared here.
+using SpecialFunctions
+include("src/const3D_tri/const3D_tri.jl")
+include("src/const3D_quad/const3D_quad.jl")
 
 function BEM_base(file,BCFace = [], k = 1, equation = "wave")
 println("Importing mesh...")

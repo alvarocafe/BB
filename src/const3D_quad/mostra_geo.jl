@@ -35,11 +35,11 @@ for i = 1:nelem
     xnos=[xno1,xno2,xno3,xno4];
     ynos=[yno1,yno2,yno3,yno4];
     znos=[zno1,zno2,zno3,zno4];
-    #xlabel ('{\it x}')
-    #ylabel ('{\it y}')
-    #zlabel ('{\it z}')
-#    plot3D(xnos,ynos,znos,linestyle="none",marker="o");	#Parte do programa que mostra geometria
-    #axis equal
+    xlabel("x")
+    ylabel("y")
+    zlabel("z")
+    plot3D(xnos,ynos,znos,linestyle="none",marker="o");	#Parte do programa que mostra geometria
+    axis("equal")
     #axis([xmin xmax ymin ymax zmin zmax])
     #hold on;
     xno=sum(xnos)/4;

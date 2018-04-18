@@ -4,7 +4,7 @@ function monta_Teq(CDC,x)
 # ncdc = n�mero de linhas da matriz CDC
 # T = vetor que cont�m as temperaturas nos n�s
 # q = vetor que cont�m o fluxo nos n�s
-
+nnos = length(CDC[:,1]);
 ncdc = length(CDC[:,1]);
 T = complex(zeros(nnos,1))
 q = complex(zeros(nnos,1))

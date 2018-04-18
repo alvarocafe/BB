@@ -1,4 +1,4 @@
-function cal_GeH(NOS,NOS_GEO,ELEM,FR,CW,qsi,w,inc)
+function cal_GeH(NOS,NOS_GEO,ELEM,k,qsi,w,inc)
 # Evaluates the G and H matrices for the linear system H phi = G q, where phi is a vector containing the values of the velocity potential and q is a vector containing the values of the flux at the boundary of the problem.
 
 nelem=size(ELEM,1); # N�mero de elementos (n�mero de linhas da
@@ -39,15 +39,15 @@ for i=1:nnos # La�o sobre os pontos fontes
 		    n = calc_vetnormal(x1,y1,z1,x2,y2,z2,x3,y3,z3); # vetor unit�rio
 		    # normal ao elemento
 		        if i==no1||i==no2||i==no3||i==no4 # O ponto fonte pertence ao elemento
-		            #G[i,j],H[i,j]=calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,qsi,w,FR,CW); # Integra��o singular
+		            G[i,j],H[i,j]=calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,qsi,w,k); # Integra��o singular
 			    #G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsi,w,FR,CW); # Integra��o singular
-			    G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsitelles,w.*Jtelles,FR,CW); # Integra��o singular
+			    #G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsitelles,w.*Jtelles,k); # Integra��o singular
 #G[i,j]=1
 #H[i,j]= 1
 #			erro = (G[i,j] - Gtelles)
 #			println("diferença entre g e gtelles= $erro")
 		        else # O ponto fonte n�o pertence ao elemento
-		            G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsi,w,FR,CW); # Integra��o
+		            G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsi,w,k); # Integra��o
 		            #  regular
 		        end
 		    end
