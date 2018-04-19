@@ -38,7 +38,7 @@ for i=1:nnos # La�o sobre os pontos fontes
 
 		    n = calc_vetnormal(x1,y1,z1,x2,y2,z2,x3,y3,z3); # vetor unit�rio
 		    # normal ao elemento
-		        if i==no1||i==no2||i==no3||i==no4 # O ponto fonte pertence ao elemento
+		        if i==j # O ponto fonte pertence ao elemento
 		            G[i,j],H[i,j]=calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,qsi,w,k); # Integra��o singular
 			    #G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsi,w,FR,CW); # Integra��o singular
 			    #G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsitelles,w.*Jtelles,k); # Integra��o singular

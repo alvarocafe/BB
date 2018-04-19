@@ -71,12 +71,12 @@ for kk=1:4
             Tast,qast = calc_solfund(xd,yd,zd, xc, yc, zc, [0 0 0],k); # Sol.
             # fudamental de temperatura
             g = g + complex(w[ii] * w[jj] * J,0) * Tast; # integra��o num�rica da matriz G
-	    h = h + complex(w[ii] * w[jj] * J,0) * qast; # integra��o num�rica da matriz H
+	    #h = h + complex(w[ii] * w[jj] * J,0) * qast; # integra��o num�rica da matriz H
         end
     end
 end
 
-#h=complex(1/2,0); # Integra��o anal�tica da matriz H
+h=complex(1/2,0); # Integra��o anal�tica da matriz H
 
 return g,h
 end
