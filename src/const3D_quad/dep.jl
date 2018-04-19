@@ -26,3 +26,4 @@ include("mostra_geo.jl")
 include("mostra_geoTRI.jl")
 include("mostra_resultados2.jl")
 include("telles.jl")
+

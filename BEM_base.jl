@@ -19,8 +19,6 @@
 # This is the main program of the BEM_base.
 # The dependencies are declared here.
 using SpecialFunctions
-include("src/const3D_tri/const3D_tri.jl")
-include("src/const3D_quad/const3D_quad.jl")
 
 function BEM_base(file,BCFace = [], k = 1, equation = "wave")
 println("Importing mesh...")
@@ -28,8 +26,10 @@ mshinfo = lermsh(file,3) #Read the mesh generated
 
 if equation == "wave"
 	if size(ELEM,2) == 5
+		include("src/const3D_tri/const3D_tri.jl")
 		u,q,uint,qint = const3D_tri(mshinfo,BCFace,k)
 	else
+		include("src/const3D_quad/const3D_quad.jl")
 		u,q,uint,qint = const3D_quad(mshinfo,BCFace,k)
 	end
 elseif equation == "heat"

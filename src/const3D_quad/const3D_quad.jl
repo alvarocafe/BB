@@ -1,12 +1,14 @@
 # Boundary element method implementation for the Helmholtz equation using constant bidimensional elements
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
 
+module const3D_quad
+
 include("dep.jl") # Includes the dependencies
-function const3D_quad()
+function solve(info,BCFace,k)
 	# Gaussian quadrature - generation of points and weights [-1,1]
 	npg=6; # Number of integration points
 	qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
-	println("Importing mesh...")
+	NOS_GEO,ELEM,elemint,CDC = info
 	NOS = mostra_geo(NOS_GEO,ELEM) #Generate the physical nodes for constant elements
 	nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
 #	CDC = gera_CDC(ELEM,CCFace); #Monta a matriz de condicoes de contorno
@@ -23,6 +25,8 @@ function const3D_quad()
 	@time x = A\b # Solves the linear system
 	println("Separating acoustic pressure from flux...")
 	@time phi,q = monta_Teq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
+	println("Solving for domain points...")
 	T_pint=calc_T_pint(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
 return phi,q,T_pint,T_pint
+end
 end

@@ -1,18 +1,16 @@
 # Boundary element method implementation for the Helmholtz equation using constant tridimensional triangular elements
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
 # Modules necessary: SpecialFunctions.jl
-include("../../src/const3D_tri/dep.jl") # Includes the dependencies
-function const3D_tri(info,CCFace=[],k=1)
+module const3D_tri
+
+include("dep.jl") # Includes the dependencies
+function solve(info,BCFace,k)
 	NOS_GEO,ELEM,elemint,CDC = info
 	# Gaussian quadrature - generation of points and weights [-1,1]
-	npg=6; # Number of integration points
+	npg=4; # Number of integration points
 	qsi,w = Gauss_Legendre(0,1,npg) # Generation of the points and weights
 	NOS = mostra_geoTRI(NOS_GEO,ELEM) #Generate the physical nodes for constant elements
 	nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
-	CCFace = ones(28,3);
-	for i = 1:28
-		CCFace[i,:] = [i 1 1]
-	end
 	CDC = gera_CDC(ELEM,CCFace); #Monta a matriz de condicoes de contorno
 	n_pint = 100
 	PONTOS_int = zeros(n_pint,4)
@@ -29,4 +27,5 @@ function const3D_tri(info,CCFace=[],k=1)
 	@time phi,q = monta_Teq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
 	println("Solving for domain points.")
 	T_pint=calc_T_pint(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
+end
 end
