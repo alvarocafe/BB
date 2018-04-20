@@ -16,30 +16,31 @@
  # along with this program; if not, write to the Free Software
  # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-# This is the main program of the BEM_base.
-# The dependencies are declared here.
-using SpecialFunctions
+# This is the main program of the BEM_base. It defines a function which will choose the right kernel for the element type of the mesh. 
+include("src/const3D_quad/const3D_quad.jl")
+include("src/const3D_tri/const3D_tri.jl")
+using const3D_tri
+using const3D_quad
 
-function BEM_base(file,BCFace = [], k = 1, equation = "wave")
+function BEM_base(file,PONTOS_int=[],BCFace = [],k=1, equation = "wave")
 println("Importing mesh...")
-mshinfo = lermsh(file,3) #Read the mesh generated 
+@time mshinfo = const3D_tri.lermsh(file,3) #Read the mesh generated 
+NOS_GEO,ELEM,elemint,CDC = mshinfo
 
 if equation == "wave"
 	if size(ELEM,2) == 5
-		include("src/const3D_tri/const3D_tri.jl")
-		u,q,uint,qint = const3D_tri(mshinfo,BCFace,k)
+		u,q,uint,qint,NOS = const3D_tri.solve(mshinfo,PONTOS_int,BCFace,k)
 	else
-		include("src/const3D_quad/const3D_quad.jl")
-		u,q,uint,qint = const3D_quad(mshinfo,BCFace,k)
+		u,q,uint,qint,NOS = const3D_quad.solve(mshinfo,PONTOS_int,BCFace,k)
 	end
-elseif equation == "heat"
-	if size(ELEM,2) == 5
-		u,q,uint,qint = const3D_tri_POT(mshinfo,BCFace,k)
-	else
-		u,q,uint,qint = const3D_quad_POT(mshinfo,BCFace,k)
-	end
+#elseif equation == "heat"
+#	if size(ELEM,2) == 5
+#		u,q,uint,qint = const3D_tri_POT(mshinfo,PONTOS_int,BCFace,k)
+#	else
+#		u,q,uint,qint = const3D_quad_POT(mshinfo,PONTOS_int,BCFace,k)
+#	end
 elseif typeof(equation) != String
 	println("Error: the equation which will be solved must be specified.")
 end
-return u,q,uint,qint
+return u,q,uint,qint,NOS
 end
