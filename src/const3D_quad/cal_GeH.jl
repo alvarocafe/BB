@@ -9,9 +9,6 @@ nnos=nelem; # N�mero de n�s
 G=complex(zeros(nnos,nnos)); # Inicializa��o da matriz G
 H=complex(zeros(nnos,nnos)); # Inicializa��o da matriz H
 phi_inc = complex(zeros(nelem,1));
-tff = 0.0
-ts = 0.0
-tj = 0.0
 for i=1:nnos # La�o sobre os pontos fontes
 		xd=NOS[i,2]; # Coordenada x do ponto fonte
 		yd=NOS[i,3]; # Coordenada y do ponto fonte
@@ -50,11 +47,8 @@ for i=1:nnos # La�o sobre os pontos fontes
 #			erro = (G[i,j] - Gtelles)
 #			println("diferença entre g e gtelles= $erro")
 		        else # O ponto fonte n�o pertence ao elemento
-		            G[i,j],H[i,j],tffi,tji,tsi=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsi,w,k); # Integra��o
+		            G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,xd,yd,zd,n,qsi,w,k); # Integra��o
 		            #  regular
-			tff+=tffi
-			tj+=tji
-			ts+=tsi
 		        end
 		    end
 				if inc[1,1] != 0
@@ -62,9 +56,6 @@ for i=1:nnos # La�o sobre os pontos fontes
 						phi_inc[i,1] = calc_inc(xd,yd,zd,FR,CW,inc[1,:]);
 				end
 end
-println("Tempo da função de forma = $tff.")
-println("Tempo do jacobiano = $tj.")
-println("Tempo da solução = $ts.")
 
 return G,H,phi_inc
 end

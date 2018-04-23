@@ -4,7 +4,6 @@ n_pint=length(qsi); # N�mero de pontos de integra��o.
 g=complex(0,0); # Inicializa o somatorio de g
 h=complex(0,0); # Inicializa o somatorio de h
 N = zeros(3)
-dN = zeros(6)
 
 for l=1:n_pint # La�o sobre os pontos de integra��o
     for m=1:n_pint # La�o sobre os pontos de integra��o

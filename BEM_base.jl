@@ -29,9 +29,9 @@ NOS_GEO,ELEM,elemint,CDC = mshinfo
 
 if equation == "wave"
 	if size(ELEM,2) == 5
-		u,q,uint,qint,NOS = const3D_tri.solve(mshinfo,PONTOS_int,BCFace,k)
+		u,q,uint,qint = const3D_tri.solve(mshinfo,PONTOS_int,BCFace,k)
 	else
-		u,q,uint,qint,NOS = const3D_quad.solve(mshinfo,PONTOS_int,BCFace,k)
+		u,q,uint,qint = const3D_quad.solve(mshinfo,PONTOS_int,BCFace,k)
 	end
 #elseif equation == "heat"
 #	if size(ELEM,2) == 5
@@ -42,5 +42,5 @@ if equation == "wave"
 elseif typeof(equation) != String
 	println("Error: the equation which will be solved must be specified.")
 end
-return u,q,uint,qint,NOS
+return u,q,uint,qint
 end
