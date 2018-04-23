@@ -26,7 +26,7 @@ function cal_GeH(NOS,NOS_GEO,ELEM,CW,FR,fc,qsi,w)
         #println("Diferença entre g e gtelles = ", abs(g-gtelles))
         #println("Diferença entre h e htelles = ", abs(h-htelles))
       else # The source point doesnt belong to the element
-        g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,CW,qsi,w,FR);	# Non singular integration
+        g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsi,w,FR);	# Non singular integration
       end
       G[i,j] = g
       H[i,j] = h

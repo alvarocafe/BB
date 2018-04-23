@@ -67,7 +67,8 @@ function cal_Aeb_interp(b1,b2,arg,ninterp=3,compressão=true,ϵ=1e-3)
 
     fontes=[2*(NOS[b1,2]-xmin[1])/(xmax[1]-xmin[1])-1 2*(NOS[b1,3]-xmin[2])/(xmax[2]-xmin[2])-1]
   L=lagrange(fontes,xs,ninterp,xs,ninterp)
-if compressão
+if 1 ==0
+#if compressão
 w1,r1=qr(L)
 w2,r2=qr(H')
 w3,r3=qr(G')

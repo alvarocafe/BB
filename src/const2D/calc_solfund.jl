@@ -19,8 +19,8 @@ ry=(y-yd); # y component of the distance
 drdn=rx*nx+ry*ny;   # Distance in the normal direction
 ZR=real(k*r);
 Z=complex(0.,ZR);
-F0C=SpecialFunctions.besselk(0,Z);
-F1C=SpecialFunctions.besselk(1,Z);
+F0C=besselk(0,Z);
+F1C=besselk(1,Z);
 
   qast=-(Z/r*drdn*F1C)/(2*pi); 	# Fundamental solution for the velocity potential
   Tast=F0C/(2*pi);    		# Fundamental solution for the flux
