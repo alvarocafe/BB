@@ -1,17 +1,16 @@
 function calcula_GeHns(x1,y1,x2,y2,xd,yd,qsi,w,k)
 # Non singular integration
-  n_pint=length(qsi); # Number of integration points
+  npg=length(qsi); # Number of integration points
   g=complex(0,0); # Start the sum for g
   h=complex(0,0); # Start the sum for h
   L=sqrt((x2-x1)^2+(y2-y1)^2); # Element length
   dgamadqsi=L/2; # Jacobian
-
   sx=(x2-x1)/L; # x component of the tangent vector
   sy=(y2-y1)/L; # y component of the tangent vector
   nx=sy; # x component of the normal vector
   ny=-sx; # y component of the normal vector
 
-  for kk=1:n_pint # Loop over the integration points
+  for kk=1:npg # Loop over the integration points
     N1,N2 =calc_fforma(qsi[kk]); # Evaluates the shape functions
     x=N1*x1+N2*x2; # Evaluates the x coordinate of the integration point
     y=N1*y1+N2*y2; # Evaluates the y coordinate of the integration point

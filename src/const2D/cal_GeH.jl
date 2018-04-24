@@ -1,4 +1,4 @@
-function cal_GeH(NOS,NOS_GEO,ELEM,CW,FR,fc,qsi,w)
+function cal_GeH(NOS,NOS_GEO,ELEM,k,fc,qsi,w)
 # Evaluates the G and H matrices for the linear system H phi = G q, where phi is a vector containing the values of the velocity potential and q is a vector containing the values of the flux at the boundary of the problem.
  
   nelem::Int64=size(ELEM)[1]; # Number of elements
@@ -20,13 +20,13 @@ function cal_GeH(NOS,NOS_GEO,ELEM,CW,FR,fc,qsi,w)
       y1=NOS_GEO[noi,3]; # y coordinate of the first point of the element
       y2=NOS_GEO[nof,3];  # y coordinate of the second point of the element
       if i==j # The source point belongs to the element
-        g,h = calcula_GeHs(x1,y1,x2,y2,CW,FR); 	# Singular integration
+        g,h = calcula_GeHs(x1,y1,x2,y2,k); 	# Singular integration
         #gtelles, htelles = calcula_GeHns(x1,y1,x2,y2,xd,yd,CW,qsitelles,w.*Jtelles,FR);	# Singular integration using the Telles transformation
         #htelles = htelles + 0.5	# Adding the jump term
         #println("Diferença entre g e gtelles = ", abs(g-gtelles))
         #println("Diferença entre h e htelles = ", abs(h-htelles))
       else # The source point doesnt belong to the element
-        g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsi,w,FR);	# Non singular integration
+        g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsi,w,k);	# Non singular integration
       end
       G[i,j] = g
       H[i,j] = h

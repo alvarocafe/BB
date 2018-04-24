@@ -14,8 +14,8 @@ end
 function  calc_solfund(x,y,xd,yd,nx,ny,k)
 # Evaluates the fundamental solutions of the Helmholtz equation.
 r=sqrt((x-xd)^2+(y-yd)^2); # Distance between the source and field points
-rx=(x-xd); # x component of the distance
-ry=(y-yd); # y component of the distance
+rx=(x-xd)/r; # x component of the distance
+ry=(y-yd)/r; # y component of the distance
 drdn=rx*nx+ry*ny;   # Distance in the normal direction
 ZR=real(k*r);
 Z=complex(0.,ZR);

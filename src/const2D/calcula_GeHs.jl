@@ -1,12 +1,12 @@
-function calcula_GeHs(X1,Y1,X2,Y2,CW,FR)
+function calcula_GeHs(X1,Y1,X2,Y2,k)
   # integração singular
   #  THIS SUBROUTINE COMPUTES THE VALUES OF THE DIAGONAL
   #  COEFFICIENTS OF THE G MATRIX
 
-  AX=(X2-X1)/2.;
-  AY=(Y2-Y1)/2.;
-  SR=sqrt(AX^2+AY^2);
-  ZR=real(FR*SR/CW);
+  AX=(X2-X1);
+  AY=(Y2-Y1);
+  SR=sqrt(AX^2+AY^2)/2;
+  ZR=real(k*SR);
   Z=complex(0.,ZR);
   S0C=INBESS(Z);
   G=(SR/Z)*S0C/(pi);
