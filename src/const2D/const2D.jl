@@ -3,10 +3,10 @@
 # Module for the constant three-dimensional quadrilateral element
 # Contains the dependencies for the quadrilateral element integration. The main function is const3D_quad.solve() which builds the influence matrices, applies the boundary conditions, solves the linear system and returns the value of the velocity potential and its flux at boundary and domain points.
 # Necessary Modules: SpecialFunctions.jl and KrylovMethods
-using SpecialFunctions
-import KrylovMethods
-module const2D
 
+module const2D
+using SpecialFunctions
+using KrylovMethods
 include("dep.jl") # Includes the dependencies
 include("beminterp.jl") # H-Matrices using Lagrange polynomial interpolation
 include("ACA.jl") # H-Matrices using ACA
@@ -30,7 +30,6 @@ return phi, qphi, phi_pint, phi_pint
 end
 
 function solveH(info,PONTOS_int,fc,BCFace,k)
-import KrylovMethods
 ## H-Matrix BEM - Interpolation using Lagrange polynomial
 	NOS,NOS_GEO,ELEM,CDC = info;
 	println("Building Tree and blocks using H-Matrices.")
@@ -40,7 +39,7 @@ import KrylovMethods
 	qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
 	println("Building A and b matrices using H-Matrix with interpolation.")
 	@time Ai,bi = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
-	xi = KrylovMethods.gmres(vet->matvec(Ai,vet,block,Tree),bi,5,tol=1e-5,maxIter=1000,out=0) #GMRES nas matrizes do ACA
+	xi = gmres(vet->matvec(Ai,vet,block,Tree),bi,5,tol=1e-5,maxIter=1000,out=0) #GMRES nas matrizes do ACA
 	phii,qphii = monta_phieq(CDC,xi[1]) # Applies the boundary conditions to return the velocity potential and flux
 	println("Evaluating values at internal points.")
 	@time phi_pinti = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phii,qphii,fc,fc,qsi,w,k) # Evaluates the value at internal (or external) points
