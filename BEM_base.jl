@@ -33,12 +33,12 @@ if equation == "wave"
 	else
 		u,q,uint,qint = const3D_quad.solve(mshinfo,PONTOS_int,BCFace,k)
 	end
-#elseif equation == "heat"
-#	if size(ELEM,2) == 5
-#		u,q,uint,qint = const3D_tri_POT(mshinfo,PONTOS_int,BCFace,k)
-#	else
-#		u,q,uint,qint = const3D_quad_POT(mshinfo,PONTOS_int,BCFace,k)
-#	end
+elseif equation == "heat"
+	if size(ELEM,2) == 5
+		u,q,uint,qint = const3D_tri_POT(mshinfo,PONTOS_int,BCFace,k)
+	else
+		u,q,uint,qint = const3D_quad_POT(mshinfo,PONTOS_int,BCFace,k)
+	end
 elseif typeof(equation) != String
 	println("Error: the equation which will be solved must be specified.")
 end
