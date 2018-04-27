@@ -20,8 +20,8 @@ SEGMENTOS = [1 1 2 -raio  #raio 0.5
 # MALHA =[numero do segmento, numero de elementos no segmento]
 MALHA = [1 ne
          2 ne];
-CCSeg=[1 1 1 0
-       2 1 1 0];
+CCSeg=[1 0 1 0
+       2 0 1 0];
 #FR = 1  #Frequencia analisada
 CW = 343  #Velocidade de propagação da onda
 #Construindo os pontos internos
@@ -42,6 +42,71 @@ fc = [0 3*0.5/2 -0.5/2 1];
 finc = [0 -1 0 1];
 return PONTOS, SEGMENTOS, MALHA, CCSeg, PONTOS_int, FR, CW,fc,finc,phi_analytical
 end
+
+function dad_vibcyl(ne,k,n_pint=50,raio=0.5,delta=10)
+#Entrada de dados para a comparação com o BEM Isogeometrico
+#raio = 0.5
+PONTOS  = [1   -raio  0 # cilindro com centro em (0.5,0.5) de raio 0.5
+          2    raio  0];
+#  Segmentos que definem a geometria
+#   SEGMENTOS=[No do segmento, No do ponto inicial, No do ponto final
+#                                                   Raio, tipo do elemento]
+#  Raio do segmento: > 0 -> O centro � � esquerda do segmento (do ponto
+#                           inicial para o ponto final)
+#                    < 0 -> O centro � � direita do segmento (do ponto
+#                           inicial para o ponto final)
+#                    = 0 -> O segmento � uma linha reta
+#  Tipo do elemento = 1 -> Elemento quadrático contínuo
+#                   = 2 -> Elemento quadrático descontínuo
+#                   = 3 -> Elemento linear contínuo
+SEGMENTOS = [1 1 2 -raio  #raio 0.5
+             2 2 1 -raio];
+# Matriz para defini��o da malha
+# MALHA =[numero do segmento, numero de elementos no segmento]
+MALHA = [1 ne
+         2 ne];
+CCSeg=[1 0 1 0
+       2 0 1 0];
+#FR = 1  #Frequencia analisada
+#CW = 343  #Velocidade de propagação da onda
+#Construindo os pontos internos
+passo = delta/(n_pint - 1);
+iter = 1;
+for i = 2:n_pint
+	for j = 2:n_pint
+		if ((i*passo)^2 + (j*passo)^2) > 0.5*raio^2
+			iter +=4
+		end
+	end
+end
+println(iter)
+PONTOS_int = zeros(iter,3)
+phi_analytical = complex(zeros(iter))
+bh1 = SpecialFunctions.besselh(1,2,k*raio);
+iter = 1;
+for i = 2:n_pint
+	for j = 2:n_pint
+		if ((i*passo)^2 + (j*passo)^2) > raio^2
+			PONTOS_int[iter,:] = [iter  (i-1)*passo (j-1)*passo]
+			PONTOS_int[iter+1,:] = [iter+1  (i-1)*passo -(j-1)*passo]
+			PONTOS_int[iter+2,:] = [iter+2  -(i-1)*passo -(j-1)*passo]
+			PONTOS_int[iter+3,:] = [iter+3  -(i-1)*passo (j-1)*passo]
+			bh0 = SpecialFunctions.besselh(0,2,k*sqrt((i*passo)^2 + (j*passo)^2));
+			phi_analytical[iter] = (1/k).*(bh0./bh1);		#solucao anali­tica pela 
+			phi_analytical[iter+1] = phi_analytical[iter];		#solucao anali­tica pela 
+			phi_analytical[iter+2] = phi_analytical[iter];		#solucao anali­tica pela 
+			phi_analytical[iter+3] = phi_analytical[iter];		#solucao anali­tica pela 
+			iter +=4
+		end
+	end
+end
+
+#Incluimos as fontes concentradas e as ondas incidentes
+fc = [0 3*0.5/2 -0.5/2 1];
+finc = [0 -1 0 1];
+return PONTOS, SEGMENTOS, MALHA, CCSeg, PONTOS_int,fc,finc,phi_analytical
+end
+
 
 function dad_lev_res(ne = 2)
 # This test case consists of a rectangular reflector and an acoustic source so that acoustic levitation is possible on the modal nodes between the source and the resonator.

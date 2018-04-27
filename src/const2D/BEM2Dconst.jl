@@ -1,6 +1,6 @@
 # Boundary element method implementation for the Helmholtz equation using constant bidimensional elements
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
-# Necessary Modules: SpecialFunctions.jl
+
 using SpecialFunctions
 using KrylovMethods
 include("dep.jl") # Includes the dependencies
@@ -8,14 +8,14 @@ include("dad_1.jl") # Includes the data file containing the geometry and physica
 include("beminterp.jl") # H-Matrices using Lagrange polynomial interpolation
 include("ACA.jl") # H-Matrices using ACA
 
-i =  500# Number of elements for half circle
+i =  300# Number of elements for half circle
 FR = 20 # Frequency of the problem [Hz]
 CW = 343 # Wave propagation speed [m/s]
 k = FR/CW # Wave number
 PONTOS, SEGMENTOS, MALHA, CCSeg, PONTOS_int, FR, CW,fc,finc,phi_analytical = dad_1(i,FR) # Geometric and physical information of the problem
 println("$(i*4) Elements, simulating vibrating cylinder.")
 # Gaussian quadrature - generation of points and weights [-1,1]
-npg=16; # Number of integration points
+npg=6; # Number of integration points
 qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
 NOS_GEO,NOS,ELEM,CDC = format_dad(PONTOS,SEGMENTOS,MALHA,CCSeg) # Apply the discretization technique and builds the problems matrices for the geometrical points, physical nodes, elements' connectivity and boundary conditions
 nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
