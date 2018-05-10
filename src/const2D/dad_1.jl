@@ -1,4 +1,4 @@
-function dad_1(ne,FR)
+function dad_1(ne,n_pint,FR)
 #Entrada de dados para a comparação com o BEM Isogeometrico
 raio = 0.5
 PONTOS  = [1   -raio  0 # cilindro com centro em (0.5,0.5) de raio 0.5
@@ -20,12 +20,12 @@ SEGMENTOS = [1 1 2 -raio  #raio 0.5
 # MALHA =[numero do segmento, numero de elementos no segmento]
 MALHA = [1 ne
          2 ne];
-CCSeg=[1 0 1 0
-       2 0 1 0];
+CCSeg=[1 1 1 0
+       2 1 1 0];
 #FR = 1  #Frequencia analisada
 CW = 343  #Velocidade de propagação da onda
 #Construindo os pontos internos
-n_pint = 50
+#n_pint = 50
 PONTOS_int = zeros(n_pint,3)
 dx = 1.0
 dy = 0
@@ -65,8 +65,8 @@ SEGMENTOS = [1 1 2 -raio  #raio 0.5
 # MALHA =[numero do segmento, numero de elementos no segmento]
 MALHA = [1 ne
          2 ne];
-CCSeg=[1 0 1 0
-       2 0 1 0];
+CCSeg=[1 1 1 0
+       2 1 1 0];
 #FR = 1  #Frequencia analisada
 #CW = 343  #Velocidade de propagação da onda
 #Construindo os pontos internos
@@ -74,19 +74,19 @@ passo = delta/(n_pint - 1);
 iter = 1;
 for i = 2:n_pint
 	for j = 2:n_pint
-		if ((i*passo)^2 + (j*passo)^2) > 0.5*raio^2
+		if ((i*passo)^2 + (j*passo)^2) > 1.5*raio^2
 			iter +=4
 		end
 	end
 end
 println(iter)
-PONTOS_int = zeros(iter,3)
-phi_analytical = complex(zeros(iter))
+PONTOS_int = zeros(iter-1,3)
+phi_analytical = complex(zeros(iter-1))
 bh1 = SpecialFunctions.besselh(1,2,k*raio);
 iter = 1;
 for i = 2:n_pint
 	for j = 2:n_pint
-		if ((i*passo)^2 + (j*passo)^2) > raio^2
+		if ((i*passo)^2 + (j*passo)^2) > 1.5*raio^2
 			PONTOS_int[iter,:] = [iter  (i-1)*passo (j-1)*passo]
 			PONTOS_int[iter+1,:] = [iter+1  (i-1)*passo -(j-1)*passo]
 			PONTOS_int[iter+2,:] = [iter+2  -(i-1)*passo -(j-1)*passo]

@@ -32,7 +32,6 @@ println("Calculating the error.")
 println("error = $erro %")
 
 ## H-Matrix - Interpolation using Lagrange polynomial
-
 println("Building Tree and blocks using H-Matrices.")
 @time Tree,block = cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
 println("Building A and b matrices using H-Matrix with interpolation.")

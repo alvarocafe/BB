@@ -29,6 +29,8 @@ function calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,finc,qsi,w,k)
           q[i,1], inc[i,1] =[0 0]	# There is no influence
         end
   end
-  phi_pint=-(H_int*phi-G_int*qphi-q-inc); # Evaluates the velocity potential for the internal points
+#  phi_pint=-(H_int*phi-G_int*qphi-q-inc); # Evaluates the velocity potential for the internal points
+  phi_pint=-(H_int*phi-G_int*qphi); # Evaluates the velocity potential for the internal points
+ 
   return phi_pint
 end

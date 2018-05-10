@@ -15,3 +15,7 @@ qsi,w = Gauss_Legendre(-1,1.00001,npg)
 println("Building G and H matrices...")
 G,H = cal_GeH(NOS,ELEM,CW,FR,fc,qsi,w) # Evaluates the influence matrices H and G
 println("Soma da matriz G[1,:]: ",sum(G[1,:]))
+println("Building A and b matrices for the linear system...")
+A,b,T_PR = aplica_CDC(G,H,CDC,ELEM)
+x = b\A
+

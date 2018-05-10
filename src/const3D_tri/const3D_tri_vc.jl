@@ -2,8 +2,11 @@
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
 # Modules necessary: SpecialFunctions.jl
 include("../../src/const3D_tri/dep.jl") # Includes the dependencies
-function const3D_tri(info,CCFace=[],k=1)
+function const3D_tri(info)
 	NOS_GEO,ELEM,elemint,CDC = info
+	FR = 300*2*pi;
+	CW = 343;
+	k = FR/CW;
 	# Gaussian quadrature - generation of points and weights [-1,1]
 	npg=6; # Number of integration points
 	qsi,w = Gauss_Legendre(0,1,npg) # Generation of the points and weights
