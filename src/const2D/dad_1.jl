@@ -27,9 +27,9 @@ CW = 343  #Velocidade de propagação da onda
 #Construindo os pontos internos
 #n_pint = 50
 PONTOS_int = zeros(n_pint,3)
-dx = 1.0
+dx = 0.5
 dy = 0
-passo = 0.05
+passo = 1/(n_pint)
 phi_analytical = complex(zeros(size(PONTOS_int,1),1));
 for i = 1:n_pint  # Para n_pint pontos internos
   PONTOS_int[i,:] = [i  dx+i*passo dy]

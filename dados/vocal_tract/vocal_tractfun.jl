@@ -13,13 +13,13 @@ function vocal_tract(Ac,file,BEMfun)
 		i = 1	# Cross section iterator
 		face = 10	# Each cross section is separated from the previous one by this distance [mm]
 		teste = "
-		// Defining the points
-		Point($(p)) = {-$(R[i]), 0, $((i-1)*face), 10.0};
-		Point($(p+1)) = {0, 0, $((i-1)*face),10.0};
-		Point($(p+2)) = {$(R[i]),0,$((i-1)*face),10.0};
-		// Defining the circles
-		Circle($(c)) = {$(p), $(p+1), $(p+2)};
-		Circle($(c+1)) = {$(p+2), $(p+1), $(p)};
+// Defining the points
+Point($(p)) = {-$(R[i]), 0, $((i-1)*face), 10.0};
+Point($(p+1)) = {0, 0, $((i-1)*face),10.0};
+Point($(p+2)) = {$(R[i]),0,$((i-1)*face),10.0};
+// Defining the circles
+Circle($(c)) = {$(p), $(p+1), $(p+2)};
+Circle($(c+1)) = {$(p+2), $(p+1), $(p)};
 		"		
 		write(f,teste)
 		# Update the iterators
@@ -28,26 +28,26 @@ function vocal_tract(Ac,file,BEMfun)
 
 		for i = 2:size(R,1)
 			teste = "
-			// Defining the points
-			Point($(p)) = {-$(R[i]), 0, $((i-1)*face), 10.0};
-			Point($(p+1)) = {0, 0, $((i-1)*face),10.0};
-			Point($(p+2)) = {$(R[i]),0,$((i-1)*face),10.0};
-			// Defining the circles
-			Circle($(c)) = {$(p), $(p+1), $(p+2)};
-			Circle($(c+1)) = {$(p+2), $(p+1), $(p)};
-			// Defining the surface
-			Line Loop($(L)) = {$(c+1), $(c)};
+// Defining the points
+Point($(p)) = {-$(R[i]), 0, $((i-1)*face), 10.0};
+Point($(p+1)) = {0, 0, $((i-1)*face),10.0};
+Point($(p+2)) = {$(R[i]),0,$((i-1)*face),10.0};
+// Defining the circles
+Circle($(c)) = {$(p), $(p+1), $(p+2)};
+Circle($(c+1)) = {$(p+2), $(p+1), $(p)};
+// Defining the surface
+Line Loop($(L)) = {$(c+1), $(c)};
 
 
-			// Defining the lines between circle $(c) and $(c-1)
-			Line($(c+2)) = {$(p-3), $(p)};
-			Line($(c+3)) = {$(p-1), $(p+2)};
+// Defining the lines between circle $(c) and $(c-1)
+Line($(c+2)) = {$(p-3), $(p)};
+Line($(c+3)) = {$(p-1), $(p+2)};
 
-			// Defining the surfaces of the inner side of the vocal tract
-			Line Loop($(L+1)) = {$(c-4), $(c+3), -$(c), -$(c+2)};
-			Ruled Surface($(s)) = {$(L+1)};
-			Line Loop($(L+2)) = {$(c-3), $(c+2), -$(c+1), -$(c+3)};
-			Ruled Surface($(s+1)) = {$(L+2)};
+// Defining the surfaces of the inner side of the vocal tract
+Line Loop($(L+1)) = {$(c-4), $(c+3), -$(c), -$(c+2)};
+Ruled Surface($(s)) = {$(L+1)};
+Line Loop($(L+2)) = {$(c-3), $(c+2), -$(c+1), -$(c+3)};
+Ruled Surface($(s+1)) = {$(L+2)};
 			"
 			# Update the iterators
 			p +=3

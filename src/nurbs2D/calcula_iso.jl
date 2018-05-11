@@ -59,8 +59,8 @@ for i = 1 : npg # Percorre os pontos de integra��o
     rx=x/r; # Componente x do vetor unit�rio r
     ry=y/r; # Componente y do vetor unit�rio r
     nr=nx*rx+ny*ry; # Produto escalar dos vetores unit�rios r e n
-#   Tast=-1/(2*pi*k)*log(r)
-#   qast=1/(2*pi)*(rx*nx+ry*ny)/r
+    Tast=-1/(2*pi*k)*log(r)
+    qast=1/(2*pi)*(rx*nx+ry*ny)/r
 
     # ZR=real(k*r);
     # Z=complex(0.,ZR);
@@ -68,8 +68,8 @@ for i = 1 : npg # Percorre os pontos de integra��o
     # F1C=SpecialFunctions.besselk(1,Z);
     # qast=-(Z/r*nr*F1C)/(2*pi); #Solução Fundamental da pressão acústica
     # Tast=F0C/(2*pi);    #Solução Fundamental do fluxo de pressão acústica
-    qast = complex(1,0)
-    Tast = complex(1,0)
+    #qast = complex(1,0)
+    #Tast = complex(1,0)
     h = h + B*qast*dgamadu *dudqsi* w[i]
     g = g + B*Tast*dgamadu *dudqsi* w[i]
 end
