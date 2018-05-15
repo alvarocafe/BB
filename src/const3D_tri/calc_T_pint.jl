@@ -31,16 +31,16 @@ for i=1:n_pint # La�o sobre os pontos internos
         G_int[i,j],H_int[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x_fonte,y_fonte,z_fonte,n,qsi,w,k); # Chama a functio para calculo de H e G
         # quando o ponto fonte nao pertence ao elemento
     end
-    if(inc[1,1]!=0)
-    	#g[i,1]=calc_q(x_fonte,y_fonte,fc,FR,CW,GE);
-			g[i,1]=0;
-		else
-    	g[i,1]=0;
-    end
-		if inc[1,1] != 0
+#    if(inc[1,1]!=0)
+#    	#g[i,1]=calc_q(x_fonte,y_fonte,fc,FR,CW,GE);
+#			g[i,1]=0;
+#		else
+#    	g[i,1]=0;
+#    end
+#		if inc[1,1] != 0
 	#Vamos incluir um termo de onda incidente
-				phi_inc[i,1] = calc_inc(x_fonte,y_fonte,z_fonte,FR,CW,inc[1,:]);
-		end
+#				phi_inc[i,1] = calc_inc(x_fonte,y_fonte,z_fonte,FR,CW,inc[1,:]);
+#		end
 end
 T_pint = - (H_int*T - G_int*q - phi_inc)
 #T_pint=-(H_int*T'-G_int*q'-g'); # Vetor que contem a temperatura nos

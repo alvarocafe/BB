@@ -1,4 +1,5 @@
 # Boundary element method implementation for the Helmholtz equation using constant bidimensional elements
+# Test script for the closed acoustic duct example
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
 
 using SpecialFunctions
@@ -10,7 +11,7 @@ include("../src/const2D/ACA.jl") # H-Matrices using ACA
 using PyPlot
 
 
-
+close("all")
 c = 343*1000 # Speed of propagation in mm/s
 F_closed(n,L,c) = pi*n*c/L # Analytical resonance frequency in rad/s
 phi_closed(x,n,L,c) = cos.(n*pi*(x./L))	# Analytical mode shape
@@ -93,7 +94,7 @@ plot(PONTOS_int[:,2],real.(phi_pinti),label="H-BEM - $(round(FR/(2*pi),2)) Hz",m
 
 legend(loc=0)
 grid(1)
-xlabel("distance [m]")
+xlabel("distance [mm]")
 ylabel("particle velocity [m/s]")
 
 figure()

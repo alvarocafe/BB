@@ -8,7 +8,7 @@ include("vocal_tractfun.jl")
 #A = Ac.*100 # From cm^2 to mm^2
 #R=sqrt.(A./pi)	# Determine the radius of a circle with the corresponding area.
 include("../../src/const3D_tri/const3D_tri_vc.jl")
-n = 10
+n = 5
 file = Array{Any}(n)
 for i =1:n
 	file[i] = "vocal_tract$(i)"
