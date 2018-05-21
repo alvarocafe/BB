@@ -80,8 +80,8 @@ function aplica_CDCiso(G,H,CDC,E)
 # Aplica as condições de contorno trocando as colunas das matrizes H e G
 
 ncdc = size(CDC,1); # número de linhas da matriz CDC
-A=H;
-B=G;
+A=copy(H);
+B=copy(G);
 for i=1:ncdc # Laço sobre as condições de contorno
     tipoCDC = CDC[i,2]; # Tipo da condição de contorno
     if tipoCDC == 0 # A temperatura é conhecida
