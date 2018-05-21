@@ -8,6 +8,7 @@ module const2D
 using SpecialFunctions
 using KrylovMethods
 include("dep.jl") # Includes the dependencies
+include("H_mat.jl") # H-Matrices support for building the cluster tree and blocks
 include("beminterp.jl") # H-Matrices using Lagrange polynomial interpolation
 include("ACA.jl") # H-Matrices using ACA
 

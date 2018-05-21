@@ -1,4 +1,4 @@
-function calcula_iso(collocCoord,nnos,crv,dcrv,kmat)
+function calcula_iso(collocCoord,nnos,crv,dcrv,E,kmat)
 n = length(crv);	# Number of curves
 ncollocpoints=size(collocCoord,1)
 
@@ -24,8 +24,10 @@ for i = 1 : n #Laço sobre as curvas (elementos)
         end
     end
 end
+H=H-E/2;
 return H,G
 end
+
 function  integra_elem(xfonte,yfonte,crv,dcrv,range,mid,qsi,w,k)
 # Integra��o sobre os elementos (integral I)
 # N�mero de pontos de Gauss usados na integra��o de I
@@ -120,40 +122,34 @@ end
 return T,q
 end
 
-function calc_phi_pint_nurbs(collocCoord,nnos,PONTOS_int,crv,dcrv,k,qsi,w,fc,finc,phi,qphi)
-  #Função para calcular o potencial em pontos internos para as NURBS
-  n = length(crv);	# Numero de curvas
-  ncc = size(phi,1) # Numero de pontos de colocação
-  n_pint = size(PONTOS_int,1)   # Numero de pontos externos
-  H=complex(zeros(n_pint,ncc)); # Alocação das matrizes H e G
-  G=complex(zeros(n_pint,ncc));
-  q = complex(zeros(n_pint,1))  # Alocação dos vetores para fontes concentradas e ondas incidentes
-  inc = complex(zeros(n_pint,1))
-  # phi_pint = complex(zeros())
-  for i = 1 : n #Laço sobre as curvas (e elementos)
-    uk=unique(crv[i].knots) # Knots únicos
-    ne=length(uk)-1;    # Número de elementos por curva
-    for j=1:ne  # Laço sobre os elementos
-      range=uk[j+1]-uk[j]   # Extensão do elemento no vetor knots
-      mid=(uk[j+1]+uk[j])/2 # Ponto médio entre os knots do elemento
-      for k=1:n_pint # La�o sobre os pontos internos
-        x_fonte=PONTOS_int[k,2]; # Coordenada x do ponto fonte
-        y_fonte=PONTOS_int[k,3]; # Coordenada y do ponto fonte
-        g,h,id=integra_elem(x_fonte,y_fonte,crv[i],dcrv[i],range,mid,qsi,w,k); # Integração sobre o elemento
-        H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;  #
-        G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
-        if fc[1,1] > 0
-          q[k,1] = calc_q(x_fonte,y_fonte,fc,FR,CW)
-          inc[k,1] = calc_inc(x_fonte,y_fonte,finc,FR,CW)
-        else
-          q[k,1], inc[k,1] =[0 0]
-        end
-      end
-    end
-  end
-  phi_pint=-(H*phi-G*qphi-q-inc); # Vetor que contem o potencial de velocidade nos
-  #      pontos internos
+function calc_phi_pint_nurbs(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
+n = length(crv);	# Number of curves
+ncollocpoints = size(collocCoord,1)
+n_pint=size(PONTOS_int,1)
 
-  # phi_pint = 0
-  return phi_pint
+H=complex(zeros(n_pint,ncollocpoints));
+G=complex(zeros(n_pint,ncollocpoints));
+npgauss=12;
+qsi,w=Gauss_Legendre(-1,1,npgauss)
+# qsi,w=gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
+for i = 1 : n #Laço sobre as curvas (elementos)
+    uk=unique(crv[i].knots)
+    ne=length(uk)-1;
+    for j=1:ne
+        range=uk[j+1]-uk[j]
+        mid=(uk[j+1]+uk[j])/2
+        for k=1:n_pint
+            xfonte=PONTOS_int[k,2]
+            yfonte=PONTOS_int[k,3]
+            # Integrais de dom�nio
+            g,h,id=integra_elem(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
+            #  element (I = int F n.r/r dGama)
+            H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;
+            G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
+        end
+    end
+end
+
+phi_pint = H*Tc - G*qc;
+return H,G,phi_pint
 end

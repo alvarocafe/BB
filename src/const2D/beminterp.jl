@@ -10,7 +10,7 @@ for i=1:n                       # Para cada Submatriz
 	b2 = Tree[block[i,2]]       # Nós J da malha que formam a submatriz (Pontos Campo) (Colunas)
 	# Submatriz = Produto cartesiano I x J
 	if block[i,3]==0                # Se esses blocos não são admissiveis
-		Aaca[i,1],B = cal_Aeb(b1,b2,arg)
+		Aaca[i,1],B = cal_Aeb_POT(b1,b2,arg)
 		# Salva na linha i da 1º coluna da matriz Aaca a matriz H e salva G na matriz B
 		b[b1] = b[b1] + B  # Contribuicao para o valor de G*q dos nos que formam b2
 	else                              # Caso contrario (Se blocos são admissiveis)
@@ -52,7 +52,7 @@ for i2 =1:ninterp # Laco sobre os pontos fontes
 			y1=NOS_GEO[noi,3]; # Coordenada y do ponto inicial do elemento
 			y2=NOS_GEO[nof,3];  # Coordenada y do ponto final do elemento
 
-			g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsi,w,k)
+			g,h = calcula_GeHnspot(x1,y1,x2,y2,xd,yd,qsi,w,k)
 			#g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsi,w,k)
 
 			if CDC[j,2]==0

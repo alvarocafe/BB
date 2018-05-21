@@ -1,3 +1,85 @@
+function dad_0(L=1)
+PONTOS = [1 0 0
+	  2 L 0
+	  3 L L
+	  4 0 L];
+SEGMENTOS = [1 1 2 0
+	     2 2 3 0
+	     3 3 4 0
+	     4 4 1 0];
+ne = 4;
+MALHA = [1 ne
+	 2 ne
+	 3 ne
+	 4 ne];
+CCSeg = [1 1 0
+	 2 0 1
+	 3 1 0
+	 4 0 0];
+crv = format_dad_iso(PONTOS,SEGMENTOS,MALHA)
+dcrv=map(x->nrbderiv(x),crv)
+n = length(crv);	# N�mero total de elementos
+  p=1;#refinamento p
+  for i=1:n
+      degree=crv[i].order-1
+      #	println(crv[i].knots)
+      #	println(crv[i].coefs)
+      coefs,knots = bspdegelev(degree,crv[i].coefs,crv[i].knots,p)
+      #	println(knots)
+      #	println(coefs)
+      crv[i] = nrbmak(coefs,knots)
+  end
+  h=10;#refinamento h
+  for i=1:n
+    novosnos=linspace(0,1,h+2)
+    degree=crv[i].order-1
+    coefs,knots = bspkntins(degree,crv[i].coefs,crv[i].knots,novosnos[2:end-1])
+    crv[i] = nrbmak(coefs,knots)
+  end
+z=0;
+for k=1:n
+	for i=1:crv[k].number
+		z=z+1
+	end
+end
+numcurva=zeros(Integer,z)
+collocPts=zeros(z)
+CDC=zeros(z,3)
+collocCoord=zeros(z,3)
+z=0;
+nnos=zeros(Integer,n)
+for k=1:n
+	p=crv[k].order-1;
+	nnos[k]=crv[k].number;
+	valorCDC=CCSeg[k,3];
+	tipoCDC=CCSeg[k,2];
+	for i=1:crv[k].number
+		z=z+1;
+		numcurva[z]=k;
+		collocPts[z]=sum(crv[k].knots[(i+1):(i+p)])/p;
+		if(i==2)
+			collocPts[z-1]=(collocPts[z]+collocPts[z-1])/2;
+		end
+		if(i==nnos[k])
+			collocPts[z]=(collocPts[z]+collocPts[z-1])/2;
+		end
+
+		CDC[z,:] = [z,tipoCDC,valorCDC];
+	end
+end
+nnos2=cumsum([0 nnos'],2);
+
+E=zeros(length(collocPts),length(collocPts));
+for i=1:length(collocPts)
+	collocCoord[i,:]=nrbeval(crv[numcurva[i]], collocPts[i]);
+	B, id = nrbbasisfun(crv[numcurva[i]],collocPts[i])
+	E[i,id+nnos2[numcurva[i]]]=B
+end
+# plot(collocCoord[:,1],collocCoord[:,2])
+# legend('Curva resultante','Polígono de controle','Pontos de controle','Pontos fonte')
+return collocCoord,nnos2,crv,dcrv,CDC,E
+end
+
 function dad_1(ne,FR)
 #Entrada de dados para a comparação com o BEM Isogeometrico
 raio = 0.5
@@ -44,7 +126,7 @@ return PONTOS, SEGMENTOS, MALHA, CCSeg, PONTOS_int, FR, CW,fc,finc,phi_analytica
 end
 
 
-function dad_iso(ne)
+function dad_iso(ne=1)
   #Essa é a função para produzir um elemento NURBS
   #  Segmentos que definem a geometria
   #   SEGMENTOS=[No do segmento, No do ponto inicial, No do ponto final
@@ -60,7 +142,7 @@ function dad_iso(ne)
   SEGMENTOS = [1 1 2 0.5];  #Raio = 0.5, elemento curvo circular
   # Matriz para definição da malha
   # MALHA =[numero do segmento, numero de elementos no segmento]
-  ne=1;
+#  ne=1;
   MALHA = [1 ne];
   CCSeg=[1 1 1];
   # Gerando a curva NURBS
@@ -127,4 +209,3 @@ function dad_iso(ne)
     # legend('Curva resultante','Polígono de controle','Pontos de controle','Pontos fonte')
   return collocCoord,nnos2,crv,dcrv,CDC,E
 end
-

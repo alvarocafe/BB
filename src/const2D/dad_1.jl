@@ -1,3 +1,23 @@
+function dad_0(L=1,ne=40)
+PONTOS = [1 0 0
+	  2 L 0
+	  3 L L
+	  4 0 L];
+SEGMENTOS = [1 1 2 0
+	     2 2 3 0
+	     3 3 4 0
+	     4 4 1 0];
+MALHA = [1 ne
+	 2 ne
+	 3 ne
+	 4 ne];
+CCSeg = [1 1 0
+	 2 0 1
+	 3 1 0
+	 4 0 0];
+return PONTOS, SEGMENTOS, MALHA, CCSeg
+end
+
 function dad_1(ne,n_pint,FR)
 #Entrada de dados para a comparação com o BEM Isogeometrico
 raio = 0.5

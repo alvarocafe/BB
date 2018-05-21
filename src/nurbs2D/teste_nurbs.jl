@@ -1,7 +1,7 @@
 # Boundary element method implementation for the Laplace equation using NURBS bidimensional elements
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
 # Necessary Modules: SpecialFunctions.jl
-using SpecialFunctions
+# using SpecialFunctions
 using PyPlot
 include("dep.jl") # Includes the dependencies
 include("dad_1.jl") # Includes the data file containing the geometry and physical boundary conditions of the problem
