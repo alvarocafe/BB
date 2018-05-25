@@ -1,7 +1,6 @@
 # Boundary element method implementation for the Helmholtz equation using quadratic bidimensional elements
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
 # Modules necessary: SpecialFunctions.jl, PyPlot.jl
-workspace()
 using SpecialFunctions
 using PyPlot
 include("dep.jl")	# Include the dependencies

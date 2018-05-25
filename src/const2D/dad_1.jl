@@ -87,25 +87,32 @@ MALHA = [1 ne
          2 ne];
 CCSeg=[1 1 1 0
        2 1 1 0];
-#FR = 1  #Frequencia analisada
-#CW = 343  #Velocidade de propagação da onda
-#Construindo os pontos internos
-d = raio+0.0001
-npassos=n_pint-1
-passo = (delta -d)/npassos
-npassostheta = 100
-passotheta = 2*pi/npassostheta
-PONTOS_int = zeros(n_pint*npassostheta,3)
-phi_analytical = complex(zeros(size(PONTOS_int,1),1));
-iter=1
-for theta = 0:passotheta:2*pi-passotheta
-	for i = 0:npassos
-		R = d + i*passo
-		PONTOS_int[iter,:]=[iter R*cos(theta) R*sin(theta)]
-		bh1 = SpecialFunctions.besselh(1,2,(FR/CW)*raio);
-		bh0 = SpecialFunctions.besselh(0,2,(FR/CW)*sqrt(PONTOS_int[iter,2]^2+PONTOS_int[iter,3]^2));
-		phi_analytical[iter,1] = (CW/FR).*(bh0./bh1);		#solucao anali­tica pela separacao de variaveis em coordenadas cilindricas da equacao de Helmholtz
-		iter+=1
+
+# Create the domain points
+passo = delta/(n_pint - 1);
+iter = 1;
+for i = 2:n_pint
+	for j = 2:n_pint
+		if ((i*passo)^2 + (j*passo)^2) > 30*raio
+			iter +=4
+		end
+	end
+end
+PONTOS_int = zeros(iter-1,3)
+phi_analytical = complex(zeros(iter-1,1))
+iter = 1;
+for i = 2:n_pint
+	for j = 2:n_pint
+		if ((i*passo)^2 + (j*passo)^2) > 30*raio
+			PONTOS_int[iter,:] = [iter  (i-1)*passo (j-1)*passo]
+			  bh1 = SpecialFunctions.besselh(1,2,(FR/CW)*raio);
+			  bh0 = SpecialFunctions.besselh(0,2,(FR/CW)*sqrt((PONTOS_int[iter,3])^2 + (PONTOS_int[iter,2]^2)));
+			  phi_analytical[iter:iter+3,1] = (CW/FR).*(bh0./bh1);		#solucao anali­tica pela separacao de variaveis em coordenadas cilindricas da equacao de Helmholtz
+			PONTOS_int[iter+1,:] = [iter+1  (i-1)*passo -(j-1)*passo]
+			PONTOS_int[iter+2,:] = [iter+2  -(i-1)*passo -(j-1)*passo]
+			PONTOS_int[iter+3,:] = [iter+3  -(i-1)*passo (j-1)*passo]
+			iter +=4
+		end
 	end
 end
 #Incluimos as fontes concentradas e as ondas incidentes
@@ -115,13 +122,13 @@ return PONTOS, SEGMENTOS, MALHA, CCSeg, PONTOS_int,fc,finc,phi_analytical
 end
 
 
-function dad_lev_res(ne = 2)
+function dad_lev_res(L=10,ne = 2,n_pint=100,delta=100)
 # This test case consists of a rectangular reflector and an acoustic source so that acoustic levitation is possible on the modal nodes between the source and the resonator.
 
 PONTOS  = [1 0 0 ;
-  	   2 10 0 ;
-	   3 10 1 ;
-	   4 0 1 ];
+  	   2 L 0 ;
+	   3 L L/10 ;
+	   4 0 L/10 ];
 #  Segmentos que definem a geometria
 #   SEGMENTOS=[No do segmento, No do ponto inicial, No do ponto final
 #                                                   Raio, tipo do elemento]
@@ -159,15 +166,33 @@ k = 1/cp		# Wavenumber
 	# finc = [A x y z]; where A is the amplitude of the plane wave and x,y,z are the direction d = (x,y,z) of propagation such that |d| = 1 
 fc = [0 3*0.5/2 -0.5/2 1];
 d = 5;
-finc = [1 5 -d 0];
+finc = [0 5 -d 0];
 phi_analytical = []
 
 # External points creation
-
-
-PONTOS_int = []
-
-return PONTOS, SEGMENTOS, MALHA, CCSeg, PONTOS_int, FR, CW,fc,finc,phi_analytical
+passo = delta/(n_pint - 1);
+iter = 1;
+for i = 2:n_pint
+	for j = 2:n_pint
+		if ((i*passo)^2 + (j*passo)^2) > 1.5*100^2
+			iter +=4
+		end
+	end
+end
+PONTOS_int = zeros(iter-1,3)
+iter = 1;
+for i = 2:n_pint
+	for j = 2:n_pint
+		if ((i*passo)^2 + (j*passo)^2) > 1.5*100^2
+			PONTOS_int[iter,:] = [iter  (i-1)*passo (j-1)*passo]
+			PONTOS_int[iter+1,:] = [iter+1  (i-1)*passo -(j-1)*passo]
+			PONTOS_int[iter+2,:] = [iter+2  -(i-1)*passo -(j-1)*passo]
+			PONTOS_int[iter+3,:] = [iter+3  -(i-1)*passo (j-1)*passo]
+			iter +=4
+		end
+	end
+end
+return PONTOS, SEGMENTOS, MALHA, CCSeg, PONTOS_int, FR, CW,fc,finc,phi_analytical,k
 end
 
 function dad_rocket(ne = 2,delta=1000,n_pint=100)
