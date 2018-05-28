@@ -5,8 +5,22 @@ using SpecialFunctions
 using PyPlot
 include("dep.jl")	# Include the dependencies
 #Input dos dados
-include("dad.jl")	# Data entry functions
-NOS, NOS, ELEM, CDC, PONTOS_int, phi_analytical, CW, FR, fc, finc = dad_quad_cyl(10)
+#include("dad.jl")	# Data entry functions
+#NOS, NOS, ELEM, CDC, PONTOS_int, phi_analytical, CW, FR, fc, finc = dad_quad_cyl(10)
+NOS =[  1       1       0
+        2       0.5     -0.5
+        3       0       0
+        4       0.5     0.5];
+ELEM =[1     1     2     3
+     2     3     4     1];
+ 
+ k=1;
+ CDC=[1 0 1
+     2 1 0];
+PONTOS_INT=[1 0.5 0];
+fc = 0;
+CW = 1;
+FR = 1;
 #Geração dos pontos e pesos de Gauss
 npg=6*6;
 qsi,w = Gauss_Legendre(-1,1.00001,npg)

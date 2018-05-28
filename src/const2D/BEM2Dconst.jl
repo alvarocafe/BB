@@ -26,7 +26,7 @@ println("Building A and b matrices using the traditional colocation BEM for cons
 #println("Tamanho de b = $(size(b))")
 x = A\b # Solves the linear system
 phi,qphi = monta_phieq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
-println("Evaluating values at internal points.")
+println("Evaluating at domain points.")
 @time phi_pint = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,finc,qsi,w,k) # Evaluates the value at internal (or external) points
 println("Calculating the error.")
 @time erro = abs((sum((phi_pint - phi_analytical).^2))/sum(phi_analytical))   # Calcula a norma em comparação com a solução analítica.
@@ -39,7 +39,7 @@ println("Building A and b matrices using H-Matrix with interpolation.")
 @time Ai,bi = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
 xi = gmres(vet->matvec(Ai,vet,block,Tree),bi,5,tol=1e-5,maxIter=1000,out=0) #GMRES nas matrizes do ACA
 phii,qphii = monta_phieq(CDC,xi[1]) # Applies the boundary conditions to return the velocity potential and flux
-println("Evaluating values at internal points.")
+println("Evaluating at domain points.")
 @time phi_pinti = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phii,qphii,fc,finc,qsi,w,k) # Evaluates the value at internal (or external) points
 println("Calculating the error.")
 @time erro = abs((sum((phi_pinti - phi_analytical).^2))/sum(phi_analytical))   # Calcula a norma em comparação com a solução analítica.
