@@ -1,9 +1,7 @@
 # Boundary element method implementation for the Helmholtz equation using constant bidimensional elements
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
-
+include("../src/const2D/dep.jl") # Includes the dependencies
 using SpecialFunctions
-using KrylovMethods
-include("dep.jl") # Includes the dependencies
 
 PONTOS = [1 0 0
 	  2 6 0
@@ -38,7 +36,7 @@ phi = complex(zeros(12,nfreq));
 G = 0
 for i = 1:1:nfreq
 FR=FR1 + i*(FR2-FR1)/nfreq
-println(FR,"i = ",i)
+println("Frequency =$(FR) rad/s.")
 k = FR/CW;
 # Gaussian quadrature - generation of points and weights [-1,1]
 npg=6; # Number of integration points
