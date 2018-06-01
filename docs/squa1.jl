@@ -34,10 +34,11 @@ FR2 = 28;
 nfreq = 10;
 phi = complex(zeros(12,nfreq));
 G = 0
-for i = 1:1:nfreq
-FR=FR1 + i*(FR2-FR1)/nfreq
-println("Frequency =$(FR) rad/s.")
-k = FR/CW;
+FR = [10 20 40]
+for i = 1:length(FR)
+#FR=FR1 + i*(FR2-FR1)/nfreq
+println("Frequency =$(FR[i]) rad/s.")
+k = FR[i]/CW;
 # Gaussian quadrature - generation of points and weights [-1,1]
 npg=6; # Number of integration points
 qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
@@ -45,7 +46,8 @@ nnos = size(NOS,1)  # Number of physical nodes, same as elements when using cons
 b1 = 1:nnos # Array containing all the indexes for nodes and elements which will be used for integration
 println("Building A and b matrices using the traditional colocation BEM for constant elements.")
 G,H = cal_GeH(NOS,NOS_GEO,ELEM,k,fc,qsi,w);
-@time A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])  # Builds A and B matrices using the collocation technique and applying the boundary conditions
+A,b = aplica_CDC(G,H,CDC);
+#@time A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])  # Builds A and B matrices using the collocation technique and applying the boundary conditions
 #println("Tamanho de b = $(size(b))")
 x = A\b # Solves the linear system
 phi[:,i],qphi = monta_phieq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux

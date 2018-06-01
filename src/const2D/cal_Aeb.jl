@@ -21,9 +21,9 @@ function cal_Aeb(b1,b2,arg)
       y1=NOS_GEO[noi,3]; # y coordinate of the first point of the element
       y2=NOS_GEO[nof,3];  # y coordinate of the second point of the element
       if i==j # The source point belongs to the element
-        #g,h = calcula_GeHs(x1,y1,x2,y2,1,k);	# Singular integration
-	g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsitelles,w.*Jtelles,k);	# Singular integration using the Telles transformation
-	h = 0.5;
+        g,h = calcula_GeHs(x1,y1,x2,y2,k);	# Singular integration
+	#g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsitelles,w.*Jtelles,k);	# Singular integration using the Telles transformation
+	#h = 0.5;
         # println("Diferença entre g e gtelles = ", abs(g-gtelles))
         # println("Diferença entre h e htelles = ", abs(h-htelles))
       else # O ponto fonte n�o pertence ao elemento

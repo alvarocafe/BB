@@ -18,7 +18,7 @@ function solve(info,PONTOS_int,BCFace,k)
 	npg=6; # Number of integration points
 	qsi,w = Gauss_Legendre(0,1,npg) # Generation of the points and weights
 	println("Building G and H matrices...")
-	@time G,H,phi_inc = cal_GeH(NOS,NOS_GEO,ELEM,k,qsi,w,0) #Compute the G and H matrices
+	@time G,H,phi_inc = cal_GeH_POT(NOS,NOS_GEO,ELEM,k,qsi,w,0) #Compute the G and H matrices
 	println("Applying boundary conditions to build A and b for the linear system...")
 	@time A,b = aplica_cdc(G,H,CDC) #Applies the boundary conditions and returns matrix A and vector b for the linear system
 	println("Solving the linear system...")
@@ -26,8 +26,8 @@ function solve(info,PONTOS_int,BCFace,k)
 	println("Separating acoustic pressure from flux...")
 	@time phi,q = monta_Teq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
 	println("Solving for domain points.")
-	@time phi_pint=calc_T_pint(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
-	@time dphidx,dphidy,dphidz=calc_q_pint(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
-return phi,q,phi_pint,dphidz,NOS	#TODO: evaluate potential flux at domain points
+	@time T_pint=calc_T_pint_POT(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
+	@time q_pint=calc_q_pint_POT(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
+return phi,q,T_pint,q_pint,NOS	#TODO: evaluate potential flux at domain points
 end
 end

@@ -18,7 +18,7 @@ CCSeg = [1 1 0
 return PONTOS, SEGMENTOS, MALHA, CCSeg
 end
 
-function dad_1(ne,n_pint,FR)
+function dad_1(ne,FR)
 #Entrada de dados para a comparação com o BEM Isogeometrico
 raio = 0.5
 PONTOS  = [1   -raio  0 # cilindro com centro em (0.5,0.5) de raio 0.5
@@ -45,7 +45,7 @@ CCSeg=[1 1 1 0
 #FR = 1  #Frequencia analisada
 CW = 343  #Velocidade de propagação da onda
 #Construindo os pontos internos
-#n_pint = 50
+n_pint = 50
 PONTOS_int = zeros(n_pint-1,3)
 dx = 0
 dy = 0.5

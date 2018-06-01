@@ -1,5 +1,5 @@
 function dad4()
-# Programa: dad2.m
+# Programa: dad4.jl
 #
 # 8 elementos por face
 # Todos os elementos tem a mesma orienta��o.

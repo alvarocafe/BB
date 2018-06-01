@@ -9,19 +9,20 @@ include("H_mat.jl") # H-Matrices support for building the cluster tree and block
 include("beminterp.jl") # H-Matrices using Lagrange polynomial interpolation
 include("ACA.jl") # H-Matrices using ACA
 
-i =  300# Number of elements for half circle
+i =  10# Number of elements for half circle
 FR = 20 # Frequency of the problem [Hz]
 CW = 343 # Wave propagation speed [m/s]
 k = FR/CW # Wave number
 PONTOS, SEGMENTOS, MALHA, CCSeg, PONTOS_int, FR, CW,fc,finc,phi_analytical = dad_1(i,FR) # Geometric and physical information of the problem
 println("$(i*4) Elements, simulating vibrating cylinder.")
 # Gaussian quadrature - generation of points and weights [-1,1]
-npg=6; # Number of integration points
+npg=8; # Number of integration points
 qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
 NOS_GEO,NOS,ELEM,CDC = format_dad(PONTOS,SEGMENTOS,MALHA,CCSeg) # Apply the discretization technique and builds the problems matrices for the geometrical points, physical nodes, elements' connectivity and boundary conditions
 nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
 b1 = 1:nnos # Array containing all the indexes for nodes and elements which will be used for integration
 println("Building A and b matrices using the traditional colocation BEM for constant elements.")
+G,H=cal_GeH(NOS,NOS_GEO,ELEM,k,fc,qsi,w);
 @time A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])  # Builds A and B matrices using the collocation technique and applying the boundary conditions
 #println("Tamanho de b = $(size(b))")
 x = A\b # Solves the linear system

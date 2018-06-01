@@ -20,13 +20,18 @@ Point($(p+2)) = {$(R[i]),0,$((i-1)*face),10.0};
 // Defining the circles
 Circle($(c)) = {$(p), $(p+1), $(p+2)};
 Circle($(c+1)) = {$(p+2), $(p+1), $(p)};
-		"		
+// Definig the surface area of the glotis
+Line Loop($(L)) = {-$(c+1), -$(c)};
+Plane Surface($(s)) = {$(L)};
+"		
 		write(f,teste)
 		# Update the iterators
 		p +=3
 		c +=4
+		L +=1
+		s +=1
 
-		for i = 2:size(R,1)
+		for i = 2:size(R,2)
 			teste = "
 // Defining the points
 Point($(p)) = {-$(R[i]), 0, $((i-1)*face), 10.0};
@@ -57,6 +62,15 @@ Ruled Surface($(s+1)) = {$(L+2)};
 
 			write(f,teste)
 		end
+	teste="
+// Definig the surface area of the glotis
+Line Loop($(L)) = {$(c-3), $(c-4)};
+Plane Surface($(s)) = {$(L)};
+"
+		# Update the iterators
+		L +=1
+		s +=1
+	write(f,teste);
 	end
 	println("Generating mesh...")
 	@time run(`gmsh -2 $filegeo`)

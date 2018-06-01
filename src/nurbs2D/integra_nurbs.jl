@@ -19,7 +19,13 @@ T=E*Tc;
 q=E*qc;
 
 # Domain points
-PONTOS_int = [1 0.5 0.5]
+n_pint = 50;
+PONTOS_int = zeros(n_pint,3);
+delta = 0.01;
+passo = (1-2*delta)/(n_pint-1);
+for i = 1:n_pint
+	PONTOS_int[i,:] = [i (i-1)*passo+delta 0]
+end
 fc = 0; finc = 0;
 Hp,Gp,phi_pint = calc_phi_pint_nurbs(PONTOS_int,collocCoord,nnos,crv,dcrv,k,Tc,qc);
 

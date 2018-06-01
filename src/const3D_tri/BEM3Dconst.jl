@@ -30,9 +30,10 @@ NOS = mostra_geoTRI(NOS_GEO,ELEM) #Generate the physical nodes for constant elem
 nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
 CDC = gera_CDC(ELEM,CCFace); #Monta a matriz de condicoes de contorno
 n_pint = 100
+L = 1;
 PONTOS_int = zeros(n_pint,4)
 for i = 1:n_pint
-	PONTOS_int[i,:] = [i 0 0 (140/n_pint)*i]
+	PONTOS_int[i,:] = [i 0 0 (L/n_pint)*i]
 end
 println("Building G and H matrices...")
 @time G,H,phi_inc = cal_GeH_POT(NOS,NOS_GEO,ELEM,k,qsi,w,0) #Compute the G and H matrices
@@ -43,4 +44,6 @@ println("Solving the linear system...")
 println("Separating acoustic pressure from flux...")
 @time phi,q = monta_Teq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
 println("Solving for domain points.")
-T_pint=calc_T_pint(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
+T_pint=calc_T_pint_POT(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,fc);
+q_pint=calc_q_pint_POT(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,fc);
+

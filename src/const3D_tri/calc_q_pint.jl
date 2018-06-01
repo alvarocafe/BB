@@ -1,19 +1,23 @@
 function calc_q_pint(PONTOS_int,NOS_GEO,ELEM,T,q,k,qsi,w,inc)
-# Calcula a temperatura nos pontos internos
-n_pint=length(PONTOS_int[:,1]); # Numero de pontos internos
-n_elem=length(T); # Numero de elementos
-G_int = complex(zeros(n_pint,n_elem))
-H_int = complex(zeros(n_pint,n_elem))
+# Evaluates the flux of the velocity potential at domain points
+n_pint=length(PONTOS_int[:,1]); # Number of domain points
+n_elem=length(T); # Number of elements
+Gx_int = complex(zeros(n_pint,n_elem))
+Gy_int = complex(zeros(n_pint,n_elem))
+Gz_int = complex(zeros(n_pint,n_elem))
+Hx_int = complex(zeros(n_pint,n_elem))
+Hy_int = complex(zeros(n_pint,n_elem))
+Hz_int = complex(zeros(n_pint,n_elem))
 phi_inc = complex(zeros(n_pint,1))
 g = complex(zeros(n_pint,1))
-for i=1:n_pint # La�o sobre os pontos internos
-    x_fonte=PONTOS_int[i,2]; # Coordenada x do ponto fonte
-    y_fonte=PONTOS_int[i,3]; # Coordenada y do ponto fonte
-    z_fonte=PONTOS_int[i,4]; # Coordenada z do ponto fonte
-    for j=1:n_elem  #La�o sobre os elementos
-        no1=ELEM[j,2]; # Primeiro n� geom�trico do elemento
-        no2=ELEM[j,3]; # Segundo n� geom�trico do elemento
-        no3=ELEM[j,4]; # Terceiro n� geom�trico do elemento
+for i=1:n_pint # Loop over the integration points
+    x_fonte=PONTOS_int[i,2]; # x coordinate of the source point
+    y_fonte=PONTOS_int[i,3]; # y coordinate of the source point
+    z_fonte=PONTOS_int[i,4]; # z coordinate of the source point
+    for j=1:n_elem  # Loop over the elements
+        no1=ELEM[j,2]; # First node of the element
+        no2=ELEM[j,3]; # Second node of the element
+        no3=ELEM[j,4]; # Third node of the element
 
         x1=NOS_GEO[no1,2]; # Coordenada x do n� geom�trico 1
         y1=NOS_GEO[no1,3]; # Coordenada y do n� geom�trico 1
@@ -28,8 +32,7 @@ for i=1:n_pint # La�o sobre os pontos internos
         z3=NOS_GEO[no3,4]; # Coordenada z do n� geom�trico 3
 
         n = calc_vetnormal(x1,y1,z1,x2,y2,z2,x3,y3,z3); # vetor unit�rio
-        G_int[i,j],H_int[i,j]=calcula_SGeSHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x_fonte,y_fonte,z_fonte,n,qsi,w,k); # Chama a functio para calculo de H e G
-        # quando o ponto fonte nao pertence ao elemento
+        Gx_int[i,j],Gy_int[i,j],Gz_int[i,j],Hx_int[i,j],Hy_int[i,j],Hz_int[i,j]=calcula_SGeSHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,x_fonte,y_fonte,z_fonte,n,qsi,w,k); # Evaluates the kernel for the hypersingular boundary equation
     end
 #    if(inc[1,1]!=0)
 #    	#g[i,1]=calc_q(x_fonte,y_fonte,fc,FR,CW,GE);
@@ -42,9 +45,12 @@ for i=1:n_pint # La�o sobre os pontos internos
 #				phi_inc[i,1] = calc_inc(x_fonte,y_fonte,z_fonte,FR,CW,inc[1,:]);
 #		end
 end
-T_pint = - (H_int*T - G_int*q - phi_inc)
-#T_pint=-(H_int*T'-G_int*q'-g'); # Vetor que contem a temperatura nos
-#      pontos internos
-return T_pint
+# Velocity potential flux at domain points
+dphidx=Hx_int*T-Gx_int*q;
+dphidy=Hy_int*T-Gy_int*q; 
+dphidz=Hz_int*T-Gz_int*q; 
+#T_pint = - (H_int*T - G_int*q - phi_inc)
+#T_pint=-(H_int*T'-G_int*q'-g'); 
+return dphidx,dphidy,dphidz
 end
 
