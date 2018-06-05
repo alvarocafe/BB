@@ -10,7 +10,7 @@ k=1	# Heat conductivity
 collocCoord,nnos,crv,dcrv,CDC,E = dad_0()# Geometric and physical information of the problem
 
 #Building the problems matrices
-H, G = calcula_iso(collocCoord,nnos,crv,dcrv,E,k) # Influence matrices
+H, G = calcula_iso_POT(collocCoord,nnos,crv,dcrv,E,k) # Influence matrices
 A,b= aplica_CDCiso(G,H,CDC,E);	# Applying boundary conditions
 x=A\b; # Evaluating unknown values
 Tc,qc=monta_Teqiso(CDC,x); # Separating temperature from flux
@@ -21,7 +21,7 @@ q=E*qc;
 # Domain points
 PONTOS_int = [1 0.5 0.5]
 fc = 0; finc = 0;
-Hp,Gp,phi_pint = calc_phi_pint_nurbs(PONTOS_int,collocCoord,nnos,crv,dcrv,k,Tc,qc);
+Hp,Gp,phi_pint = calc_phi_pint_nurbs_POT(PONTOS_int,collocCoord,nnos,crv,dcrv,k,Tc,qc);
 
 # Graphics
 close("all")
