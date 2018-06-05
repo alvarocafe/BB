@@ -140,7 +140,7 @@ function dad_iso(raio)
             2 1 0]
   # SEGMENTOS = [1 1 2 0];  #Raio igual a zero, elemento retilíneo
   SEGMENTOS = [1 1 2 raio
-	       2 2 1 raio];  #Raio = 0.5, elemento curvo circular
+	       2 2 1 -raio];  #Raio = 0.5, elemento curvo circular
   # Matriz para definição da malha
   # MALHA =[numero do segmento, numero de elementos no segmento]
   ne=1;

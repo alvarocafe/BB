@@ -6,7 +6,7 @@ using PyPlot
 include("dep.jl") # Includes the dependencies
 include("dad_1.jl") # Includes the data file containing the geometry and physical boundary conditions of the problem
 # Characteristics of the problem: Square domain with imposed temperature in two opposite faces and imposed null temperature flux at the other two faces. 
-k=0.1	# wavenumber
+k=0	# wavenumber
 collocCoord,nnos,crv,dcrv,CDC,E = dad_helm()# Geometric and physical information of the problem
 
 #Building the problems matrices
