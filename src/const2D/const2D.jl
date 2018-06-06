@@ -25,7 +25,7 @@ function solve(info,PONTOS_int,fc,BCFace,k)
 	@time A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])  # Builds A and B matrices using the collocation technique and applying the boundary conditions
 	x = A\b # Solves the linear system
 	phi,qphi = monta_phieq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
-	println("Evaluating values at domain points.")
+	println("Evaluating at domain points.")
 	@time phi_pint = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k) # Evaluates the value at domain points
 return phi, qphi, phi_pint, phi_pint
 end
