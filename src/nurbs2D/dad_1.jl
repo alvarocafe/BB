@@ -213,26 +213,17 @@ function dad_iso(raio)
   return collocCoord,nnos2,crv,dcrv,CDC,E
 end
 
-function dad_helm(L=6)
-PONTOS = [1 0 0
-	  2 L 0
-	  3 L L
-	  4 0 L];
-SEGMENTOS = [1 1 2 0
-	     2 2 3 0
-	     3 3 4 0
-	     4 4 1 0];
-ne = 4;
-MALHA = [1 ne
-	 2 ne
-	 3 ne
-	 4 ne];
-CCSeg = [1 0 0
-	 2 1 0
-	 3 1 100
-	 4 0 0];
+function dad_helm(L=100,d=10)
+# Acoustic duct problem
+
+points = [1 0 0; 2 L 0; 3 L d; 4 0 d];
+segments = [1 1 2 0; 2 2 3 0; 3 3 4 0; 4 4 1 0];
+ne = 10; # Number of element per segment
+MESH = [1 ne; 2 ne; 3 ne; 4 ne];
+BCFace = [1 1 0; 2 1 0; 3 1 0; 4 0 -1]; # Face 4 will act like a piston
+
   # Gerando a curva NURBS
-  crv = format_dad_iso(PONTOS,SEGMENTOS,MALHA)
+  crv = format_dad_iso(points,segments,MESH)
   dcrv=map(x->nrbderiv(x),crv)
   n = length(crv);	# N�mero total de elementos
   p=1;#refinamento p
@@ -267,8 +258,8 @@ CCSeg = [1 0 0
   for k=1:n
       p=crv[k].order-1;
       nnos[k]=crv[k].number;
-    valorCDC=CCSeg[k,3];
-    tipoCDC=CCSeg[k,2];
+    valorCDC=BCFace[k,3];
+    tipoCDC=BCFace[k,2];
     for i=1:crv[k].number
         z=z+1;
         numcurva[z]=k;
