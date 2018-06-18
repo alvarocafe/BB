@@ -73,7 +73,8 @@ function cal_GeHpot(NOS,NOS_GEO,ELEM,k,fc,qsi,w)
       y2=NOS_GEO[nof,3];  # y coordinate of the second point of the element
       if i==j # The source point belongs to the element
         #g,h = calcula_GeHs(x1,y1,x2,y2,k); 	# Singular integration
-        g, h = calcula_GeHnspot(x1,y1,x2,y2,xd,yd,CW,qsitelles,w.*Jtelles,FR);	# Singular integration using the Telles transformation
+	g, h = calcula_GeHnspot(x1,y1,x2,y2,xd,yd,qsitelles,w.*Jtelles,k)
+# Singular integration using the Telles transformation
 	h = -0.5
         #htelles = htelles + 0.5	# Adding the jump term
         #println("Diferença entre g e gtelles = ", abs(g-gtelles))

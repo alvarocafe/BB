@@ -176,7 +176,7 @@ for k = 1:nc         #  Loop through edges
    end
 end
 #  Re-index to undo the sorting
-cn[i] = cn|on;
+cn[i] = cn.|on;
 on[i] = on;
 
 return cn;

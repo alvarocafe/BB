@@ -23,7 +23,7 @@ function format_dad(PONTOS,SEGMENTOS,MALHA,CCSeg)
     tamanho = tamanho + MALHA[i,2]
   end
   NOS_GEO = zeros(tamanho,3)
-  ELEM = zeros(tamanho,3)
+  ELEM = zeros(Int,tamanho,3)
   NOS = zeros(tamanho,3)
   normal = zeros(tamanho,tamanho)
   cont_nos = 0;
@@ -207,5 +207,5 @@ function format_dad(PONTOS,SEGMENTOS,MALHA,CCSeg)
     NOS[i,2]=xd;
     NOS[i,3]=yd;
   end
-  return NOS_GEO,NOS,ELEM,CDC
+  return NOS_GEO,NOS,ELEM,CDC,normal
 end

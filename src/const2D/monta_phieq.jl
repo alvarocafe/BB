@@ -2,8 +2,8 @@ function monta_phieq(CDC,x)
 # Apply the boundary conditions on system A x = b, once the vector x has been determined, to separate the values of the velocity potential (phi) and flux (q), described as H phi = G q
   ncdc = length(CDC[:,1]);	# Number of boundary conditions
   nnos = length(x)	# Number of nodes
-  phi = complex(zeros(nnos,1))	# Allocates the vector for the velocity potential
-  q = complex(zeros(nnos,1))	# Allocates the vector for the flux
+  phi = complex(zeros(nnos))	# Allocates the vector for the velocity potential
+  q = complex(zeros(nnos))	# Allocates the vector for the flux
   for i=1:ncdc # Loop over the boundary conditions
     tipoCDC=CDC[i,2]; # Type of the boundary condition (Neumann or Dirichlet)
     valorCDC=CDC[i,3]; # Value of the boundary condition

@@ -35,7 +35,7 @@ function calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,finc,qsi,w,k)
   return phi_pint
 end
 
-function calc_phi_pint_POT(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,finc,qsi,w,k)
+function calc_phi_pintpot(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,qsi,w,k)
 # Evaluates the velocity potential at internal (or external) points
   n_pint=length(PONTOS_int[:,1]); # Number of internal points
   n_elem=length(phi); # Number of elements
@@ -61,9 +61,8 @@ function calc_phi_pint_POT(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,finc,qsi,w,k)
     end
         if fc[1,1] > 0 	# If the flag is greater than zero, there are acoustic sources and/or incident plane waves
           q[i,1] = calc_q(x_fonte,y_fonte,fc,k) # Evaluates the influence from acoustic concentrated sources
-          inc[i,1] = calc_inc(x_fonte,y_fonte,finc,k) # Evaluates the influence from acoustic incident plane waves
         else
-          q[i,1], inc[i,1] =[0 0]	# There is no influence
+          q[i,1] =0	# There is no influence
         end
   end
 #  phi_pint=-(H_int*phi-G_int*qphi-q-inc); # Evaluates the velocity potential for the internal points

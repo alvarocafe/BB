@@ -1,11 +1,11 @@
-function mostra_problema(ELEM,NOS_GEO,NOS,tipoCDC,valorCDC,normal)
+function mostra_problema(ELEM,NOS_GEO,NOS,tipoCDC,valorCDC,normal,T,q)
 nelem=size(ELEM,1);
 figure();
 ind=collect(1:nelem);
 indKnownq=ind[tipoCDC];
-indKnownT=ind[!tipoCDC];
-maxT=maximum(abs(T[indKnownT]))
-maxq=maximum(abs(q[indKnownq]))
+indKnownT=ind[.!tipoCDC];
+maxT=maximum(abs.(T[indKnownT]))
+maxq=maximum(abs.(q[indKnownq]))
 xmax=maximum(NOS_GEO[:,1])
 ymax=maximum(NOS_GEO[:,2])
 xmin=minimum(NOS_GEO[:,1])
@@ -60,7 +60,6 @@ ELEM2=[ELEM ELEM[:,2]];
 ncont=50;
 # plt.triplot(XY[:,1], XY[:,2], t-1, color=(0.0,0.,0.),linewidth=0.4)
 plt.triplot(NOS_GEO[:,1], NOS_GEO[:,2], ELEM2-1, color=(0.0,0.,0.),linewidth=0.4)
-
 plt.tricontourf(XY[:,1], XY[:,2], t-1, cor, ncont)
 plt.colorbar()
 
