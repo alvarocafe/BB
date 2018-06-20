@@ -70,3 +70,64 @@ function calc_phi_pintpot(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,qsi,w,k)
  
   return phi_pint
 end
+
+function domain_field(xfield,y,T,q,node,dnorm,kmat)
+# -------------------------------------------------------------------------------
+#  Fucntion used to evaluate the temperature/heat flux using the direct
+#     evaluation of the integral representation
+#
+# -------------------------------------------------------------------------------
+if(isempty(xfield))
+  f=zeros(1)
+  fx=zeros(1)
+  fy=zeros(1)
+else
+    pi2 = π*2
+    nfield=size(xfield,2)
+    f=zeros(nfield)
+    fx=zeros(nfield)
+    fy=zeros(nfield)
+    n=size(y,2)
+    al= sqrt.((y[1,vec(node[2,:])]-y[1,vec(node[1,:])]).^2+ (y[2,vec(node[2,:])]-y[2,vec(node[1,:])]).^2)
+
+    for j=1:n
+        # Comprimento do elemento
+        # Dist�ncias entre o ponto interno e os extremos dos elementos
+        x11 = y[1,node[1,j]] - xfield[1,:]
+        x21 = y[2,node[1,j]] - xfield[2,:]
+        x12 = y[1,node[2,j]] - xfield[1,:]
+        x22 = y[2,node[2,j]] - xfield[2,:]
+        r1 =  sqrt.(x11.^2 + x21.^2); # Dist�ncia para o in�cio do elemento
+        r2 =  sqrt.(x12.^2 + x22.^2); # Dist�ncia para o final do elemento
+
+        # Proje��o do vetor dist�ncia no vetor normal ao elemento
+        d  =  x11.*dnorm[1,j] + x21.*dnorm[2,j]; # Figura A.1, p�gina 178
+        t1 = -x11.*dnorm[2,j] + x21.*dnorm[1,j]; # Dist�ncia T1 da figura A.1
+        t2 = -x12.*dnorm[2,j] + x22.*dnorm[1,j]; # Dist�ncia T2 da figura A.1
+        ds = abs.(d)
+        dtheta = atan2.(ds.*al[j],ds.^2+t1.*t2)
+
+        # Equa��o (A.5) do livro do Liu: elementos da matriz G
+        g = -(-dtheta.*ds + al[j] + t1.*real(log.(r1))-t2.*real(log.(r2)))/(pi2*kmat)
+        # Equa��o (A.7) com nx=1, ny=0, tx=0, ty=1.
+        kkx = (dtheta.*dnorm[1,j] - real(log.(r2./r1)).*dnorm[2,j])/(pi2*kmat)
+        # Equa��o(A.7) do livro do Liu com nx=0, ny=1, tx=-1, ty=0.
+        kky = (dtheta.*dnorm[2,j] + real(log.(r2./r1)).*dnorm[1,j])/(pi2*kmat)
+        hhx = -(-(t2./r2.^2-t1./r1.^2).*dnorm[1,j] - d.*(1./r2.^2-1./r1.^2).*dnorm[2,j])/pi2; # Equa��o (A.8) com nx=1
+        # ny=0; tx=0; ty=1.
+        hhy = -(-(t2./r2.^2-t1./r1.^2).*dnorm[2,j] + d.*(1./r2.^2-1./r1.^2).*dnorm[1,j])/pi2; # Equa��o (A.8) com nx=0
+        #     if(d<=0)
+        #         dtheta = -dtheta
+        #     end
+        dtheta = dtheta.*sign.(d)
+        h = -dtheta/pi2; # Equa��o (A.6): Elementos da matriz 
+        f = f + g*q[j] - h*T[j]; # Integral (2.12) com o termo de
+        # dom�nio igual a zero.
+        fx = fx + kkx*q[j] - hhx*T[j]; # Integral (2.12) com o termo de
+        # dom�nio igual a zero.
+        fy = fy + kky*q[j] - hhy*T[j]; # Integral (2.12) com o termo de
+        # dom�nio igual a zero.
+    end
+end
+return f,fx,fy
+end

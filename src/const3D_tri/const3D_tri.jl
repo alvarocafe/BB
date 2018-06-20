@@ -4,7 +4,14 @@
 # Contains the dependencies for the triangular element integration. The main function is const3D_tri.solve() which builds the influence matrices, applies the boundary conditions, solves the linear system and returns the value of the velocity potential and its flux at boundary and domain points.
 
 module const3D_tri
+using PyPlot
+using PyCall
+# @pyimport matplotlib.colors as col
+@pyimport matplotlib.cm as cm
+@pyimport mpl_toolkits.mplot3d as mp
+@pyimport mpl_toolkits.mplot3d.art3d as ar
 
+plt=PyPlot
 include("dep.jl") # Includes the dependencies
 function solve(info,PONTOS_int,BCFace,k)
 	NOS_GEO,ELEM,elemint,CDC = info
