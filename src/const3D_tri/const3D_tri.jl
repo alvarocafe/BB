@@ -22,7 +22,7 @@ function solve(info,PONTOS_int,BCFace,k)
 		CDC = gera_CDC(ELEM,BCFace); #Monta a matriz de condicoes de contorno
 	end
 	# Gaussian quadrature - generation of points and weights [-1,1]
-	npg=6; # Number of integration points
+	npg=12; # Number of integration points
 	qsi,w = Gauss_Legendre(0,1,npg) # Generation of the points and weights
 	println("Building G and H matrices...")
 	@time G,H,phi_inc = cal_GeH(NOS,NOS_GEO,ELEM,k,qsi,w,0) #Compute the G and H matrices
@@ -35,6 +35,6 @@ function solve(info,PONTOS_int,BCFace,k)
 	println("Solving for domain points.")
 	@time phi_pint=calc_T_pint(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
 	@time dphidx,dphidy,dphidz=calc_q_pint(PONTOS_int,NOS_GEO,ELEM,phi,q,k,qsi,w,0)
-return phi,q,phi_pint,dphidz,NOS	#TODO: evaluate potential flux at domain points
+return phi,q,phi_pint,dphidz
 end
 end

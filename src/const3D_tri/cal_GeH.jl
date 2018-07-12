@@ -4,7 +4,7 @@ function cal_GeH(NOS,NOS_GEO,ELEM,k,qsi,w,inc)
 nelem=size(ELEM,1); # N�mero de elementos (n�mero de linhas da
 #  matriz ELEM)
 qsitelles,Jtelles = telles(qsi,0); # Evaluates the Telles' points and Jacobian
-npg=4; # Number of integration points
+npg=12; # Number of integration points
 qsiquad,wquad = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
 nnos=nelem; # N�mero de n�s
 G=complex(zeros(nnos,nnos)); # Inicializa��o da matriz G
