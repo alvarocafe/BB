@@ -1,4 +1,4 @@
-function dad4()
+function dad4(LL=1)
 # Programa: dad4.jl
 #
 # 8 elementos por face
@@ -8,7 +8,7 @@ function dad4()
 #
 # Cubo de lado = LL
 
-LL = 1; # Comprimento do lado do cubo
+#LL = 1; # Comprimento do lado do cubo
 
 # Coordenada dos n�s que definem a geometria (n�s geom�tricos)
 # NOS = [n�mero do n�, coord. x, coord. y, coord. z];

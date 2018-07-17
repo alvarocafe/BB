@@ -42,7 +42,7 @@ for i=1:n_pint # La�o sobre os pontos internos
 				phi_inc[i,1] = calc_inc(x_fonte,y_fonte,z_fonte,FR,CW,inc[1,:]);
 		end
 end
-T_pint =  (H_int*T - G_int*q - phi_inc)
+T_pint =  (H_int*T - G_int*q)
 #T_pint=-(H_int*T'-G_int*q'-g'); # Vetor que contem a temperatura nos
 #      pontos internos
 return T_pint
