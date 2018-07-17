@@ -1,6 +1,6 @@
 # This is a function to generate plane triangular meshes for a geometry compatible with vocal tract geometries. 
 
-function vocal_tract(Ac,file,BEMfun)
+function vocal_tract(Ac,file,k)
 	A = Ac.*100 # From cm^2 to mm^2
 	R=sqrt.(A./pi)	# Determine the radius of a circle with the corresponding area.
 	filegeo = string(file,".geo")
@@ -73,8 +73,24 @@ Plane Surface($(s)) = {$(L)};
 	write(f,teste);
 	end
 	println("Generating mesh...")
-	@time run(`gmsh -2 $filegeo`)
-	@time mshinfo = lermsh(string(file,".msh"),3) #Read the mesh generated
-	@time BEMfun(mshinfo)
-return
+	run(`gmsh -2 $filegeo -v 0`)
+	filemsh = string(file,".msh")
+	mshinfo = const3D_tri.lermsh(filemsh,3) #Read the mesh generated
+	# Build the domain points
+	L = 140; # Length of the vocal tract
+	n_pint = 50; # Number of domain points
+	PONTOS_int = zeros(n_pint,4);
+	delta = 1; # distance from both ends 
+	passo = (L-2*delta)/(n_pint-1);
+	for i = 1:n_pint
+	    PONTOS_int[i,:] = [i 0 0 delta+(i-1)*passo];
+	end
+	# Set the boundary conditions for each face. Vowel /A/ model has 30 faces
+	BCFace = ones(30,3);
+	BCFace[:,3] = 0;
+	BCFace[1,:] = [1 1 1]; # Neumann (flux = 1) to the Glotis
+	BCFace[30,:] = [30 0 0]; # Dirichlet (pressure = 0) to the mouth
+	u,q,uint,qint = const3D_tri.solve(mshinfo,PONTOS_int,BCFace,k)
+	run(`rm $filegeo $filemsh`)
+return qint
 end
