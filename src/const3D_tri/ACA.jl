@@ -224,11 +224,18 @@ end
 function matvec(hmat,b,block,Tree)
     v = b*0
     for i =1:length(block[:,3])
-        if block[i,3]==2
+        if block[i,3]==1
             v[Tree[block[i,1]]]+=hmat[i,1]*(hmat[i,2]*b[Tree[block[i,2]]])
         else
             v[Tree[block[i,1]]]+=hmat[i,1]*b[Tree[block[i,2]]]
         end
+    end
+    return  v
+end
+function matveccheia(hmat,b,block,Tree)
+    v = b*0
+    for i =1:length(block[:,3])
+            v[Tree[block[i,1]]]+=hmat[i,1]*b[Tree[block[i,2]]]
     end
     return  v
 end
