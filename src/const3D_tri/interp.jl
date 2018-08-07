@@ -11,8 +11,8 @@ function interp(Tree,block,arg,ninterp=3,compressão=true,ϵ=1e-3)
             Aaca[i,1],B = cal_Aeb(b1,b2,arg)
 	    b[b1] = b[b1] + B  
 	else                            # The block is admissible for approximation
-#	    Aaca[i,1],Aaca[i,2],L,B=cal_Aeb_interp(b1,b2,arg,ninterp,compressão,ϵ)
-#	    b[b1] = b[b1] + L*(B*arg[7][b2,3])
+            #	    Aaca[i,1],Aaca[i,2],L,B=cal_Aeb_interp(b1,b2,arg,ninterp,compressão,ϵ)
+            #	    b[b1] = b[b1] + L*(B*arg[7][b2,3])
             Aaca[i,1],B = cal_Aeb(b1,b2,arg)
 	    b[b1] = b[b1] + B  
 	end	
@@ -21,7 +21,8 @@ function interp(Tree,block,arg,ninterp=3,compressão=true,ϵ=1e-3)
 end
 
 function cal_Aeb_interp(b1,b2,arg,ninterp=3,compressão=true,ϵ=1e-3)
-    NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k=arg
+    NOS, NOS_GEO, ELEM, k, CDC,qsi,w,qsi_tri,w_tri = arg;
+    #    NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k=arg
     nelem::Int64 = size(ELEM)[1]          # Numero de elementos de contorno
     G = complex(zeros(ninterp*ninterp,length(b2)))      # Dimensiona matriz G
     H = complex(zeros(ninterp*ninterp,length(b2)))      # Dimensiona matriz H
@@ -30,7 +31,7 @@ function cal_Aeb_interp(b1,b2,arg,ninterp=3,compressão=true,ϵ=1e-3)
     xmax=maximum(NOS[b1,2:4],1)
     xmin=minimum(NOS[b1,2:4],1)
     xs=criapontosinterp(ninterp)
-    n1,n2=calc_fforma(xs)
+    n1,n2,n3=calc_fformatri(xs)
     xks=n1*xmin+n2*xmax
     ci=0
 
