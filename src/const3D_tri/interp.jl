@@ -32,7 +32,7 @@ function cal_Aeb_interp(b1,b2,arg,ninterp=3,compressão=true,ϵ=1e-3)
     xmin=minimum(NOS[b1,2:4],1)
     xs=criapontosinterp(ninterp)
     n1,n2,n3=calc_fformatri(xs)
-    xks=n1*xmin+n2*xmax
+    xks=n1*xmin+n2*xmax + n3*(xmin+xmax)/2
     ci=0
 
     for i2 =1:ninterp # Laco sobre os pontos fontes
