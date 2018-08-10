@@ -16,7 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-# This is the main program of the BEM_base. It defines a function which will choose the right kernel for the element type of the mesh. 
+# This is the main program of the BEM_base. It defines a function which will
+# choose the right kernel for the element type of the mesh. 
 include("src/const3D_quad/const3D_quad.jl")
 include("src/const3D_tri/const3D_tri.jl")
 using const3D_tri
