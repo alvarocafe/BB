@@ -7,7 +7,7 @@
 ### Analytical solution
 ### BEM model
 ### return error
-
+module heat_tests
 
 ########## Test case 1 ##########
 # Let a square domain of length L [m] and heat
@@ -57,11 +57,13 @@ function test_modules(ϵ=10^(-6))
     using const2D
     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg) # Apply the discretization technique and builds the problems matrices for the geometrical points, physical nodes, elements' connectivity and boundary conditions
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
+##TODO: standardize heat or pot notation
     G,H=const2D.cal_GeHpot(NOS,NOS_GEO,ELEM,k,fc,qsi,w);
     A,b = const2D.aplica_CDC(G,H,CDC);
     x = A\b # Solves the linear system
     T,q = const2D.monta_phieq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
 
     
-    return const2D.error
+    return error
+end
 end

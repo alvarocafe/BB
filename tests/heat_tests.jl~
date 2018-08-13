@@ -1,6 +1,0 @@
-## Test cases for heat conducticity problems
-# This script tests the BEM models against
-#known problems for which analytical solutions
-#are readily obtained.
-
-########## Test case 1 ##########
