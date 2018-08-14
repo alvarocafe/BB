@@ -23,36 +23,36 @@ end
 function cal_Aeb_interp(b1,b2,arg,ninterp=3,compressão=true,ϵ=1e-3)
     NOS, NOS_GEO, ELEM, k, CDC,qsi,w,qsi_tri,w_tri = arg;
     #    NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k=arg
-    nelem::Int64 = size(ELEM)[1]          # Numero de elementos de contorno
-    G = complex(zeros(ninterp*ninterp,length(b2)))      # Dimensiona matriz G
-    H = complex(zeros(ninterp*ninterp,length(b2)))      # Dimensiona matriz H
-    q = complex(zeros(length(b1),1))               # Dimensiona matriz q
+    nelem::Int64 = size(ELEM)[1]          
+    G = complex(zeros(ninterp*ninterp,length(b2)))      
+    H = complex(zeros(ninterp*ninterp,length(b2)))      
+    q = complex(zeros(length(b1),1))               
 
     xmax=maximum(NOS[b1,2:4],1)
     xmin=minimum(NOS[b1,2:4],1)
     xs=criapontosinterp(ninterp)
     n1,n2,n3=calc_fformatri(xs)
+    #TODO: obtain the triangular interpolation
     xks=n1*xmin+n2*xmax + n3*(xmin+xmax)/2
     ci=0
 
-    for i2 =1:ninterp # Laco sobre os pontos fontes
-	for i1 =1:ninterp # Laco sobre os pontos fontes
+    for i2 =1:ninterp # Loop over source points
+	for i1 =1:ninterp # Loop over sourve points
 	    ci+=1
-	    xd=xks[i1,1]; # Coordenada x do ponto fonte
-	    yd=xks[i2,2]; # Coordenada y do ponto fonte
+	    xd=xks[i1,1]; # x coordinate of source point
+	    yd=xks[i2,2]; # y coordinate of source point
 	    cj=0
 
-	    for j in b2 # Laco sobre os elementos
+	    for j in b2 # Loop over elements
 		cj+=1
-		noi::Int64=ELEM[j,2]; # Ponto inicial do elemento
-		nof::Int64=ELEM[j,3]; # Ponto final do elemento
-		x1=NOS_GEO[noi,2]; # Coordenada x do ponto inicial do elemento
-		x2=NOS_GEO[nof,2]; # Coordenada x do ponto final do elemento
-		y1=NOS_GEO[noi,3]; # Coordenada y do ponto inicial do elemento
-		y2=NOS_GEO[nof,3];  # Coordenada y do ponto final do elemento
+		noi::Int64=ELEM[j,2]; # initial point of the element
+		nof::Int64=ELEM[j,3]; # final point of the element
+		x1=NOS_GEO[noi,2]; 
+		x2=NOS_GEO[nof,2]; 
+		y1=NOS_GEO[noi,3]; 
+		y2=NOS_GEO[nof,3];  
 
 		g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsi,w,k)
-		#g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsi,w,k)
 
 		if CDC[j,2]==0
 		    G[ci,cj] = -h

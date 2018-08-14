@@ -17,7 +17,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 # This is the main program of the BEM_base.
-# It defines a function which will  choose the right kernel for the element type of the mesh. 
 include("src/const3D_quad/const3D_quad.jl")
 include("src/const3D_tri/const3D_tri.jl")
 using const3D_tri
@@ -27,7 +26,7 @@ function BEM_base(file,PONTOS_int=[],BCFace = [],k=1, equation = "wave")
     println("Importing mesh...")
     @time mshinfo = const3D_tri.lermsh(file,3) #Read the mesh generated 
     NOS_GEO,ELEM,elemint,CDC = mshinfo
-
+    # Choose the right kernel for the element type of the mesh. 
     if equation == "wave"
 	if size(ELEM,2) == 5
 	    u,q,uint,qint = const3D_tri.solve(mshinfo,PONTOS_int,BCFace,k)

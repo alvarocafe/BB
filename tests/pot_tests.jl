@@ -1,7 +1,6 @@
 ## Test cases for heat conducticity problems
-# This script tests the BEM models against
-#known problems for which analytical solutions
-#are readily obtained.
+# This script tests the BEM models against known problems
+#for which analytical solutions are readily obtained.
 ########## Test case number ##########
 ### Problem description
 ### Analytical solution
@@ -11,14 +10,12 @@ module pot_tests
 
 ########## Test case 1 ##########
 # Let a square domain of length L [m] and heat
-#conductivity k [W/(m.K)], initially at
-#uniform constant temperature be subjected to
-#a temperature gradient on its boundaries on
-#opposites sides in the x direction.
+#conductivity k [W/(m.K)], initially at uniform constant
+#temperature be subjected to a temperature gradient on
+#its boundaries on opposites sides in the x direction.
 L = 1; # length of the square
 k = 1; # heat conductivity of the material
-#The points and segments which describe this
-#geometry are
+#The points and segments which describe this geometry are
 POINTS = [1 0 0
 	  2 L 0
 	  3 L L
@@ -33,8 +30,8 @@ MESH = [1 ne
 	2 ne
 	3 ne
 	4 ne];
-# BCSeg =[NE BT V] are the boundary conditions
-#at each segment. [NE BT V] are
+# BCSeg =[NE BT V] are the boundary conditions at each segment.
+#[NE BT V] are
 #NE: element number
 #BT: boundary condition type
 # BT = 0 if the temperature is known
