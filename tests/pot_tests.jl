@@ -1,19 +1,19 @@
 ## Test cases for heat conducticity problems
 # This script tests the BEM models against known problems
 #for which analytical solutions are readily obtained.
-########## Test case number ##########
+#################### Test case n ####################
 ### Problem description
 ### Analytical solution
 ### BEM model
 ### return error
 module pot_tests
 
-########## Test case 1 ##########
+#################### Test case 1 ####################
 # Let a square domain of length L [m] and heat
 #conductivity k [W/(m.K)], initially at uniform constant
 #temperature be subjected to a temperature gradient on
 #its boundaries on opposites sides in the x direction.
-L = 1; # length of the square
+L = 10; # length of the square
 k = 1; # heat conductivity of the material
 #The points and segments which describe this geometry are
 POINTS = [1 0 0
