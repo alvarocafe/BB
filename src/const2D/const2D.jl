@@ -1,6 +1,8 @@
-# Boundary element method implementation for the Helmholtz equation using constant bidimensional elements
+# Boundary element method implementation for the Helmholtz and Laplace equations using constant  bidimensional elements
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
-# Contains the dependencies for the quadrilateral element integration. The main function is const3D_quad.solve() which builds the influence matrices, applies the boundary conditions, solves the linear system and returns the value of the velocity potential and its flux at boundary and domain points.
+# Contains the dependencies for the linear discontinuous constant element integration.
+#The main function is const2D.solve() which builds the influence matrices, applies the boundary conditions,
+#solves the linear system and returns the value of the velocity potential and its flux at boundary and domain points.
 
 module const2D
 using SpecialFunctions
