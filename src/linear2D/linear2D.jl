@@ -1,9 +1,9 @@
 # Boundary element method implementation for the Helmholtz equation using constant bidimensional elements
+
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
-# Modules necessary: SpecialFunctions.jl
 
 module linear2D
-using SpecialFunctions
+# Modules necessary: SpecialFunctions.jlusing SpecialFunctions
 using PyPlot
 
 include("dep.jl") # Includes the dependencies
