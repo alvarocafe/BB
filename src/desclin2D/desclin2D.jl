@@ -15,7 +15,8 @@ include("ACA.jl") # H-Matrices using ACA
 
 function solve(info,PONTOS_int,fc,BCFace,k)
     ## CBIE - Conventional Boundary Integral Equation
-    NOS_GEO,NOS_const,ELEM,CDC = info;
+    NOS_GEO,NOS,ELEM,CDC = info;
+    ne = size(ELEM,1);
     # Gaussian quadrature - generation of points and weights [-1,1]
     npg=6; # Number of integration points
     qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
@@ -29,8 +30,8 @@ function solve(info,PONTOS_int,fc,BCFace,k)
     CDC_d = zeros(2*ne,3);
     j = 0;
     for i=1:ne # Loop over the elements
-        no1 = ELEM[i,2];	# First point of the element
-        no2 = ELEM[i,3]	# Second point of the element
+        no1::Int = ELEM[i,2];	# First point of the element
+        no2::Int = ELEM[i,3]	# Second point of the element
         # Coordinate of the continuous element points
         x1 = NOS[no1,2];    y1 = NOS[no1,3];
         x2 = NOS[no2,2];    y2 = NOS[no2,3];
