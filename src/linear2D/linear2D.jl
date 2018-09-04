@@ -11,16 +11,12 @@ using PyPlot
 include("dep.jl") # Includes the dependencies
 
 
-function
-    println("Evaluating matrices H, G and array q");
+function solve()
     G,H,q = monta_GeH(ELEM_d,NOS_d,CDC,k,fc,qsi,w); # Evaluates the influence matrices H and G and source influence array q
     A,b=aplica_CDC(G,H,CDC);	# Applies the boundary conditions to build the linear system matrix A and vector b
-    println("Solving the linear system");
     x=A\(b); # Solves the linear system
-    println("Reordering to obtain phi and qphi");
     phi,qphi = Monta_Teq(x,CDC);	# Applies the boundary conditions to build the velocity potential and its flux
-    return phi, qphi
-    
+    return phi, qphi    
 end
 
 end # end module linear2D
