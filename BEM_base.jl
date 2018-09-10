@@ -18,15 +18,13 @@
 # 
 
 # This program follows the following scheme:
-#S----P-----------------------------------M----------------------post
+#Start----Problem--------------Method-----------------post-processing
 #^You are here-------------------------------------------------------
 # This is the start of the program, S. From here, you'll need to define the
 #problem P which will be solved and the matricial system M which will solve it.
 #g are control points, n are the parametric
 #curve generating functions, b are the boundary conditions and problem statement
-#function kernel k. The 
-
-#where S is the start of the project, G are geometry information, B are boundary conditions and problem definition (including the kernel), 
+#function kernel k.
 # M: 
 #S----G-----------------B-----------------M----------------------post
 #S----g--------n--------B-----------------M----------------------post
@@ -35,16 +33,23 @@
 #S----P-----------------------------------c--------h--------a----post
 #S----g--------n--------b--------k--------c--------h--------a----post.
 # This is the main program of the BEM_base. Add here your new implementation!
-# Notes:
 # Returns the potential and flux on boundary points and then on domain points.
-# 
-
-
+# 2-dimensional elements.
+include("src/const2D/const2D.jl")
+include("src/desclin2D/desclin2D.jl")
+include("src/linear2D/linear2D.jl")
+include("src/quad2D/quad2D.jl")
+include("src/nurbs2D/nurbs2D.jl")
+# 3-dimensional elements.
 include("src/const3D_quad/const3D_quad.jl")
 include("src/const3D_tri/const3D_tri.jl")
+using const2D
+using desclin2D
+using linear2D
+using quad2D
+using nurbs2D
 using const3D_tri
 using const3D_quad
-
 function BEM_base(file,PONTOS_int=[],BCFace = [],k=1, equation = "wave")
     println("Importing mesh...")
     @time mshinfo = const3D_tri.lermsh(file,3) #Read the mesh generated 
