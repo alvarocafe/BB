@@ -1,54 +1,94 @@
-# Boundary element method implementation for the Helmholtz and Laplace equations using linear discontinuous  bidimensional elements
+# Boundary element method implementation for the Helmholtz and Laplace
+#equations using linear discontinuous bidimensional elements
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
 # Contains the dependencies for the linear discontinuous element integration.
-#The main function is desclin2D.solve() which builds the influence matrices, applies the boundary conditions,
-#solves the linear system and returns the value of the velocity potential and its flux at boundary and domain points.
+#The main function is desclin2D.solve() which builds the influence matrices,
+#applies the boundary conditions, solves the linear system and returns the
+#value of the potential and its gradient at boundary and domain points.
 
 module desclin2D
 using SpecialFunctions
+using KrylovMethods
+using PyCall
 using PyPlot
+plt=PyPlot
+@pyimport matplotlib.tri as tri
 
-include("dep.jl") # Includes the dependencies
+
+include("format.jl") # curve interpolation formatting
+include("kernel.jl") # 
+include("cal.jl") #
 include("H_mat.jl") # H-Matrices support for building the cluster tree and blocks
-include("beminterp.jl") # H-Matrices using Lagrange polynomial interpolation
+include("interp.jl") # H-Matrices using Lagrange polynomial interpolation
 include("ACA.jl") # H-Matrices using ACA
 
-function solve(info,PONTOS_int,fc,BCFace,k)
-    ## CBIE - Conventional Boundary Integral Equation
-    NOS_GEO,NOS,ELEM,CDC = info;
-    ne = size(ELEM,1);
-    # Gaussian quadrature - generation of points and weights [-1,1]
-    npg=6; # Number of integration points
-    qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
-    println("Building A and b matrices using the traditional colocation BEM for constant elements.")    
-    # Evaluates the continuous shape functions at the points where the descontinuous nodes will be created. This nodes will be used with the descontinuous linear shape function later on. 
-    N11,N21=calc_fforma(-1/2); 
-    N12,N22=calc_fforma(1/2);
-    # Allocates the new nodes, connectivity and boundary conditions matrices 
-    NOS_d = zeros(2*ne,3);
-    ELEM_d = zeros(Int,ne,3);
-    CDC_d = zeros(2*ne,3);
-    j = 0;
-    for i=1:ne # Loop over the elements
-        no1::Int = ELEM[i,2];	# First point of the element
-        no2::Int = ELEM[i,3]	# Second point of the element
-        # Coordinate of the continuous element points
-        x1 = NOS[no1,2];    y1 = NOS[no1,3];
-        x2 = NOS[no2,2];    y2 = NOS[no2,3];
-        j=j+1;
-        NOS_d[j,:] = [j N11*x1+N21*x2 N11*y1+N21*y2]; # Evaluates the position of the first new descontinuous node
-        j=j+1;
-        NOS_d[j,:] = [j N12*x1+N22*x2 N12*y1+N22*y2]; # Evaluates the position of the second new descontinuous node
-        ELEM_d[i,:] = [i j-1 j]; # Updates the mesh connectivity matrix
-    end
-    println("Evaluating matrices H, G and array q");
-    G,H,q = monta_GeH(ELEM_d,NOS_d,CDC,k,fc,qsi,w); # Evaluates the influence matrices H and G and source influence array q
-    A,b=aplica_CDC(G,H,CDC);	# Applies the boundary conditions to build the linear system matrix A and vector b
-    println("Solving the linear system");
-    x=A\(b); # Solves the linear system
-    println("Reordering to obtain phi and qphi");
-    phi,qphix = Monta_Teq(x,CDC);	# Applies the boundary conditions to build the velocity potential and its flux
-    return phi, qphix, qphix, phi_pint 
-end # end function solve
 
-end # end module desclin2D
+function solve(info,PONTOS_int,fc,BCFace,k)
+## CBIE - Conventional Boundary Integral Equation
+	NOS_GEO,NOS,ELEM,CDC = info;
+	nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
+	b1 = 1:nnos # Array containing all the indexes for nodes and elements which will be used for integration
+	# Gaussian quadrature - generation of points and weights [-1,1]
+	npg=6; # Number of integration points
+	qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
+#	println("Building A and b matrices using the traditional colocation BEM for constant elements.")
+	@time A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])  # Builds A and B matrices using the collocation technique and applying the boundary conditions
+	x = A\b # Solves the linear system
+	phi,qphi = monta_phieq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
+#	println("Evaluating at domain points.")
+	@time phi_pint = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k) # Evaluates the value at domain points
+return phi, qphi, phi_pint, phi_pint
+end
+
+function solveH(info,PONTOS_int,fc,BCFace,k)
+## H-Matrix BEM - Interpolation using Lagrange polynomial
+	NOS,NOS_GEO,ELEM,CDC = info;
+#	println("Building Tree and blocks using H-Matrices.")
+	@time Tree,block = cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
+	# Gaussian quadrature - generation of points and weights [-1,1]
+	npg=6; # Number of integration points
+	qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
+#	println("Building A and b matrices using H-Matrix with interpolation.")
+	@time Ai,bi = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
+	xi = gmres(vet->matvec(Ai,vet,block,Tree),bi,5,tol=1e-5,maxIter=1000,out=0) #GMRES nas matrizes do ACA
+	phii,qphii = monta_phieq(CDC,xi[1]) # Applies the boundary conditions to return the velocity potential and flux
+#	println("Evaluating values at internal points.")
+	@time phi_pinti = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phii,qphii,fc,fc,qsi,w,k) # Evaluates the value at internal (or external) points
+return phii,qphii,phi_pinti,phi_pinti
+end
+
+function solvepot(info,PONTOS_int,fc,BCFace,k)
+## CBIE - Conventional Boundary Integral Equation
+	NOS_GEO,NOS,ELEM,CDC = info;
+	nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
+	b1 = 1:nnos # Array containing all the indexes for nodes and elements which will be used for integration
+	# Gaussian quadrature - generation of points and weights [-1,1]
+	npg=6; # Number of integration points
+	qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
+#	println("Building A and b matrices using the traditional colocation BEM for constant elements.")
+	@time A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])  # Builds A and B matrices using the collocation technique and applying the boundary conditions
+	x = A\b # Solves the linear system
+	phi,qphi = monta_phieq(CDC,x) # Applies the boundary conditions to return the velocity potential and flux
+#	println("Evaluating at domain points.")
+	@time phi_pint = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k) # Evaluates the value at domain points
+return phi, qphi, phi_pint, phi_pint
+end
+
+function solveHpot(info,PONTOS_int,fc,BCFace,k)
+## H-Matrix BEM - Interpolation using Lagrange polynomial
+	NOS,NOS_GEO,ELEM,CDC = info;
+#	println("Building Tree and blocks using H-Matrices.")
+	@time Tree,block = cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
+	# Gaussian quadrature - generation of points and weights [-1,1]
+	npg=6; # Number of integration points
+	qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
+#	println("Building A and b matrices using H-Matrix with interpolation.")
+	@time Ai,bi = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
+	xi = gmres(vet->matvec(Ai,vet,block,Tree),bi,5,tol=1e-5,maxIter=1000,out=0) #GMRES nas matrizes do ACA
+	phii,qphii = monta_phieq(CDC,xi[1]) # Applies the boundary conditions to return the velocity potential and flux
+#	println("Evaluating values at internal points.")
+	@time phi_pinti = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phii,qphii,fc,fc,qsi,w,k) # Evaluates the value at internal (or external) points
+return phii,qphii,phi_pinti,phi_pinti
+end
+
+end

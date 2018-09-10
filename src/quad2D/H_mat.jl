@@ -11,9 +11,9 @@ function divnode(X,t)
     ref = eig_vecx[:,indmax(eig_valx)]      # Define como referencia o autovetor relacionado ao maior autovalor
     # a direcao desse autovetor e a direcao e maior cvariabilidade dos dados
     attcond = zeros(n)
-    for i=1:n
-        attcond[i] = (x.-c)[i,:]'*ref  # Condicao que divide os nos em dois blococ diferentes.
-    end
+        for i=1:n
+            attcond[i] = (x.-c)[i,:]'*ref  # Condicao que divide os nos em dois blococ diferentes.
+        end
     x1 = t[attcond.>=0]         # Bloco tal que a condicao e >= 0
     x2 = t[attcond.<0]          # Bloco tal que a condicao e < 0
     diam = 2*maximum(sqrt.(((x.-c).*(x.-c))[:,1]+((x.-c).*(x.-c))[:,2]))
@@ -42,30 +42,30 @@ function cluster(X, max_elem,η = 1.0)
     diam = zeros(2*max_clt)          # Aloca um vetor ppara guardar o diametro de cada bloco de nós da malha.
     i = 1                            # Começa contagem de nós
     while inode >= ileaf             # Enquanto o quantidade de nós for maior que a de folhas.
-        # Observe que a condição só não vai ser satisfeita quando a árvore estiver completa.
+    # Observe que a condição só não vai ser satisfeita quando a árvore estiver completa.
         t1,t2,d,c = divnode(X,nodes[i])      # Executa a rotina que divide os nós da malha.
         center_row[i,:] = c;                 # Salva centro geometrico do nó i da árvore
         diam[i] = d;                         # Salva diametro do nó i da árvore
-        if length(t1)> max_elem          # Se a quantidade de nós em t1 for maior que max_elem, definir como nó
-            inode = inode + 1            # Chama proximo nó
-            nodes[inode] = t1            # Define t1 como um nó
-            child[i,1] = inode           # Define t1 como filho do nó i
-        else                             # Se a quantidade de nós for menor que max_elem, definir como folha
-            leaves[ileaf] = t1           # Define t1 como uma folha
-            ileaf = ileaf + 1            # Chama proxima folha
-            child1[i] = ileaf            # Define t1 como folha do nó i
-        end
-        # Realiza o mesmo para t2---------------------------------------
-        if length(t2) > max_elem
-            inode = inode + 1
-            nodes[inode] = t2
-            child[i,2] = inode
-        else
-            leaves[ileaf] = t2
-            ileaf = ileaf + 1
-            child2[i] = ileaf
-        end
-        # --------------------------------------------------------------
+            if length(t1)> max_elem          # Se a quantidade de nós em t1 for maior que max_elem, definir como nó
+                inode = inode + 1            # Chama proximo nó
+                nodes[inode] = t1            # Define t1 como um nó
+                child[i,1] = inode           # Define t1 como filho do nó i
+            else                             # Se a quantidade de nós for menor que max_elem, definir como folha
+                leaves[ileaf] = t1           # Define t1 como uma folha
+                ileaf = ileaf + 1            # Chama proxima folha
+                child1[i] = ileaf            # Define t1 como folha do nó i
+            end
+            # Realiza o mesmo para t2---------------------------------------
+            if length(t2) > max_elem
+                inode = inode + 1
+                nodes[inode] = t2
+                child[i,2] = inode
+            else
+                leaves[ileaf] = t2
+                ileaf = ileaf + 1
+                child2[i] = ileaf
+            end
+            # --------------------------------------------------------------
         i = i + 1
     end
 

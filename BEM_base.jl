@@ -1,4 +1,4 @@
-# Boundary Element Method Base
+# Boundary element method base (BEM_base)
 # Author: Álvaro Campos Ferreira
 # Copyright (C) 2018 Álvaro Campos Ferreira
 # 
@@ -15,8 +15,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+# 
 
-# This is the main program of the BEM_base.
+# This program follows the following scheme:
+#S----P-----------------------------------M----------------------post
+#^You are here-------------------------------------------------------
+# This is the start of the program, S. From here, you'll need to define the
+#problem P which will be solved and the matricial system M which will solve it.
+#g are control points, n are the parametric
+#curve generating functions, b are the boundary conditions and problem statement
+#function kernel k. The 
+
+#where S is the start of the project, G are geometry information, B are boundary conditions and problem definition (including the kernel), 
+# M: 
+#S----G-----------------B-----------------M----------------------post
+#S----g--------n--------B-----------------M----------------------post
+#S----g--------n--------b--------k--------M----------------------post
+#S----P-----------------------------------c--------H-------------post
+#S----P-----------------------------------c--------h--------a----post
+#S----g--------n--------b--------k--------c--------h--------a----post.
+# This is the main program of the BEM_base. Add here your new implementation!
+# Notes:
+# Returns the potential and flux on boundary points and then on domain points.
+# 
+
+
 include("src/const3D_quad/const3D_quad.jl")
 include("src/const3D_tri/const3D_tri.jl")
 using const3D_tri
