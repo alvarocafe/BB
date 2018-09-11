@@ -17,17 +17,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 # BEM_base follows the following scheme:
 #Start----Problem--------------Method-----------------post-processing
-#--^You are here-----------------------------------------------------
+#--^You are here!----------------------------------------------------
 # This is the start of the program, S. From here, you'll need to define the
-#problem P which will be solved and the matricial system  will solved
-#using the method defined in M.
-#g are control points, n are the parametric curve generating functions, b are the boundary conditions and problem statement function kernel k.
-#S----G-----------------B-----------------M----------------------post
-#S----g--------n--------B-----------------M----------------------post
-#S----g--------n--------b--------k--------M----------------------post
-#S----P-----------------------------------c--------H-------------post
-#S----P-----------------------------------c--------h--------a----post
-#S----g--------n--------b--------k--------c--------h--------a----post.
+#problem P which will be solved and the method M for building and solving
+#the matricial system. The results then must be post-processed.
 # This is the main program of the BEM_base. Add here your new implementation!
 # Returns the potential and flux on boundary points and then on domain points.
 # 2-dimensional elements.
