@@ -15,17 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-# 
-
-# This program follows the following scheme:
+# BEM_base follows the following scheme:
 #Start----Problem--------------Method-----------------post-processing
-#^You are here-------------------------------------------------------
+#--^You are here-----------------------------------------------------
 # This is the start of the program, S. From here, you'll need to define the
-#problem P which will be solved and the matricial system M which will solve it.
-#g are control points, n are the parametric
-#curve generating functions, b are the boundary conditions and problem statement
-#function kernel k.
-# M: 
+#problem P which will be solved and the matricial system  will solved
+#using the method defined in M.
+#g are control points, n are the parametric curve generating functions, b are the boundary conditions and problem statement function kernel k.
 #S----G-----------------B-----------------M----------------------post
 #S----g--------n--------B-----------------M----------------------post
 #S----g--------n--------b--------k--------M----------------------post
@@ -43,13 +39,8 @@ include("src/nurbs2D/nurbs2D.jl")
 # 3-dimensional elements.
 include("src/const3D_quad/const3D_quad.jl")
 include("src/const3D_tri/const3D_tri.jl")
-using const2D
-using desclin2D
-using linear2D
-using quad2D
-using nurbs2D
-using const3D_tri
-using const3D_quad
+using const2D, desclin2D, linear2D, quad2D, nurbs2D, const3D_tri, const3D_quad
+# Main function
 function BEM_base(file,PONTOS_int=[],BCFace = [],k=1, equation = "wave")
     println("Importing mesh...")
     @time mshinfo = const3D_tri.lermsh(file,3) #Read the mesh generated 

@@ -1,21 +1,27 @@
 # Boundary element method implementation for the Helmholtz and Laplace
-#equations using constant  bidimensional elements
+#equations using linear discontinuous bidimensional elements
 # Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
-# Contains the dependencies for the linear constant element integration.
-#The main function is const2D.solve() which builds the influence matrices,
+# Contains the dependencies for the linear discontinuous element integration.
+#The main function is desclin2D.solve() which builds the influence matrices,
 #applies the boundary conditions, solves the linear system and returns the
 #value of the potential and its gradient at boundary and domain points.
 
-module const2D
-using SpecialFunctions, KrylovMethods, PyCall, PyPlot
+module desclin2D
+using SpecialFunctions
+using KrylovMethods
+using PyCall
+using PyPlot
 plt=PyPlot
 @pyimport matplotlib.tri as tri
+
+
 include("format.jl") # curve interpolation formatting
 include("kernel.jl") # 
 include("cal.jl") #
 include("H_mat.jl") # H-Matrices support for building the cluster tree and blocks
 include("interp.jl") # H-Matrices using Lagrange polynomial interpolation
 include("ACA.jl") # H-Matrices using ACA
+
 
 function solve(info,PONTOS_int,fc,BCFace,k)
 ## CBIE - Conventional Boundary Integral Equation
