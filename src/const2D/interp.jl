@@ -1,3 +1,9 @@
+# Boundary element method implementation for the Helmholtz and Laplace
+#equations using constant  bidimensional elements
+# Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
+#Start----Problem--------------Method-----------------post-processing
+#--------------------------------^You are here!----------------------
+# Approximates H-Matrices clusters using Lagrangian interpolation.
 function Hinterp(Tree,block,arg,ninterp=3,compressão=true,ϵ=1e-3)
     # arg = [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k]
     #         1     2     3    4  5  6  7  8
@@ -10,7 +16,7 @@ function Hinterp(Tree,block,arg,ninterp=3,compressão=true,ϵ=1e-3)
 	b2 = Tree[block[i,2]]       # Nós J da malha que formam a submatriz (Pontos Campo) (Colunas)
 	# Submatriz = Produto cartesiano I x J
 	if block[i,3]==0                # Se esses blocos não são admissiveis
-	    Aaca[i,1],B = cal_Aeb_POT(b1,b2,arg)
+	    Aaca[i,1],B = cal_Aebpot(b1,b2,arg)
 	    # Salva na linha i da 1º coluna da matriz Aaca a matriz H e salva G na matriz B
 	    b[b1] = b[b1] + B  # Contribuicao para o valor de G*q dos nos que formam b2
 	else                              # Caso contrario (Se blocos são admissiveis)
@@ -21,7 +27,6 @@ function Hinterp(Tree,block,arg,ninterp=3,compressão=true,ϵ=1e-3)
     end
     return Aaca,b
 end
-
 function cal_Aeb_interp(b1,b2,arg,ninterp=3,compressão=true,ϵ=1e-3)
     NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k=arg
     nelem::Int64 = size(ELEM)[1]          # Numero de elementos de contorno

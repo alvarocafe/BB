@@ -48,7 +48,7 @@ T_an (x) = 1 - x./L;
 q_an (x) = -1./L;
 ### BEM modules test
 function test_modules(ϵ=10^(-6))
-# Each module will be tested in this function.
+    # Each module will be tested in this function.
     ## TODO: automate module search and testing.
     # Constant elements
     include("../src/const2D/const2D.jl")

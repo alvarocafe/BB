@@ -1,3 +1,9 @@
+# Boundary element method implementation for the Helmholtz and Laplace
+#equations using constant  bidimensional elements
+# Author: Álvaro Campos Ferreira - alvaro.campos.ferreira@gmail.com
+#Start----Problem--------------Method-----------------post-processing
+#--------------------------------^You are here!----------------------
+# Calculate influence matrices with no approximation.
 function cal_Aeb(b1,b2,arg)
     # Builds the matrices for the linear system A x = b 
     NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k=arg
@@ -43,7 +49,7 @@ function cal_Aeb(b1,b2,arg)
     return A,b
 end
 
-function cal_Aeb_POT(b1,b2,arg)
+function cal_Aebpot(b1,b2,arg)
     # Builds the matrices for the linear system A x = b 
     NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k=arg
     nelem::Int64=size(ELEM)[1]; # Number of elements

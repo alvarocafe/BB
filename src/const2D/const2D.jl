@@ -7,7 +7,6 @@
 #value of the potential and its gradient at boundary and domain points.
 #Start----Problem--------------Method-----------------post-processing
 #-----------^You are here!-------------------------------------------
-
 module const2D
 using SpecialFunctions, KrylovMethods, PyCall, PyPlot
 plt=PyPlot
@@ -38,15 +37,15 @@ end
 
 function solveH(info,PONTOS_int,fc,BCFace,k)
     ## H-Matrix BEM - Interpolation using Lagrange polynomial
-    NOS,NOS_GEO,ELEM,CDC = info
+    NOS_GEO,NOS,ELEM,CDC = info
     Tree,block = cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
     # Gaussian quadrature - generation of points and weights [-1,1]
     npg=6
     qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
     A,b = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
-    x = gmres(vet->matvec(Ai,vet,block,Tree),bi,5,tol=1e-5,maxIter=1000,out=0)
-    phi,qphi = monta_phieq(CDC,xi[1]) # Applies the boundary conditions
-    phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phii,qphii,fc,fc,qsi,w,k)
+    x = gmres(vet->matvec(A,vet,block,Tree),b,5,tol=1e-5,maxIter=1000,out=0)
+    phi,qphi = monta_phieq(CDC,x[1]) # Applies the boundary conditions
+    phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k)
     return phi,qphi,phi_dom,phi_dom
 end
 
@@ -60,24 +59,24 @@ function solvepot(info,PONTOS_int,fc,BCFace,k)
     # Gaussian quadrature - generation of points and weights [-1,1]
     npg=6; # Number of integration points
     qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
-    A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
+    A,b = cal_Aebpot(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
     x = A\b # Solves the linear system
     phi,qphi = monta_phieq(CDC,x) # Applies the boundary conditions
     phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k)
     return phi, qphi, phi_dom, phi_dom
 end
 
-function solveHpot(info,PONTOS_int,fc,BCFace,k)
+function solvepotH(info,PONTOS_int,fc,BCFace,k)
     ## H-Matrix BEM - Interpolation using Lagrange polynomial
-    NOS,NOS_GEO,ELEM,CDC = info;
+    NOS_GEO,NOS,ELEM,CDC = info
     Tree,block = cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
     # Gaussian quadrature - generation of points and weights [-1,1]
     npg=6
     qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
     A,b = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
-    x = gmres(vet->matvec(Ai,vet,block,Tree),bi,5,tol=1e-5,maxIter=1000,out=0)
-    phi,qphi = monta_phieq(CDC,xi[1]) # Applies the boundary conditions
-    phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phii,qphii,fc,fc,qsi,w,k)
+    x = gmres(vet->matvec(A,vet,block,Tree),b,5,tol=1e-5,maxIter=1000,out=0)
+    phi,qphi = monta_phieq(CDC,x[1]) # Applies the boundary conditions
+    phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k)
     return phi,qphi,phi_dom,phi_dom
 end
 
