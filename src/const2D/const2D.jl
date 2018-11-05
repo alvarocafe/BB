@@ -23,23 +23,20 @@ function solve(info,PONTOS_int,fc,BCFace,k)
     NOS_GEO,NOS,ELEM,CDC = info
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using
     #constant elements
-    b1 = 1:nnos # Array containing all the indexes for nodes and elements which
-    #will be used for integration
-    # Gaussian quadrature - generation of points and weights [-1,1]
+    b1 = 1:nnos # Array containing all the indexes for nodes and elements
     npg=6
     qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
     A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
     x = A\b # Solves the linear system
     phi,qphi = monta_phieq(CDC,x) # Applies the boundary conditions
     phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k)
-    return phi, qphi, phi_domt, phi_dom
+    return phi, qphi, phi_dom, phi_dom
 end
 
 function solveH(info,PONTOS_int,fc,BCFace,k)
     ## H-Matrix BEM - Interpolation using Lagrange polynomial
     NOS_GEO,NOS,ELEM,CDC = info
     Tree,block = cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
-    # Gaussian quadrature - generation of points and weights [-1,1]
     npg=6
     qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
     A,b = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
