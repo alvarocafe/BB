@@ -37,7 +37,7 @@ SEGMENTS = [1 1 2 0
 	    3 3 4 0
 	    4 4 1 0];
 # Each segment will be meshed by ne elements
-ne = 10;
+ne = 100;
 MESH = [1 ne
 	2 ne
 	3 ne
@@ -53,6 +53,7 @@ fc = [0 0 0]
 NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
 nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
 info = [NOS_GEO,NOS,ELEM,CDC]
+tic()
 phi, q, phi_dom, phi_dom = const2D.solve(info,PONTOS_dom,fc,BCSeg,k)
 t = toq()
 # Conventional method with approximated influence matrices

@@ -1,3 +1,47 @@
+function cal_Aeb(collocCoord,nnos,crv,dcrv,E,kmat,CDC)
+   # Solves the Helmholtz equation
+    n = length(crv);	# Number of curves
+    ncollocpoints=size(collocCoord,1)
+    H=complex(zeros(ncollocpoints,ncollocpoints));
+    G=complex(zeros(ncollocpoints,ncollocpoints));
+    npgauss=12;
+    qsi,w=Gauss_Legendre(-1,1,npgauss)
+    # qsi,w=gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
+    for i = 1 : n #Laço sobre as curvas (elementos)
+        uk=unique(crv[i].knots)
+        ne=length(uk)-1;
+        for j=1:ne
+            range=uk[j+1]-uk[j]
+            mid=(uk[j+1]+uk[j])/2
+            for k=1:ncollocpoints
+                xfonte=collocCoord[k,1]
+                yfonte=collocCoord[k,2]
+                # Integrais de dom�nio
+                g,h,id=integra_elem(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
+                #  element (I = int F n.r/r dGama)
+                H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;
+                G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
+            end
+        end
+    end
+    H=H+E/2;
+    # Aplica as condições de contorno trocando as colunas das matrizes H e G
+    ncdc = size(CDC,1); # número de linhas da matriz CDC
+    A=copy(H);
+    B=copy(G);
+    for i=1:ncdc # Laço sobre as condições de contorno
+        tipoCDC = CDC[i,2]; # Tipo da condição de contorno
+        if tipoCDC == 0 # A temperatura é conhecida
+            colunaA=-A[:,i]; # Coluna da matriz H que será trocada
+            A[:,i]=-B[:,i]; # A matriz H recebe a coluna da matriz G
+            B[:,i]=colunaA; # A mstriz G recebe a coluna da matriz H
+        end
+    end
+    valoresconhecidos=E\CDC[:,3] # Valores das condições de contorno
+    b=B*valoresconhecidos; # vetor b
+    return A,b    
+end
+
 function calcula_iso(collocCoord,nnos,crv,dcrv,E,kmat)
     # Solves the Helmholtz equation
     n = length(crv);	# Number of curves
@@ -66,8 +110,8 @@ function  integra_elem(xfonte,yfonte,crv,dcrv,range,mid,qsi,w,k)
         
         ZR=real(k*r);
         Z=complex(0.,ZR);
-        F0C=SpecialFunctions.besselk(0,Z);
-        F1C=SpecialFunctions.besselk(1,Z);
+        F0C=besselk(0,Z);
+        F1C=besselk(1,Z);
         qast=-(Z/r*nr*F1C)/(2*pi); #Solução Fundamental da pressão acústica
         Tast=F0C/(2*pi);    #Solução Fundamental do fluxo de pressão acústica
         #qast = complex(1,0)
@@ -75,6 +119,7 @@ function  integra_elem(xfonte,yfonte,crv,dcrv,range,mid,qsi,w,k)
         h = h + B*qast*dgamadu *dudqsi* w[i]
         g = g + B*Tast*dgamadu *dudqsi* w[i]
     end
+    
     return g,h,id
 end
 
@@ -163,7 +208,7 @@ function  integra_elem_POT(xfonte,yfonte,crv,dcrv,range,mid,qsi,w,k)
     return g,h,id
 end
 
-function aplica_CDCiso(G,H,CDC,E)
+function aplica_CDC(G,H,CDC,E)
     # Aplica as condições de contorno trocando as colunas das matrizes H e G
 
     ncdc = size(CDC,1); # número de linhas da matriz CDC
