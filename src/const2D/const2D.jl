@@ -8,9 +8,10 @@
 #Start----Problem--------------Method-----------------post-processing
 #-----------^You are here!-------------------------------------------
 module const2D
-using SpecialFunctions, KrylovMethods, PyCall, PyPlot
-plt=PyPlot
-@pyimport matplotlib.tri as tri
+using SpecialFunctions, LinearAlgebra, KrylovMethods
+#, PyCall, PyPlot
+#plt=PyPlot
+#@pyimport matplotlib.tri as tri
 include("format.jl") # curve interpolation formatting
 include("kernel.jl") # problem statement kernel
 include("cal.jl") # element integration calculating functions
