@@ -9,9 +9,7 @@
 #-----------^You are here!-------------------------------------------
 
 module nurbs2D
-using SpecialFunctions, KrylovMethods, PyCall, PyPlot
-plt=PyPlot
-@pyimport matplotlib.tri as tri
+using SpecialFunctions, KrylovMethods
 include("format.jl") # curve interpolation formatting
 include("kernel.jl") # problem statement kernel
 include("cal.jl") # element integration calculating functions
@@ -19,17 +17,17 @@ include("H_mat.jl") # H-Matrices support for building the cluster tree and block
 include("interp.jl") # approximation  using Lagrange polynomial interpolation
 include("ACA.jl") # approximation using ACA
 
-function solve(info,PONTOS_int,fc,BCFace,k)
+function solve(info,PONTOS_int,fc,CDC,k)
     ## CBIE - Conventional Boundary Integral Equation
-    collocCoord,nnos,crv,dcrv,E = info;
-    b1 = 1:nnos
+    collocCoord,nnos,crv,dcrv,E = info
     npg=6 # Number of integration points
     qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
-    A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
+    A,b = cal_Aeb(1,1,collocCoord,nnos,crv,dcrv,E,k,CDC)
+#    A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
     x = A\b # Solves the linear system
-    phi,qphi = monta_phieq(CDC,x)
-    phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k)
-    return phi, qphi, phi_pint, phi_pint
+    phi,qphi = monta_Teq(CDC,x)
+    phi_dom = calc_phi_pint(PONTOS_int,collocCoord,nnos,crv,dcrv,k,phi,qphi)
+    return phi, qphi, phi_dom, phi_dom
 end
 
 function solveH(info,PONTOS_int,fc,BCFace,k)

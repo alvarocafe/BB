@@ -1,4 +1,4 @@
-function cal_Aeb(collocCoord,nnos,crv,dcrv,E,kmat,CDC)
+function cal_Aeb(b1,b2,collocCoord,nnos,crv,dcrv,E,kmat,CDC)
    # Solves the Helmholtz equation
     n = length(crv);	# Number of curves
     ncollocpoints=size(collocCoord,1)
@@ -227,7 +227,7 @@ function aplica_CDC(G,H,CDC,E)
     return A,b
 end
 
-function monta_Teqiso(CDC,x)
+function monta_Teq(CDC,x)
     # Separa fluxo e temperatura
 
     # ncdc = número de linhas da matriz CDC
@@ -285,7 +285,7 @@ function calc_phi_pint_nurbs_POT(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc
     return H,G,phi_pint
 end
 
-function calc_phi_pint_nurbs(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
+function calc_phi_pint(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
     n = length(crv);	# Number of curves
     ncollocpoints = size(collocCoord,1)
     n_pint=size(PONTOS_int,1)
@@ -315,5 +315,5 @@ function calc_phi_pint_nurbs(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
     end
 
     phi_pint = H*Tc - G*qc;
-    return H,G,phi_pint
+    return phi_pint
 end

@@ -7,9 +7,8 @@
 ### BEM model
 ### return error
 include("../src/const2D/const2D.jl")
-# include("../src/nurbs2D/nurbs2D.jl")
-# using nurbs2D
-using .const2D, SpecialFunctions
+include("../src/nurbs2D/nurbs2D.jl")
+using .const2D, .nurbs2D, SpecialFunctions
 
 println("Running tests for BEM_base...")
 
@@ -77,10 +76,8 @@ end
 phi_cylinder(k,r,x) = (1/k).*(besselh(0,2,k.*x)./besselh(1,2,k.*r));
 #at a distance x from the cylinder of radius r.
 ### BEM model
-function cylinder(ne = 1000,r=0.5,c=[0 0],k=1)
-    #r = 0.5; # cylinder radius
-    #c = [0 0]; # cylinder center
-    #ne = 100;
+function cylinder(ne = 100,r=0.5,c=[0 0],k=1)
+    t=0; tH=0; tiso=0; ϵ=0; ϵH=0; ϵiso=0; phi=0; q=0; phi_dom=0;  phiH=0; qH=0; phi_domH=0;  phiiso=0; qiso=0; domiso=0;
     POINTS =[1  c[1,1]-r	c[1,2]
        	     2	c[1,1]		c[1,2]+r
        	     3	c[1,1]+r	c[1,2]
@@ -90,28 +87,75 @@ function cylinder(ne = 1000,r=0.5,c=[0 0],k=1)
                 3 3 4 -r
                 4 4 1 -r];
     BCSeg = [1 1 1 0
-              2 1 1 0
-              3 1 1 0
-              4 1 1 0];
+             2 1 1 0
+             3 1 1 0
+             4 1 1 0];
     MESH = [1 ne
             2 ne
             3 ne
             4 ne];
-    PONTOS_dom = [1 0 10*r]
+    x = 10*r
+    PONTOS_dom = [1 0 x]
     fc = [0 0 0]
-    # Conventional method with full influence matrices
-    NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
-    nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
-    info = [NOS_GEO,NOS,ELEM,CDC]
-    tic()
-    phi, q, phi_dom, phi_dom = const2D.solve(info,PONTOS_dom,fc,BCSeg,k)
-    t = toq()
+    # # Conventional method with full influence matrices
+     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
+     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
+     info = [NOS_GEO,NOS,ELEM,CDC]
+    # tic()
+    # phi, q, phi_dom, phi_dom = const2D.solve(info,PONTOS_dom,fc,BCSeg,k)
+    # t = toq()
+    # ϵ = abs.(sqrt.(((phi_dom .- phi_cylinder(k,r,x)).^2)./phi_cylinder(k,r,x).^2))
     # Conventional method with approximated influence matrices
-    NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
-    nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
-    info = [NOS_GEO,NOS,ELEM,CDC]
     tic()
     phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)
     tH = toq()
-    return t, tH, phi_dom, phi_domH
+    ϵH = abs.(sqrt.(((phi_domH .- phi_cylinder(1,0.5,5)).^2)./phi_cylinder(1,0.5,5).^2))
+    # # Isogeometric BEM with full influence matrices
+    # crv = nurbs2D.format_dad(POINTS,SEGMENTS,MESH)
+    # dcrv=map(x->nurbs2D.nrbderiv(x),crv)
+    # n = length(crv)
+    # z=0;
+    # for k=1:n
+    #     for i=1:crv[k].number
+    #         z=z+1
+    #     end
+    # end
+    # numcurva=zeros(Integer,z)
+    # collocPts=zeros(z)
+    # CDC=zeros(z,3)
+    # collocCoord=zeros(z,3)
+    # z=0;
+    # nnos=zeros(Integer,n)
+    # for k=1:n
+    #     p=crv[k].order-1;
+    #     nnos[k]=crv[k].number;
+    #     valorCDC=BCSeg[k,3];
+    #     tipoCDC=BCSeg[k,2];
+    #     for i=1:crv[k].number
+    #         z=z+1;
+    #         numcurva[z]=k;
+    #         collocPts[z]=sum(crv[k].knots[(i+1):(i+p)])/p;
+    #         if(i==2)
+    #             collocPts[z-1]=(collocPts[z]+collocPts[z-1])/2;
+    #         end
+    #         if(i==nnos[k])
+    #             collocPts[z]=(collocPts[z]+collocPts[z-1])/2;
+    #         end
+
+    #         CDC[z,:] = [z,tipoCDC,valorCDC];
+    #     end
+    # end
+    # nnos2=cumsum([0 nnos'],2)
+    # E=zeros(length(collocPts),length(collocPts));
+    # for i=1:length(collocPts)
+    #     collocCoord[i,:]=nurbs2D.nrbeval(crv[numcurva[i]], collocPts[i]);
+    #     B, id = nurbs2D.nrbbasisfun(crv[numcurva[i]],collocPts[i])
+    #     E[i,id+nnos2[numcurva[i]]]=B
+    # end
+    # info = collocCoord,nnos2,crv,dcrv,E
+    # tic()
+    # phiiso, qiso, domiso, domiso = nurbs2D.solve(info,PONTOS_dom,fc,CDC,k)
+    # tiso = toq()
+    # ϵiso = abs.(sqrt.(((domiso .- phi_cylinder(k,r,x)).^2)./phi_cylinder(k,r,x).^2))
+    return t, tH, tiso, ϵ, ϵH, ϵiso, phi, q, phi_dom,  phiH, qH, phi_domH,  phiiso, qiso, domiso
 end
