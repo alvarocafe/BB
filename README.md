@@ -1,4 +1,4 @@
-* BEM_base
+# BEM_base
 ---
 A Julia language implementation of the a fast isogeometric boundary element method formulation (IGABEM) with Hierarchical Matrices partitioning and approximation using Lagrange polynomials and the Adapative-Cross Approximation (ACA). 
 The goal of the BEM_base project is to provide a platform that can be used alongside FreeCad and Gmsh to quickly solve bidimensional boundary element problems.
@@ -14,21 +14,21 @@ To solve a problem with a geometry file 'file.msh' and boundary conditions in ea
 where k is the thermal condutivity in the Laplace equation and the wavenumber in the Helmholtz equation.
 BEM_base will analyse the mesh and choose the solver accordingly.
 
-** Installation
+## Installation
 ---
 The project runs on Julia 0.6.4. To include the dependecies, simply clone the repository and include the files.  
 
     git clone https://github.com/alvarocafe/BEM_base
 And run the code given above.
 
-** Contribute
+## Contribute
 ---
 This project is still in a very early stage and contributions are welcome.
 
-** NOTICE
+## NOTICE
 ---
 The program is not yet usable in its current form, I'll keep updating it and I'll update this notice when the program is usable. You can still use the subroutines to build BEM models and run them, but that's harder than the intended usage of the package. 
 
-** License
+## License
 ---
 This project is currently licensed under GNU GPL v.3
