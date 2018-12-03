@@ -13,7 +13,6 @@ using SpecialFunctions, KrylovMethods, PyCall, PyPlot
 plt=PyPlot
 @pyimport matplotlib.tri as tri
 include("format.jl") # curve interpolation formatting
-include("kernel.jl") # problem statement kernel
 include("cal.jl") # element integration calculating functions
 include("H_mat.jl") # H-Matrices support for building the cluster tree and blocks
 include("interp.jl") # approximation  using Lagrange polynomial interpolation

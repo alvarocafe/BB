@@ -16,7 +16,6 @@ plt=PyPlot
 
 
 include("format.jl") # curve interpolation formatting
-include("kernel.jl") # 
 include("cal.jl") #
 include("H_mat.jl") # H-Matrices support for building the cluster tree and blocks
 include("interp.jl") # H-Matrices using Lagrange polynomial interpolation

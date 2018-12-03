@@ -13,7 +13,6 @@ using SpecialFunctions, LinearAlgebra, KrylovMethods
 #plt=PyPlot
 #@pyimport matplotlib.tri as tri
 include("format.jl") # curve interpolation formatting
-include("kernel.jl") # problem statement kernel
 include("cal.jl") # element integration calculating functions
 include("H_mat.jl") # H-Matrices support for building the cluster tree and blocks
 include("interp.jl") # approximation  using Lagrange polynomial interpolation
@@ -60,7 +59,7 @@ function solvepot(info,PONTOS_int,fc,BCFace,k)
     A,b = cal_Aebpot(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
     x = A\b # Solves the linear system
     phi,qphi = monta_phieq(CDC,x) # Applies the boundary conditions
-    phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k)
+    phi_dom = calc_phi_pintpot(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,qsi,w,k)
     return phi, qphi, phi_dom, phi_dom
 end
 
@@ -74,7 +73,7 @@ function solvepotH(info,PONTOS_int,fc,BCFace,k)
     A,b = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
     x = gmres(vet->matvec(A,vet,block,Tree),b,5,tol=1e-5,maxIter=1000,out=0)
     phi,qphi = monta_phieq(CDC,x[1]) # Applies the boundary conditions
-    phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k)
+    phi_dom = calc_phi_pintpot(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,qsi,w,k)
     return phi,qphi,phi_dom,phi_dom
 end
 
