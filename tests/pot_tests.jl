@@ -6,14 +6,11 @@
 ### Analytical solution
 ### BEM model
 ### return error
-include("../src/const2D/const2D.jl")
-include("../src/nurbs2D/nurbs2D.jl")
-using  .const2D, .nurbs2D, SpecialFunctions
-
+include("../BEM_base.jl")
 println("Running tests for potential problems...")
 
 #################### Test case 1 ####################
-### Problem description
+### Heat conduction on a square plate
 # Let a square domain of length L [m] and heat
 #conductivity k [W/(m.K)], initially at uniform constant
 #temperature be subjected to a temperature gradient on

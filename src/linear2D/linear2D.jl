@@ -6,7 +6,7 @@
 #applies the boundary conditions, solves the linear system and returns the
 #value of the potential and its gradient at boundary and domain points.
 
-module desclin2D
+module linear2D
 using SpecialFunctions
 using KrylovMethods
 using PyCall

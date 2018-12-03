@@ -82,9 +82,9 @@ for el = 1:nelem  # Corre os elementos
         # das condições de contorno ao vetor q
         q_vet[3*el-2:3*el]=[valorCDC valorCDC valorCDC];
         if el==1 && tipoCDCultimo==1
-            T([no1 no2])=x([no1 no2 no3]);
-        elseif(el~=nelem)
-            T([no2 no3])=[x[no2] x[no3]];
+            T[[no1 no2]]=x[[no1 no2 no3]];
+        elseif(el!=nelem)
+            T[[no2 no3]]=[x[no2] x[no3]];
         else
             T[no2]=x[no2];
         end

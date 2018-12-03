@@ -10,9 +10,15 @@ using PyCall
 @pyimport matplotlib.cm as cm
 @pyimport mpl_toolkits.mplot3d as mp
 @pyimport mpl_toolkits.mplot3d.art3d as ar
-
 plt=PyPlot
-include("dep.jl") # Includes the dependencies
+
+include("format.jl") # curve interpolation formatting
+include("cal.jl") # element integration calculating functions
+include("H_mat.jl") # H-Matrices support for building the cluster tree and blocks
+include("interp.jl") # approximation  using Lagrange polynomial interpolation
+include("ACA.jl") # approximation using ACA
+
+
 function solve(info,PONTOS_int,BCFace,k)
     NOS_GEO,ELEM,elemint,CDC = info
     NOS = mostra_geoTRI(NOS_GEO,ELEM) #Generate the physical nodes for constant elements
