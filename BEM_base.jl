@@ -30,7 +30,6 @@ include("src/linear2D/linear2D.jl")
 include("src/quad2D/quad2D.jl")
 include("src/nurbs2D/nurbs2D.jl")
 # 3-dimensional elements.
-include("src/const3D_quad/const3D_quad.jl")
 include("src/const3D_tri/const3D_tri.jl")
 using const2D, desclin2D, linear2D, quad2D, nurbs2D, const3D_tri, const3D_quad
 # Main function
