@@ -266,7 +266,7 @@ function calcula_GeHnspot(x1,y1,x2,y2,xd,yd,qsi,w,k)
     H=0; # Inicializa o somatorio de h
     for kk=1:n_pint # Laço sobre os pontos de integração
         N1,N2=calc_fforma(qsi[kk]); # Calcula as funções de forma
-        dN1dqsi= -0.5
+        dN1dqsi=-0.5
         dN2dqsi=0.5 # Calcula as derivadas das
         #    funções de forma
         x=N1*x1+N2*x2; # Calcula a coordenada x do ponto de integração

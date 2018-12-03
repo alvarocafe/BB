@@ -10,7 +10,7 @@ include("../src/const2D/const2D.jl")
 include("../src/nurbs2D/nurbs2D.jl")
 using .const2D, .nurbs2D, SpecialFunctions
 
-println("Running tests for BEM_base...")
+println("Running tests for wave problems...")
 
 #################### Test case 1 ####################
 ### Acoustic square
@@ -62,7 +62,7 @@ function square(ne=10,L=1,k=1)
     tic()
     phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)
     tH = toq()
-    return t, tH, phi, phiH
+    return t, tH, phi, phiH, phi_dom
 end
 
 #################### Test case 2 ####################
