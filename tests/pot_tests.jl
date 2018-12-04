@@ -57,6 +57,6 @@ function square(ne=10,L=1,k=1)
     tic()
     Tiso, qiso, T_domiso = nurbs2D.solvepot(info,PONTOS_dom,[0],CDC,k)
     tiso = toq()
-    ϵiso = abs.(sqrt.(((T_domiso .- T_square(L/2,L)).^2)./T_square(L/2,L).^2))
+#    ϵiso = abs.(sqrt.(((T_domiso .- T_square(L/2,L)).^2)./T_square(L/2,L).^2))
     return t, ϵ, T, q, T_dom, tiso, ϵiso, Tiso, qiso, T_domiso
 end

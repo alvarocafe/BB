@@ -53,7 +53,7 @@ function solvepot(info,PONTOS_int,fc,CDC,k)
     A,b = cal_Aebpot(1,1,collocCoord,nnos,crv,dcrv,E,k,CDC)
     x = A\b # Solves the linear system
     phi,qphi = monta_Teq(CDC,x)
-    phi_dom = calc_phi_pint(PONTOS_int,collocCoord,nnos,crv,dcrv,k,phi,qphi)
+    phi_dom = calc_phi_pint_POT(PONTOS_int,collocCoord,nnos,crv,dcrv,k,phi,qphi)
     return phi, qphi, phi_dom, phi_dom
 end
 
