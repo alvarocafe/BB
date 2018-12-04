@@ -1,124 +1,4 @@
-function Gauss_Legendre(x1,x2,n)
-    eps=3e-14;
-    m::Int64 = round((n+1)/2);
-    x = zeros(n)
-    w = zeros(n)
-    pp = 1
-    xm=0.5*(x2+x1);
-    xl=0.5*(x2-x1);
-    for i=1:m
-        z=cos(pi*(i-0.25)/(n+0.5));
-        while 1==1
-            p1=1.0;
-            p2=0.0;
-            for j=1:n
-                p3=p2;
-                p2=p1;
-                p1=((2*j-1)*z*p2-(j-1)*p3)/j;
-            end
-            pp=n*(z*p1-p2)/(z*z-1);
-            z1=z;
-            z=z1-p1/pp;
-            if(abs(z-z1)<eps)
-                break
-            end
-        end
-        x[i]=xm-xl*z;
-        x[n+1-i]=xm+xl*z;
-        w[i]=2*xl/((1-z*z)*pp*pp);
-        w[n+1-i]=w[i];
-    end
-    return x,w
-end
-
-function calcula_arcoiso(x1,y1,x2,y2,xc,yc)
-    # Function to compute the tet1 angle between the line from point (x1,y1) to (xc,yc) and the
-    # horizontal direction and the the tet2 angle between the line from point (x2,y2) to (xc,yc)
-    # and the horizontal direction
-
-
-    dx1 = x1 - xc; dy1 = y1 - yc
-    dx2 = x2 - xc; dy2 = y2 - yc
-
-    # Computation of tet1
-    if dy1 == 0				# The point 1 and the center have the same y coordinate
-        if x1 > xc
-            tet1 = 0
-        else  # (x1 < xc)
-            tet1 = π
-        end
-    elseif dx1 == 0				# The point 1 and the center have the same x coordinate
-        if y1 > yc
-            tet1 = π/2
-        else  # (y1 < yc)
-            tet1 = -π/2
-        end
-    else  # (dx1~=0 e dy1~=0)
-        tet1 = atan(dy1/dx1);
-        if dx1<0 && tet1<0
-            tet1 = π + tet1
-        elseif dx1 < 0 && tet1>0
-            tet1 = -π + tet1
-        end
-    end
-
-    # Computation of tet2
-    if dy2 == 0				# The point 2 and the center have the same y coordinate
-        if x2 > xc
-            tet2 = 0
-        else  # (x2 < xc)
-            tet2 = π
-        end
-    elseif dx2 == 0				# The point 2 and the center have the same x coordinate
-        if y2 > yc
-            tet2 = π/2
-        else  # (y2 < yc)
-            tet2 = -π/2
-        end
-    else  # (dx2~=0 e dy2~=0)
-        tet2 = atan(dy2/dx2);
-        if dx2<0 && tet2<0
-            tet2 = π + tet2
-        elseif dx2 < 0 && tet2>0
-            tet2 = -π + tet2
-        end
-    end
-    [tet1,tet2]
-end
-
-
-function calcula_centroiso(x1,y1,x2,y2,raio)
-    # Compute the center of an arc given two points and the radius
-
-    xm=(x1+x2)/2
-    ym=(y1+y2)/2
-    b=√((x2-x1)^2+(y2-y1)^2)
-    t1=(x2-x1)/b
-    t2=(y2-y1)/b
-    n1=t2
-    n2=-t1
-    h=√(abs(raio^2-(b/2)^2))
-    if(raio>0)
-        if(n1==0)
-            xc=xm
-            yc=ym-n2/abs(n2)*h
-        else
-            xc=-n1/abs(n1)*√(h^2*n1^2/(n1^2+n2^2))+xm;
-            yc=n2/n1*(xc-xm)+ym
-        end
-    else
-        if(n1==0)
-            xc=xm
-            yc=ym+n2/abs(n2)*h
-        else
-            xc=n1/abs(n1)*√(h^2*n1^2/(n1^2+n2^2))+xm;
-            yc=n2/n1*(xc-xm)+ym
-        end
-    end
-    [xc,yc]
-end
-
-function format_dad(PONTOS,SEGMENTOS,MALHA)
+function format_dad(PONTOS,SEGMENTOS,MALHA,BCSeg)
     # Programa para formata��o dos dados de entrada
     # [NOS_GEO,NOS,ELEM,tipoCDC,valorCDC,normal]
     #   Autor: Lucas Campos
@@ -246,7 +126,167 @@ function format_dad(PONTOS,SEGMENTOS,MALHA)
         end
         t=t+1
     end                                  # end of while(t<num_lin)
-    return crv
+        dcrv=map(x->nurbs2D.nrbderiv(x),crv)
+    n = length(crv)
+    z=0;
+    for k=1:n
+        for i=1:crv[k].number
+            z=z+1
+        end
+    end
+    numcurva=zeros(Integer,z)
+    collocPts=zeros(z)
+    CDC=zeros(z,3)
+    collocCoord=zeros(z,3)
+    z=0;
+    nnos=zeros(Integer,n)
+    for k=1:n
+        p=crv[k].order-1;
+        nnos[k]=crv[k].number;
+        valorCDC=BCSeg[k,3];
+        tipoCDC=BCSeg[k,2];
+        for i=1:crv[k].number
+            z=z+1;
+            numcurva[z]=k;
+            collocPts[z]=sum(crv[k].knots[(i+1):(i+p)])/p;
+            if(i==2)
+                collocPts[z-1]=(collocPts[z]+collocPts[z-1])/2;
+            end
+            if(i==nnos[k])
+                collocPts[z]=(collocPts[z]+collocPts[z-1])/2;
+            end
+
+            CDC[z,:] = [z,tipoCDC,valorCDC];
+        end
+    end
+    nnos2=cumsum([0 nnos'],2)
+    E=zeros(length(collocPts),length(collocPts));
+    for i=1:length(collocPts)
+        collocCoord[i,:]=nurbs2D.nrbeval(crv[numcurva[i]], collocPts[i]);
+        B, id = nurbs2D.nrbbasisfun(crv[numcurva[i]],collocPts[i])
+        E[i,id+nnos2[numcurva[i]]]=B
+    end
+    return collocCoord,nnos2,crv,dcrv,E,CDC
+end
+
+function Gauss_Legendre(x1,x2,n)
+    eps=3e-14;
+    m::Int64 = round((n+1)/2);
+    x = zeros(n)
+    w = zeros(n)
+    pp = 1
+    xm=0.5*(x2+x1);
+    xl=0.5*(x2-x1);
+    for i=1:m
+        z=cos(pi*(i-0.25)/(n+0.5));
+        while 1==1
+            p1=1.0;
+            p2=0.0;
+            for j=1:n
+                p3=p2;
+                p2=p1;
+                p1=((2*j-1)*z*p2-(j-1)*p3)/j;
+            end
+            pp=n*(z*p1-p2)/(z*z-1);
+            z1=z;
+            z=z1-p1/pp;
+            if(abs(z-z1)<eps)
+                break
+            end
+        end
+        x[i]=xm-xl*z;
+        x[n+1-i]=xm+xl*z;
+        w[i]=2*xl/((1-z*z)*pp*pp);
+        w[n+1-i]=w[i];
+    end
+    return x,w
+end
+
+function calcula_arcoiso(x1,y1,x2,y2,xc,yc)
+    # Function to compute the tet1 angle between the line from point (x1,y1) to (xc,yc) and the
+    # horizontal direction and the the tet2 angle between the line from point (x2,y2) to (xc,yc)
+    # and the horizontal direction
+
+
+    dx1 = x1 - xc; dy1 = y1 - yc
+    dx2 = x2 - xc; dy2 = y2 - yc
+
+    # Computation of tet1
+    if dy1 == 0				# The point 1 and the center have the same y coordinate
+        if x1 > xc
+            tet1 = 0
+        else  # (x1 < xc)
+            tet1 = π
+        end
+    elseif dx1 == 0				# The point 1 and the center have the same x coordinate
+        if y1 > yc
+            tet1 = π/2
+        else  # (y1 < yc)
+            tet1 = -π/2
+        end
+    else  # (dx1~=0 e dy1~=0)
+        tet1 = atan(dy1/dx1);
+        if dx1<0 && tet1<0
+            tet1 = π + tet1
+        elseif dx1 < 0 && tet1>0
+            tet1 = -π + tet1
+        end
+    end
+
+    # Computation of tet2
+    if dy2 == 0				# The point 2 and the center have the same y coordinate
+        if x2 > xc
+            tet2 = 0
+        else  # (x2 < xc)
+            tet2 = π
+        end
+    elseif dx2 == 0				# The point 2 and the center have the same x coordinate
+        if y2 > yc
+            tet2 = π/2
+        else  # (y2 < yc)
+            tet2 = -π/2
+        end
+    else  # (dx2~=0 e dy2~=0)
+        tet2 = atan(dy2/dx2);
+        if dx2<0 && tet2<0
+            tet2 = π + tet2
+        elseif dx2 < 0 && tet2>0
+            tet2 = -π + tet2
+        end
+    end
+    [tet1,tet2]
+end
+
+
+function calcula_centroiso(x1,y1,x2,y2,raio)
+    # Compute the center of an arc given two points and the radius
+
+    xm=(x1+x2)/2
+    ym=(y1+y2)/2
+    b=√((x2-x1)^2+(y2-y1)^2)
+    t1=(x2-x1)/b
+    t2=(y2-y1)/b
+    n1=t2
+    n2=-t1
+    h=√(abs(raio^2-(b/2)^2))
+    if(raio>0)
+        if(n1==0)
+            xc=xm
+            yc=ym-n2/abs(n2)*h
+        else
+            xc=-n1/abs(n1)*√(h^2*n1^2/(n1^2+n2^2))+xm;
+            yc=n2/n1*(xc-xm)+ym
+        end
+    else
+        if(n1==0)
+            xc=xm
+            yc=ym+n2/abs(n2)*h
+        else
+            xc=n1/abs(n1)*√(h^2*n1^2/(n1^2+n2^2))+xm;
+            yc=n2/n1*(xc-xm)+ym
+        end
+    end
+    [xc,yc]
 end
 
 function monta_Teqiso(tipoCDC,valorCDC,x)

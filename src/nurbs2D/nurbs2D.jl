@@ -22,7 +22,7 @@ function solve(info,PONTOS_int,fc,CDC,k)
     npg=6 # Number of integration points
     qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
     A,b = cal_Aeb(1,1,collocCoord,nnos,crv,dcrv,E,k,CDC)
-#    A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
+    #    A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
     x = A\b # Solves the linear system
     phi,qphi = monta_Teq(CDC,x)
     phi_dom = calc_phi_pint(PONTOS_int,collocCoord,nnos,crv,dcrv,k,phi,qphi)
@@ -43,34 +43,18 @@ function solveH(info,PONTOS_int,fc,BCFace,k)
     return phii,qphii,phi_pinti,phi_pinti
 end
 
-function solvepot(info,PONTOS_int,fc,BCFace,k)
+function solvepot(info,PONTOS_int,fc,CDC,k)
     ## CBIE - Conventional Boundary Integral Equation
-    NOS_GEO,NOS,ELEM,CDC = info;
-    nnos = size(NOS,1)  # Number of physical nodes
-    b1 = 1:nnos # Array containing all the indexes for nodes and elements which
-    #will be used for integration
-    # Gaussian quadrature - generation of points and weights [-1,1]
-    npg=6; # Number of integration points
+    collocCoord,nnos,crv,dcrv,E = info
+    npg=6 # Number of integration points
     qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
-    A,b = cal_Aeb(b1,b1, [NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
+    # H,G = nurbs2D.calcula_iso_POT(collocCoord,nnos,crv,dcrv,E,k)
+    # A,b = aplica_CDC(G,H,CDC,E)
+    A,b = cal_Aebpot(1,1,collocCoord,nnos,crv,dcrv,E,k,CDC)
     x = A\b # Solves the linear system
-    phi,qphi = monta_phieq(CDC,x) # Applies the boundary conditions
-    phi_pint = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phi,qphi,fc,fc,qsi,w,k)
-    return phi, qphi, phi_pint, phi_pint
-end
-
-function solveHpot(info,PONTOS_int,fc,BCFace,k)
-    ## H-Matrix BEM - Interpolation using Lagrange polynomial
-    NOS,NOS_GEO,ELEM,CDC = info;
-    Tree,block = cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
-    # Gaussian quadrature - generation of points and weights [-1,1]
-    npg=6; # Number of integration points
-    qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
-    A,b = Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
-    x = gmres(vet->matvec(Ai,vet,block,Tree),bi,5,tol=1e-5,maxIter=1000,out=0) 
-    phi,qphi = monta_phieq(CDC,xi[1]) 
-    phi_dom = calc_phi_pint(PONTOS_int,NOS_GEO,ELEM,phii,qphii,fc,fc,qsi,w,k)
-    return phi,qphi,phi_dom,phi_dom
+    phi,qphi = monta_Teq(CDC,x)
+    phi_dom = calc_phi_pint(PONTOS_int,collocCoord,nnos,crv,dcrv,k,phi,qphi)
+    return phi, qphi, phi_dom, phi_dom
 end
 
 end

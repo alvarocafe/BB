@@ -51,5 +51,12 @@ function square(ne=10,L=1,k=1)
     T,q,T_dom=const2D.solvepot(info,PONTOS_dom,[0],BCSeg,k)
     t = toq()
     ϵ = abs.(sqrt.(((T_dom .- T_square(L/2,L)).^2)./T_square(L/2,L).^2))
-    return t, ϵ, T, q, T_dom
+    ## CBIE - Conventional Boundary Integral Equation
+    collocCoord,nnos2,crv,dcrv,E,CDC = nurbs2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
+    info = [collocCoord,nnos2,crv,dcrv,E]
+    tic()
+    Tiso, qiso, T_domiso = nurbs2D.solvepot(info,PONTOS_dom,[0],CDC,k)
+    tiso = toq()
+    ϵiso = abs.(sqrt.(((T_domiso .- T_square(L/2,L)).^2)./T_square(L/2,L).^2))
+    return t, ϵ, T, q, T_dom, tiso, ϵiso, Tiso, qiso, T_domiso
 end

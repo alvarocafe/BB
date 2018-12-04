@@ -108,52 +108,12 @@ function cylinder(ne = 100,r=0.5,c=[0 0],k=1)
     phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)
     tH = toq()
     ϵH = abs.(sqrt.(((phi_domH .- phi_cylinder(1,0.5,5)).^2)./phi_cylinder(1,0.5,5).^2))
-    # # Isogeometric BEM with full influence matrices
-    # crv = nurbs2D.format_dad(POINTS,SEGMENTS,MESH)
-    # dcrv=map(x->nurbs2D.nrbderiv(x),crv)
-    # n = length(crv)
-    # z=0;
-    # for k=1:n
-    #     for i=1:crv[k].number
-    #         z=z+1
-    #     end
-    # end
-    # numcurva=zeros(Integer,z)
-    # collocPts=zeros(z)
-    # CDC=zeros(z,3)
-    # collocCoord=zeros(z,3)
-    # z=0;
-    # nnos=zeros(Integer,n)
-    # for k=1:n
-    #     p=crv[k].order-1;
-    #     nnos[k]=crv[k].number;
-    #     valorCDC=BCSeg[k,3];
-    #     tipoCDC=BCSeg[k,2];
-    #     for i=1:crv[k].number
-    #         z=z+1;
-    #         numcurva[z]=k;
-    #         collocPts[z]=sum(crv[k].knots[(i+1):(i+p)])/p;
-    #         if(i==2)
-    #             collocPts[z-1]=(collocPts[z]+collocPts[z-1])/2;
-    #         end
-    #         if(i==nnos[k])
-    #             collocPts[z]=(collocPts[z]+collocPts[z-1])/2;
-    #         end
-
-    #         CDC[z,:] = [z,tipoCDC,valorCDC];
-    #     end
-    # end
-    # nnos2=cumsum([0 nnos'],2)
-    # E=zeros(length(collocPts),length(collocPts));
-    # for i=1:length(collocPts)
-    #     collocCoord[i,:]=nurbs2D.nrbeval(crv[numcurva[i]], collocPts[i]);
-    #     B, id = nurbs2D.nrbbasisfun(crv[numcurva[i]],collocPts[i])
-    #     E[i,id+nnos2[numcurva[i]]]=B
-    # end
-    # info = collocCoord,nnos2,crv,dcrv,E
-    # tic()
-    # phiiso, qiso, domiso, domiso = nurbs2D.solve(info,PONTOS_dom,fc,CDC,k)
-    # tiso = toq()
-    # ϵiso = abs.(sqrt.(((domiso .- phi_cylinder(k,r,x)).^2)./phi_cylinder(k,r,x).^2))
+    # Isogeometric BEM with full influence matrices
+    collocCoord,nnos,crv,dcrv,E,CDC = nurbs2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
+    info = [collocCoord,nnos,crv,dcrv,E]
+    tic()
+    phiiso, qiso, phi_domiso = nurbs2D.solve(info,PONTOS_dom,[0],CDC,k)
+    tiso = toq()
+    ϵiso = abs.(sqrt.(((phi_domiso .- phi_cylinder(1,0.5,5)).^2)./phi_cylinder(1,0.5,5).^2))
     return t, tH, tiso, ϵ, ϵH, ϵiso, phi, q, phi_dom,  phiH, qH, phi_domH,  phiiso, qiso, domiso
 end
