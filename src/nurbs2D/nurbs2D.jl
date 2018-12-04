@@ -52,9 +52,9 @@ function solvepot(info,PONTOS_int,fc,CDC,k)
     # A,b = aplica_CDC(G,H,CDC,E)
     A,b = cal_Aebpot(1,1,collocCoord,nnos,crv,dcrv,E,k,CDC)
     x = A\b # Solves the linear system
-    phi,qphi = monta_Teq(CDC,x)
-    phi_dom = calc_phi_pint_POT(PONTOS_int,collocCoord,nnos,crv,dcrv,k,phi,qphi)
-    return phi, qphi, phi_dom, phi_dom
+    T,q = monta_Teq(CDC,x)
+    T_dom = calc_phi_pintpot(PONTOS_int,collocCoord,nnos,crv,dcrv,k,T,q)
+    return T, q, T_dom, T_dom
 end
 
 end

@@ -21,6 +21,9 @@ T_square(x,L) = 1 - x./L;
 q_square(x,L) = -1./L;
 ### BEM model
 function square(ne=10,L=1,k=1)
+    #Start----Problem---------------Method----------------post-processing
+    #Start----geometry--formatting--Method----------------post-processing
+    #------------^You are here!------------------------------------------
     #L = 1; # length of the square
     #k = 1; # heat conductivity of the material
     #The points and segments which describe this geometry are
@@ -43,11 +46,14 @@ function square(ne=10,L=1,k=1)
 	     3 1 0
 	     4 0 1];
     PONTOS_dom = [1 L/2 L/2]
+    ## Formatting geometry for applying the method
     # Conventional method with full influence matricces
     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg) # Apply the discretization technique and builds the problems matrices for the geometrical points, physical nodes, elements' connectivity and boundary conditions
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
     info = [NOS_GEO,NOS,ELEM,CDC]
     tic()
+    #Start----Problem---------------Method----------------post-processing
+    #--------------------------------^You are here!----------------------
     T,q,T_dom=const2D.solvepot(info,PONTOS_dom,[0],BCSeg,k)
     t = toq()
     ϵ = abs.(sqrt.(((T_dom .- T_square(L/2,L)).^2)./T_square(L/2,L).^2))
@@ -57,6 +63,6 @@ function square(ne=10,L=1,k=1)
     tic()
     Tiso, qiso, T_domiso = nurbs2D.solvepot(info,PONTOS_dom,[0],CDC,k)
     tiso = toq()
-#    ϵiso = abs.(sqrt.(((T_domiso .- T_square(L/2,L)).^2)./T_square(L/2,L).^2))
+    ϵiso = abs.(sqrt.(((T_domiso .- T_square(L/2,L)).^2)./T_square(L/2,L).^2))
     return t, ϵ, T, q, T_dom, tiso, ϵiso, Tiso, qiso, T_domiso
 end

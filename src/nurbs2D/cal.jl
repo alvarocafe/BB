@@ -61,7 +61,7 @@ function cal_Aebpot(b1,b2,collocCoord,nnos,crv,dcrv,E,kmat,CDC)
                 xfonte=collocCoord[k,1]
                 yfonte=collocCoord[k,2]
                 # Integrais de dom�nio
-                g,h,id=integra_elem(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
+                g,h,id=integra_elem_POT(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
                 #  element (I = int F n.r/r dGama)
                 H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;
                 G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
@@ -298,38 +298,38 @@ function monta_Teq(CDC,x)
     return T,q
 end
 
-function calc_phi_pint_nurbs_POT(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
-    n = length(crv);	# Number of curves
-    ncollocpoints = size(collocCoord,1)
-    n_pint=size(PONTOS_int,1)
-
-    H=complex(zeros(n_pint,ncollocpoints));
-    G=complex(zeros(n_pint,ncollocpoints));
-    npgauss=12;
-    qsi,w=Gauss_Legendre(-1,1,npgauss)
-    # qsi,w=gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
-    for i = 1 : n #Laço sobre as curvas (elementos)
-        uk=unique(crv[i].knots)
-        ne=length(uk)-1;
-        for j=1:ne
-            range=uk[j+1]-uk[j]
-            mid=(uk[j+1]+uk[j])/2
-            for k=1:n_pint
-                xfonte=PONTOS_int[k,2]
-                yfonte=PONTOS_int[k,3]
-                # Integrais de dom�nio
-                g,h,id=integra_elem_POT(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
-                #  element (I = int F n.r/r dGama)
-                H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;
-                G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
-            end
-
-        end
-    end
-
-    phi_pint = H*Tc - G*qc;
-    return H,G,phi_pint
-end
+# function calc_phi_pintpot(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
+#     n = length(crv);	# Number of curves
+#     ncollocpoints = size(collocCoord,1)
+#     n_pint=size(PONTOS_int,1)
+# 
+#     H=complex(zeros(n_pint,ncollocpoints));
+#     G=complex(zeros(n_pint,ncollocpoints));
+#     npgauss=12;
+#     qsi,w=Gauss_Legendre(-1,1,npgauss)
+#     # qsi,w=gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
+#     for i = 1 : n #Laço sobre as curvas (elementos)
+#         uk=unique(crv[i].knots)
+#         ne=length(uk)-1;
+#         for j=1:ne
+#             range=uk[j+1]-uk[j]
+#             mid=(uk[j+1]+uk[j])/2
+#             for k=1:n_pint
+#                 xfonte=PONTOS_int[k,2]
+#                 yfonte=PONTOS_int[k,3]
+#                 # Integrais de dom�nio
+#                 g,h,id=integra_elem_POT(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
+#                 #  element (I = int F n.r/r dGama)
+#                 H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;
+#                 G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
+#             end
+# 
+#         end
+#     end
+# 
+#     phi_pint = H*Tc - G*qc;
+#     return H,G,phi_pint
+# end
 
 function calc_phi_pint(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
     n = length(crv);	# Number of curves
@@ -352,6 +352,38 @@ function calc_phi_pint(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
                 yfonte=PONTOS_int[k,3]
                 # Integrais de dom�nio
                 g,h,id=integra_elem(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
+                #  element (I = int F n.r/r dGama)
+                H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;
+                G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
+            end
+
+        end
+    end
+
+    phi_pint = H*Tc - G*qc;
+    return phi_pint
+end
+function calc_phi_pintpot(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
+    n = length(crv);	# Number of curves
+    ncollocpoints = size(collocCoord,1)
+    n_pint=size(PONTOS_int,1)
+
+    H=complex(zeros(n_pint,ncollocpoints));
+    G=complex(zeros(n_pint,ncollocpoints));
+    npgauss=12;
+    qsi,w=Gauss_Legendre(-1,1,npgauss)
+    # qsi,w=gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
+    for i = 1 : n #Laço sobre as curvas (elementos)
+        uk=unique(crv[i].knots)
+        ne=length(uk)-1;
+        for j=1:ne
+            range=uk[j+1]-uk[j]
+            mid=(uk[j+1]+uk[j])/2
+            for k=1:n_pint
+                xfonte=PONTOS_int[k,2]
+                yfonte=PONTOS_int[k,3]
+                # Integrais de dom�nio
+                g,h,id=integra_elem_POT(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
                 #  element (I = int F n.r/r dGama)
                 H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;
                 G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
