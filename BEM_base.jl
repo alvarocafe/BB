@@ -31,7 +31,7 @@ include("src/quad2D/quad2D.jl")
 include("src/nurbs2D/nurbs2D.jl")
 # 3-dimensional elements.
 include("src/const3D_tri/const3D_tri.jl")
-using .const2D, .desclin2D, .linear2D, .quad2D, .nurbs2D, .const3D_tri, SpecialFunctions, LinearAlgebra, KrylovMethods
+using .const2D, .desclin2D, .linear2D, .quad2D, .nurbs2D, .const3D_tri, SpecialFunctions, KrylovMethods
 # Main function
 function BEM_base(file,PONTOS_int=[],BCFace = [],k=1, equation = "wave")
     println("Importing mesh...")

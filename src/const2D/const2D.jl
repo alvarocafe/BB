@@ -8,7 +8,7 @@
 #Start----Problem--------------Method-----------------post-processing
 #-----------^You are here!-------------------------------------------
 module const2D
-using SpecialFunctions, LinearAlgebra, KrylovMethods
+using SpecialFunctions, KrylovMethods
 #, PyCall, PyPlot
 #plt=PyPlot
 #@pyimport matplotlib.tri as tri

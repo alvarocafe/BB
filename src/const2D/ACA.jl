@@ -27,7 +27,7 @@ function ACAF(Tree,block,fHeG,arg,erro=1e-5)
             aref=0*ind1
             for indaref =1 :length(ind1)
                 aref,btemp=fHeG(b1[indaref],b2,arg)
-                aref=aref.'
+                aref=aref'
                 push!(INDB1,indaref)
                 B1=[B1;btemp]
                 if norm(aref)>1e-10
@@ -37,7 +37,7 @@ function ACAF(Tree,block,fHeG,arg,erro=1e-5)
             end
             if ind1==falses(ind1)
                 Aaca[i,1]=ind1*0
-                Aaca[i,2]=ind2.'*0
+                Aaca[i,2]=ind2'*0
             else
                 #coluna 1
                 indbref=1
@@ -73,10 +73,10 @@ function ACAF(Tree,block,fHeG,arg,erro=1e-5)
                         B2=[B2 btemp]
                         Umax=indmax(abs.(U[:,cont]))
                         V[cont,:],btemp=fHeG(b1[Umax],b2,arg)
-                        V[cont,:]=(V[cont,:][:]-Ap[Umax,:]).'/U[Umax,cont]
+                        V[cont,:]=(V[cont,:][:]-Ap[Umax,:])'/U[Umax,cont]
                         push!(INDB1,Umax)
                         B1=[B1;btemp]
-                        # V[cont,:]=(fHeG(b1[Umax],b2,arg)[1,:]-Ap[Umax,:]).'/U[Umax,cont]
+                        # V[cont,:]=(fHeG(b1[Umax],b2,arg)[1,:]-Ap[Umax,:])'/U[Umax,cont]
                         Vmax=arefmax
                     else
                         V[cont,:],btemp=fHeG(b1[brefmax],b2,arg)
@@ -130,10 +130,10 @@ function ACAF(Tree,block,fHeG,arg,erro=1e-5)
                         end
 
                     elseif indaref==Umax
-                        bref=bref-U[:,cont]*V[cont,indbref].'
+                        bref=bref-U[:,cont]*V[cont,indbref]'
                         #  indaref=indmin(abs.(bref[ind1]))
                         #  indaref=indaref+cumsum(ind1.==0)[ind1][indaref]
-                        #  aref=fHeG(b1[indaref],b2).'-Ap[indaref,:].'
+                        #  aref=fHeG(b1[indaref],b2)'-Ap[indaref,:].'
 
                         for indaref =1 :sum(ind1)
                             indaref=indmin(abs.(bref[ind1]))
@@ -170,7 +170,7 @@ function ACAF(Tree,block,fHeG,arg,erro=1e-5)
                         end
                     else
                         aref=aref[:]-U[indaref,cont]*V[cont,:]
-                        bref=bref-U[:,cont]*V[cont,indbref].'
+                        bref=bref-U[:,cont]*V[cont,indbref]'
                     end
                     arefmax=indmax(abs.(aref))
                     brefmax=indmax(abs.(bref))
@@ -182,7 +182,7 @@ Aaca[i,2]=V[1:cont,:]
 end
 max1=ind2sub(size(B1),indmax(abs.(B1[:,INDB2])))
 maxv=B1[max1[1],INDB2[max1[2]]]
-Vb=B1[max1[1],:].'
+Vb=B1[max1[1],:]'
 Ub=B2[:,max1[2]]/maxv
 Bp=Ub*Vb
 B1-=Bp[INDB1,:]
@@ -193,9 +193,9 @@ for i=1:size(B1,1)-1
     if abs.(maxv)<1e-12
         break
     end
-    Vb=[Vb; B1[max1[1],:].']
+    Vb=[Vb; B1[max1[1],:]']
     Ub=[Ub B2[:,max1[2]]/maxv]
-    lastBp=Ub[:,end]*Vb[end,:].'
+    lastBp=Ub[:,end]*Vb[end,:]'
     B1-=lastBp[INDB1,:]
     B2-=lastBp[:,INDB2]
 
@@ -215,7 +215,7 @@ end
 function erroblocos(hmat,A,block,Tree)
     for i =1:length(block[:,3])
         if block[i,3]==1
-            n=vecnorm(A[Tree[block[i,1]],Tree[block[i,2]]]-hmat[i,1]*hmat[i,2])
+            n=norm(A[Tree[block[i,1]],Tree[block[i,2]]]-hmat[i][1]*hmat[i][2])
             println("erro no bloco $i = $n")
         end
     end
@@ -225,20 +225,20 @@ function matvec(hmat,b,block,Tree)
     v=b*0
     for i =1:length(block[:,3])
         if block[i,3]==1
-            v[Tree[block[i,1]]]+=hmat[i,1]*(hmat[i,2]*b[Tree[block[i,2]]])
+            v[Tree[block[i,1]]]+=hmat[i][1].*(hmat[i][2].*b[Tree[block[i,2]]])
         else
-            v[Tree[block[i,1]]]+=hmat[i,1]*b[Tree[block[i,2]]]
+            v[Tree[block[i,1]]]+=hmat[i][1].*b[Tree[block[i,2]]]
         end
     end
     return  v
 end
 function montacheia(hmat,block,Tree,n)
-    A=zeros(n,n)
+    A=complex(zeros(n,n))
     for i =1:length(block[:,3])
         if block[i,3]==1
-            A[Tree[block[i,1]],Tree[block[i,2]]]=hmat[i,1]*hmat[i,2]
+            A[Tree[block[i,1]],Tree[block[i,2]]]=hmat[i][1]*hmat[i][2]
         else
-            A[Tree[block[i,1]],Tree[block[i,2]]]=hmat[i,1]
+            A[Tree[block[i,1]],Tree[block[i,2]]]=hmat[i][1]
         end
     end
     A
