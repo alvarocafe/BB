@@ -157,9 +157,9 @@ nelem=size(ELEM,1);
 NOS=zeros(nelem,4);
 
 for i = 1:nelem
-		no1=ELEM[i,2];
-		no2=ELEM[i,3];
-		no3=ELEM[i,4];
+		no1::Int=ELEM[i,2];
+		no2::Int=ELEM[i,3];
+		no3::Int=ELEM[i,4];
 
 		xno1=NOS_GEO[no1,2];
 		yno1=NOS_GEO[no1,3];

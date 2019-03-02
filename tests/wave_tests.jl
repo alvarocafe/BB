@@ -6,7 +6,6 @@
 ### Analytical solution
 ### BEM model
 ### return error
-include("../BEM_base.jl")
 
 #################### Test case 1-4 ####################
 ### Acoustic tube
@@ -40,7 +39,7 @@ function closed2D(ne=10,L=1,k=1)
 	    4 ne];
     PONTOS_dom = [1 L/2 L/2]
     fc = [0 0 0]
-   BCSeg = [1 1 0
+    BCSeg = [1 1 0
 	     2 1 0
 	     3 1 0
 	     4 1 1];
@@ -51,8 +50,8 @@ function closed2D(ne=10,L=1,k=1)
     # Conventional method with approximated influence matrices
     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
-#    info = [NOS_GEO,NOS,ELEM,CDC]
-#    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)    
+    #    info = [NOS_GEO,NOS,ELEM,CDC]
+    #    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)    
     return norm(phi_dom-phi_closed(k,PONTOS_dom[1,2]))
 end
 
@@ -79,7 +78,7 @@ function cup2D(ne=10,L=1,k=1)
 	    4 ne];
     PONTOS_dom = [1 L/2 L/2]
     fc = [0 0 0]
-   BCSeg = [1 1 0
+    BCSeg = [1 1 0
 	     2 0 1
 	     3 1 0
 	     4 1 0];
@@ -90,8 +89,8 @@ function cup2D(ne=10,L=1,k=1)
     # Conventional method with approximated influence matrices
     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
-#    info = [NOS_GEO,NOS,ELEM,CDC]
-#    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)    
+    #    info = [NOS_GEO,NOS,ELEM,CDC]
+    #    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)    
     return norm(phi_dom-phi_cup(k,PONTOS_dom[1,2]))
 end
 
@@ -118,7 +117,7 @@ function open2D(ne=10,L=1,k=1)
 	    4 ne];
     PONTOS_dom = [1 L/2 L/2]
     fc = [0 0 0]
-   BCSeg = [1 1 0
+    BCSeg = [1 1 0
 	     2 0 0
 	     3 1 0
 	     4 0 1];
@@ -129,8 +128,8 @@ function open2D(ne=10,L=1,k=1)
     # Conventional method with approximated influence matrices
     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
-#    info = [NOS_GEO,NOS,ELEM,CDC]
-#    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)    
+    #    info = [NOS_GEO,NOS,ELEM,CDC]
+    #    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)    
     return norm(phi_dom-phi_open(k,PONTOS_dom[1,2]))
 end
 
@@ -157,7 +156,7 @@ function helmholtz_bottle(ne=10,L=1,k=1)
 	    4 ne];
     PONTOS_dom = [1 L/2 L/2]
     fc = [0 0 0]
-   BCSeg = [1 1 0
+    BCSeg = [1 1 0
 	     2 0 0
 	     3 1 0
 	     4 0 1];
@@ -168,8 +167,8 @@ function helmholtz_bottle(ne=10,L=1,k=1)
     # Conventional method with approximated influence matrices
     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
-#    info = [NOS_GEO,NOS,ELEM,CDC]
-#    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)    
+    #    info = [NOS_GEO,NOS,ELEM,CDC]
+    #    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)    
     return norm(phi_dom-phi_helmholtz(k,PONTOS_dom[1,2]))
 end
 
@@ -207,9 +206,9 @@ function const2Dcylinder(ne = 100,r=0.5,c=[0 0],k=1)
     PONTOS_dom = [1 0 x]
     fc = [0 0 0]
     # # Conventional method with full influence matrices
-     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
-     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
-     info = [NOS_GEO,NOS,ELEM,CDC]
+    NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
+    nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
+    info = [NOS_GEO,NOS,ELEM,CDC]
     t = @elapsed phi, q, phi_dom, phi_dom = const2D.solve(info,PONTOS_dom,fc,BCSeg,k)
     b1 = 1:nnos # Array containing all the indexes for nodes and elements
     npg=6
@@ -241,10 +240,10 @@ function Hconst2Dcylinder(ne = 100,r=0.5,c=[0 0],k=1)
     PONTOS_dom = [1 0 x]
     fc = [0 0 0]
     # # Conventional method with full influence matrices
-     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
-     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
+    NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
+    nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
     # Conventional method with approximated influence matrices
-#    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)
+    #    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)
     Tree,block = const2D.cluster(NOS[:,2:3],floor(sqrt(length(NOS))),2)
     tH = @elapsed Aaca1,baca =  const2D.Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k])
     Aaca = const2D.montacheia(Aaca1,block,Tree,nnos)
@@ -294,17 +293,17 @@ function cylinder3D(ne = 100,r=1,L=10,c=[0 0],k=1)
     #3D constant elements    
     #NURBS
     PNTS = [1 0 0 0
-              2 r 0 0
-              3 r L 0
-              4 0 L 0]
+            2 r 0 0
+            3 r L 0
+            4 0 L 0]
     SEGS = [1 1 2 0
             2 2 3 0
             3 3 4 0
             4 4 1 0]
     MESH = [1 10
-             2 10
-             3 10
-             4 10]    
+            2 10
+            3 10
+            4 10]    
     BCSeg = [1 1 1
              2 1 1
              3 1 1
@@ -357,10 +356,10 @@ function cyl_scat(ne = 100,r=0.5,c=[0 0],k=1)
     PONTOS_dom = [1 0 x]
     fc = [1 -1 0]
     # # Conventional method with full influence matrices
-     NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
-     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
-     info = [NOS_GEO,NOS,ELEM,CDC]
-#    t = @elapsed phi, q, phi_dom, phi_dom = const2D.solve(info,PONTOS_dom,fc,BCSeg,k)
+    NOS_GEO,NOS,ELEM,CDC,normal = const2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
+    nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
+    info = [NOS_GEO,NOS,ELEM,CDC]
+    #    t = @elapsed phi, q, phi_dom, phi_dom = const2D.solve(info,PONTOS_dom,fc,BCSeg,k)
     b1 = 1:nnos # Array containing all the indexes for nodes and elements
     npg=6
     qsi,w = const2D.Gauss_Legendre(-1,1,npg) # Generation of the points and weights
@@ -377,8 +376,8 @@ function cyl_scat(ne = 100,r=0.5,c=[0 0],k=1)
     ϵH = norm(Aaca-A)
     println("ϵH = ",ϵH)
     # Conventional method with approximated influence matrices
-#    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)
-#    ϵH = abs.(sqrt.(((phi_domH .- phi_cylinder(1,0.5,5)).^2)./phi_cylinder(1,0.5,5).^2))
+    #    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)
+    #    ϵH = abs.(sqrt.(((phi_domH .- phi_cylinder(1,0.5,5)).^2)./phi_cylinder(1,0.5,5).^2))
     # Isogeometric BEM with full influence matrices
     #collocCoord,nnos,crv,dcrv,E,CDC = nurbs2D.format_dad(POINTS,SEGMENTS,MESH,BCSeg)
     #info = [collocCoord,nnos,crv,dcrv,E]

@@ -6,8 +6,6 @@
 ### Analytical solution
 ### BEM model
 ### return error
-include("../BEM_base.jl")
-println("Running tests for potential problems...")
 
 #################### Test case 1 ####################
 ### Heat conduction on a square plate

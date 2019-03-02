@@ -4,13 +4,13 @@
 # Contains the dependencies for the triangular element integration. The main function is const3D_tri.solve() which builds the influence matrices, applies the boundary conditions, solves the linear system and returns the value of the velocity potential and its flux at boundary and domain points.
 
 module const3D_tri
-using PyPlot
-using PyCall
+using KrylovMethods
+#using PyPlot, PyCall
 # @pyimport matplotlib.colors as col
-@pyimport matplotlib.cm as cm
-@pyimport mpl_toolkits.mplot3d as mp
-@pyimport mpl_toolkits.mplot3d.art3d as ar
-plt=PyPlot
+# @pyimport matplotlib.cm as cm
+# @pyimport mpl_toolkits.mplot3d as mp
+# @pyimport mpl_toolkits.mplot3d.art3d as ar
+# plt=PyPlot
 
 include("format.jl") # curve interpolation formatting
 include("cal.jl") # element integration calculating functions
@@ -19,8 +19,7 @@ include("interp.jl") # approximation  using Lagrange polynomial interpolation
 include("ACA.jl") # approximation using ACA
 
 
-function solve(info,PONTOS_int,BCFace,k)
-    NOS_GEO,ELEM,elemint,CDC = info
+function solve(NOS_GEO,ELEM,PONTOS_int,BCFace,k)
     NOS = mostra_geoTRI(NOS_GEO,ELEM) #Generate the physical nodes for constant elements
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
     # If there's a defined BCFace, the boundary condition matrix is created. If no BCFace is defined, then the mesh reader has already built the boudnary conditions matrix.
@@ -45,7 +44,7 @@ function solve(info,PONTOS_int,BCFace,k)
 end
 
 function H_solve(info,PONTOS_int,BCFace,k)
-    NOS_GEO,ELEM,elemint,CDC = info
+    NOS_GEO,ELEM = info
     NOS = mostra_geoTRI(NOS_GEO,ELEM) #Generate the physical nodes for constant elements
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
     # If there's a defined BCFace, the boundary condition matrix is created. If no BCFace is defined, then the mesh reader has already built the boudnary conditions matrix.
