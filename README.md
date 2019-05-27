@@ -1,4 +1,4 @@
-# BEM_base
+# BEM base
 ---
 A Julia language implementation of the a fast isogeometric boundary element method formulation (IGABEM) with Hierarchical Matrices partitioning and approximation using Lagrange polynomials and the Adapative-Cross Approximation (ACA). 
 The goal of the BEM_base project is to provide a platform that can be used alongside FreeCad and Gmsh to quickly solve bidimensional boundary element problems.
