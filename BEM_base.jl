@@ -25,16 +25,13 @@
 # Returns the potential and flux on boundary points and then on domain points.
 # 2-dimensional elements.
 include("src/const2D/const2D.jl")
-include("src/desclin2D/desclin2D.jl")
-include("src/linear2D/linear2D.jl")
-include("src/quad2D/quad2D.jl")
 include("src/nurbs2D/nurbs2D.jl")
 # 3-dimensional elements.
 include("src/const3D_tri/const3D_tri.jl")
 # Tests
 include("tests/wave_tests.jl")
 include("tests/pot_tests.jl")
-using .const2D, .desclin2D, .linear2D, .quad2D, .nurbs2D, .const3D_tri, SpecialFunctions, KrylovMethods
+using .const2D, .nurbs2D, .const3D_tri, SpecialFunctions, KrylovMethods
 # Main function
 function BEM_base(file,PONTOS_int=[],BCFace = [],k=1, equation = "wave")
     println("Importing mesh...")

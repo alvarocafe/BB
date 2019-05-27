@@ -40,7 +40,7 @@ for i in b1 # Laco sobre os pontos fontes
         if i==j # O ponto fonte pertence ao elemento
             g,h = calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,xi,w,FR,CW)
         else # O ponto fonte n�o pertence ao elemento
-            g,h = calcula_HeGns_POT(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,xitri,wtri,FR,CW);
+            g,h = calcula_HeGns(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,xitri,wtri,FR,CW);
         end
         if CDC[j,2]==0
             G[ci,cj] = -h
@@ -196,7 +196,7 @@ for i1 =1:ninterp1 # Laco sobre os pontos fontes
                 z2=NOS_GEO[no2,4];  # Coordenada z do ponto final do elemento
                 z3=NOS_GEO[no3,4];  # Coordenada z do ponto final do elemento
                 n = calc_vetnormal(x1,y1,z1,x2,y2,z2,x3,y3,z3);
-                g,h = calcula_HeGns_POT(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,xitri,wtri,FR,CW);
+                g,h = calcula_HeGns(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,xitri,wtri,FR,CW);
                 if CDC[j,2]==0
                     GG[ci,cj] = -h
                     HH[ci,cj] = -g

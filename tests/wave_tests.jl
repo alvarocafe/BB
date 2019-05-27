@@ -1,6 +1,7 @@
 ## Test cases for wave problems
 # This script tests the BEM models against known problems
 #for which analytical solutions are readily obtained.
+include("../BEM_base.jl")
 #################### Test case n ####################
 ### Problem description
 ### Analytical solution
