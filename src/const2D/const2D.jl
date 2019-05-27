@@ -5,8 +5,6 @@
 #The main function is const2D.solve() which builds the influence matrices,
 #applies the boundary conditions, solves the linear system and returns the
 #value of the potential and its gradient at boundary and domain points.
-#Start----Problem--------------Method-----------------post-processing
-#-----------^You are here!-------------------------------------------
 module const2D
 using SpecialFunctions, LinearAlgebra, IterativeSolvers, Statistics
 
@@ -75,4 +73,4 @@ function solvepotH(info,PONTOS_int,fc,BCFace,k)
     return phi,qphi,phi_dom,phi_dom
 end
 
-end # end module const2D
+end # module const2D
