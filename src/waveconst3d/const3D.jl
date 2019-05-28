@@ -5,7 +5,7 @@
 #The main function is const2D.solve() which builds the influence matrices,
 #applies the boundary conditions, solves the linear system and returns the
 #value of the potential and its gradient at boundary and domain points.
-module const3D
+#module const3D
 using KrylovMethods, Statistics, LinearAlgebra, DelimitedFiles, PyCall
 include("dad.jl")
 include("hmat.jl")
@@ -32,9 +32,8 @@ filemsh = "VT_A.msh"
 # Python - mesh.io
 meshio = pyimport("meshio")
 mesh = meshio.read("tests/data/VT_A.msh")
-points = mesh("points")
-elems = [mesh.cells["triangle"] mesh.cell_data["triangle"]["gmsh:geometrical"]]
-
+NOS_GEO = [1:size(mesh.points,1) mesh.points]
+ELEM = [1:size(mesh.cells["triangle"],1) mesh.cells["triangle"].+1 mesh.cell_data["triangle"]["gmsh:geometrical"]]
 # Build the domain points
 L = 140; # Length of the vocal tract
 n_pint = 40; # Number of domain points
@@ -50,8 +49,10 @@ BCFace = ones(30,3);
 BCFace[:,3] .= 0;
 BCFace[1,:] = [1 1 1]; # Neumann (flux = 1) to the Glotis
 BCFace[30,:] = [30 0 0]; # Dirichlet (pressure = 0) to the mouth
-
-
+CDC,NOS = gera_vars(ELEM,BCFace,NOS_GEO)
+FR = 1
+CW = 1
+inc = 1
 function solveH(info,PONTOS_int,fc,BCFace,k)
     ## H-Matrix BEM - Interpolation using Lagrange polynomial
     NOS_GEO,NOS,ELEM,CDC = info
@@ -69,8 +70,12 @@ end
 # H-BEM
 # max_elem = Define máximo de nós em cada folha, tal que: max_elem/2 <= nós em cada folha < max_elem
 # max_elem=floor(sqrt(2*length(NOS[:,1])))
+# Gaussian quadrature - generation of points and weights [-1,1]
+npg=12; # Number of integration points
+qsi,w = Gauss_Legendre(0,1,npg) # Generation of the points and weights
+
 max_elem=10
-println("max_elem = $max_elem")
+#println("max_elem = $max_elem")
 Tree,child,center_row,diam,inode,ileaf = cluster(NOS[:,2:3],max_elem)
 ninterp=4 # Número de pontos de interpolação
 #η =.4 # Coeficiente relacionado a admissibilidade dos blocos
@@ -82,4 +87,4 @@ xi = gmres(vet->matvec(hmati,vet,block,Tree),bi,5,tol=1e-8,maxIter=1000,out=0)
 T,q=monta_Teq(CDC,xi[1])
 T_pint = calc_T_pint(PONTOS_int,NOS_GEO,ELEM,T,q,FR,CW,qsi,w,inc)
 
-end # module const3D
+#end # module const3D
