@@ -43,7 +43,7 @@ function solveH(info,PONTOS_int,fc,BCFace,k)
     return phi,qphi,phi_dom,phi_dom
 end
 
-files = ["VT_A_coarse.msh" "VT_A_coarsest.msh" "VT_A_fine.msh" "VT_A.msh" "VT_A_very_fine.msh"]
+files = ["VT_A_coarse.msh" "VT_A_coarsest.msh" "VT_A_fine.msh" "VT_A_very_fine.msh" "VT_A.msh"]
 # Python - mesh.io
 meshio = pyimport("meshio")
 # Build the domain points
