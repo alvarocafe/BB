@@ -33,7 +33,7 @@ end
 BCFace = ones(30,3);
 BCFace[:,3] .= 0;
 BCFace[1,:] = [1 0 1]; # Dirichlet (pressure = 1) to the Glotis
-BCFace[30,:] = [30 0 0]; # Dirichlet (pressure = 0) to the mouth
+BCFace[30,:] = [30 0 0.00001]; # Dirichlet (pressure = 0) to the mouth
 mshd = "./tests/data/"
 t = []
 for i in files
@@ -42,7 +42,9 @@ for i in files
     nelem = size(mesh.cells["triangle"],1)
     ELEM = [1:nelem mesh.cells["triangle"].+1 mesh.cell_data["triangle"]["gmsh:geometrical"]]
     CDC,NOS = gera_vars(ELEM,BCFace,NOS_GEO)
-    FR = 1;CW = 1;inc = 0
+    CW = 343*1000; # Speed of sound in mm/s
+    FR = 774/2/pi; # Set the frequency
+    inc = [0]
     println(i," nelem = ",nelem)
     # Conventional BEM
     b1 = 1:nelem; b2 = 1:nelem;
