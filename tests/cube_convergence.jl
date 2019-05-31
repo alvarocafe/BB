@@ -46,8 +46,8 @@ BCFace = [1. 1. 0.
           6. 1. 0.];
 mshd = "./tests/data/"
 files = ["cube_coarsest.msh" "cube_coarse.msh"  "cube_fine.msh" "cube_finest.msh"]
-#files = ["cube_coarsest.msh" "cube_coarse.msh"]
-t = []
+#i = files[1];
+t = [];
 for i in files
     mesh = meshio.read(string(mshd,i))
     NOS_GEO = [1:size(mesh.points,1) mesh.points]
@@ -60,7 +60,7 @@ for i in files
     # max_elem=floor(sqrt(2*length(NOS[:,1])))
     max_elem=10
     #println("max_elem = $max_elem")
-    ttree = @elapsed Tree,child,center_row,diam,inode,ileaf = cluster(NOS[:,2:3],max_elem)
+    ttree = @elapsed Tree,child,center_row,diam,inode,ileaf = cluster(NOS[:,2:4],max_elem)
     println(ttree)
     ninterp=4 # Número de pontos de interpolação
     #η =.4 # Coeficiente relacionado a admissibilidade dos blocos
@@ -84,5 +84,5 @@ for i in files
     T_pintc = calc_T_pint(PONTOS_int,NOS_GEO,ELEM,Tc,qc,FR,CW,qsi,w,inc)
     println("tmatrixc = ", tmatrixc,", tsolvec = ",tsolvec)
     global t = append!(t,[ttree tmatrix tsolve tmatrixc tsolvec])
-    save(string(mshd,i,".jld"),"ttree",ttree,"tmatrix",tmatrix,"tsolve","tsolve", "T",T,"q",q,"Tc",Tc,"qc",qc)
+    save(string(mshd,i,".jld"),"ttree",ttree,"tmatrix",tmatrix,"tsolve",tsolve, "T",T,"q",q,"Tc",Tc,"qc",qc)
 end # files for
