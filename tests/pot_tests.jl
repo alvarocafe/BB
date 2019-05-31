@@ -17,13 +17,10 @@
 # A linear solution solves the problem.
 T_square(x,L) = 1 - x./L;
 q_square(x,L) = -1./L;
+k_res(L) = n*pi/L;
+
 ### BEM model
 function square(ne=10,L=1,k=1)
-    #Start----Problem---------------Method----------------post-processing
-    #Start----geometry--formatting--Method----------------post-processing
-    #------------^You are here!------------------------------------------
-    #L = 1; # length of the square
-    #k = 1; # heat conductivity of the material
     #The points and segments which describe this geometry are
     POINTS = [1 0 0
 	      2 L 0

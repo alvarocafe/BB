@@ -10,30 +10,42 @@ filed = "../src/waveconst3d/"
 include(string(filed,"dad.jl"))
 include(string(filed,"hmat.jl"))
 include(string(filed,"bem_functions.jl"))
-include(string(filed,"lermsh.jl"))
 include(string(filed,"tree.jl"))
+### Analytical solution
+L = 10; # Square length
+n = 1; # First mode number
+phi_closed(k,x) = sin.(k.*x)
+q_closed(k,x) = -k.*cos(k.*x)
+k_res(n,L) = n*pi/L; # Resonance wavenumber, k = ω/c, where c is the speed of propagation and ω is the angular frequency
+CW = 343*1000; # Speed of sound in mm/s
+FR = k_res(n,L)*CW; # Set the frequency in [rad/s]
+inc = [0]; # There'll be no incident wave
+
+# BEM modelling
 # Gaussian quadrature - generation of points and weights [-1,1]
 npg=4; # Number of integration points
 qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
-
-files = [ "VT_A_coarsest.msh" "VT_A_coarse.msh"]
+#files = ["cube_coarsest.msh" "cube_coarse.msh"  "cube_fine.msh"]
+files = ["cube_coarsest.msh" "cube_coarse.msh"]
 # Python - mesh.io
 meshio = pyimport("meshio")
 # Build the domain points
-L = 140; # Length of the vocal tract
+L = 10; # Length of the vocal tract
 n_pint = 40; # Number of domain points
 #n_pint = 10; # Number of domain points
 PONTOS_int = zeros(n_pint,4);
-delta = 1; # distance from both ends 
+delta = 0.1; # distance from both ends 
 passo = (L-2*delta)/(n_pint-1);
 for i = 1:n_pint
     PONTOS_int[i,:] = [i 0 0 delta+(i-1)*passo];
 end
-# Set the boundary conditions for each face. Vowel /A/ model has 30 faces
-BCFace = ones(30,3);
-BCFace[:,3] .= 0;
-BCFace[1,:] = [1 1 1]; # Dirichlet (pressure = 1) to the Glotis
-BCFace[30,:] = [30 0 0.00001]; # Dirichlet (pressure = 0) to the mouth
+# Set the boundary conditions for each face. A cube has 6 faces
+BCFace = [1. 1. 0.
+          2. 1. 0.
+          3. 0. 1.
+          4. 1. 0.
+          5. 1. 0.
+          6. 1. 0.];
 mshd = "./tests/data/"
 t = []
 for i in files
@@ -42,9 +54,6 @@ for i in files
     nelem = size(mesh.cells["triangle"],1)
     ELEM = [1:nelem mesh.cells["triangle"].+1 mesh.cell_data["triangle"]["gmsh:geometrical"]]
     CDC,NOS = gera_vars(ELEM,BCFace,NOS_GEO)
-    CW = 343*1000; # Speed of sound in mm/s
-    FR = 774/2/pi; # Set the frequency
-    inc = [0]
     println(i," nelem = ",nelem)
     # Conventional BEM
     b1 = 1:nelem; b2 = 1:nelem;

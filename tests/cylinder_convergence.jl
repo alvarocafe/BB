@@ -6,7 +6,7 @@
 #applies the boundary conditions, solves the linear system and returns the
 #value of the potential and its gradient at boundary and domain points.
 using KrylovMethods, Statistics, LinearAlgebra, DelimitedFiles, PyCall, JLD
-filed = "../src/waveconst3d/"
+filed = "../src/potconst3d/"
 include(string(filed,"dad.jl"))
 include(string(filed,"hmat.jl"))
 include(string(filed,"bem_functions.jl"))
@@ -16,11 +16,11 @@ include(string(filed,"tree.jl"))
 npg=4; # Number of integration points
 qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
 
-files = [ "VT_A_coarsest.msh" "VT_A_coarse.msh"]
+files = ["VT_A_coarsest.msh" "VT_A_coarse.msh"]
 # Python - mesh.io
 meshio = pyimport("meshio")
 # Build the domain points
-L = 140; # Length of the vocal tract
+L = 100; # Length of the vocal tract
 n_pint = 40; # Number of domain points
 #n_pint = 10; # Number of domain points
 PONTOS_int = zeros(n_pint,4);
