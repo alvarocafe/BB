@@ -55,15 +55,6 @@ for i in files
     ELEM = [1:nelem mesh.cells["triangle"].+1 mesh.cell_data["triangle"]["gmsh:geometrical"]]
     CDC,NOS = gera_vars(ELEM,BCFace,NOS_GEO)
     println(i," nelem = ",nelem)
-    # Conventional BEM
-    b1 = 1:nelem; b2 = 1:nelem;
-    tmatrixc = @elapsed Ac,bc = cal_Aeb(b1,b2,[NOS,NOS_GEO,ELEM,qsi,w,CDC,FR,CW])
-    println(tmatrixc)
-    tsolvec = @elapsed xc = bc\Ac
-    println(tsolvec)
-    Tc,qc = monta_Teq(CDC,xc)
-    T_pintc = calc_T_pint(PONTOS_int,NOS_GEO,ELEM,Tc,qc,FR,CW,qsi,w,inc)
-    println("tmatrixc = ", tmatrixc,", tsolvec = ",tsolvec)
     # H-BEM
     # max_elem = Define máximo de nós em cada folha, tal que: max_elem/2 <= nós em cada folha < max_elem
     # max_elem=floor(sqrt(2*length(NOS[:,1])))
@@ -83,6 +74,15 @@ for i in files
     T,q=monta_Teq(CDC,xi[1])
     T_pint = calc_T_pint(PONTOS_int,NOS_GEO,ELEM,T,q,FR,CW,qsi,w,inc)
     println("ttree = ",ttree,", tmatrix = ", tmatrix,", tsolve = ",tsolve)    
+    # Conventional BEM
+    b1 = 1:nelem; b2 = 1:nelem;
+    tmatrixc = @elapsed Ac,bc = cal_Aeb(b1,b2,[NOS,NOS_GEO,ELEM,qsi,w,CDC,FR,CW])
+    println(tmatrixc)
+    tsolvec = @elapsed xc = bc\Ac
+    println(tsolvec)
+    Tc,qc = monta_Teq(CDC,xc)
+    T_pintc = calc_T_pint(PONTOS_int,NOS_GEO,ELEM,Tc,qc,FR,CW,qsi,w,inc)
+    println("tmatrixc = ", tmatrixc,", tsolvec = ",tsolvec)
     global t = append!(t,[ttree tmatrix tsolve tmatrixc tsolvec])
-    #save(string(mshd,i,".jld"),"ttree",ttree,"tmatrix",tmatrix,"tsolve","tsolve")
+    save(string(mshd,i,".jld"),"ttree",ttree,"tmatrix",tmatrix,"tsolve","tsolve", "T",T,"q",q,"Tc",Tc,"qc",qc)
 end # files for
