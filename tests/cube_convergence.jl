@@ -25,8 +25,6 @@ inc = [0]; # There'll be no incident wave
 # Gaussian quadrature - generation of points and weights [-1,1]
 npg=4; # Number of integration points
 qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
-#files = ["cube_coarsest.msh" "cube_coarse.msh"  "cube_fine.msh"]
-files = ["cube_coarsest.msh" "cube_coarse.msh"]
 # Python - mesh.io
 meshio = pyimport("meshio")
 # Build the domain points
@@ -47,6 +45,8 @@ BCFace = [1. 1. 0.
           5. 1. 0.
           6. 1. 0.];
 mshd = "./tests/data/"
+files = ["cube_coarsest.msh" "cube_coarse.msh"  "cube_fine.msh" "cube_finest.msh"]
+#files = ["cube_coarsest.msh" "cube_coarse.msh"]
 t = []
 for i in files
     mesh = meshio.read(string(mshd,i))
@@ -58,7 +58,9 @@ for i in files
     # Conventional BEM
     b1 = 1:nelem; b2 = 1:nelem;
     tmatrixc = @elapsed Ac,bc = cal_Aeb(b1,b2,[NOS,NOS_GEO,ELEM,qsi,w,CDC,FR,CW])
+    println(tmatrixc)
     tsolvec = @elapsed xc = bc\Ac
+    println(tsolvec)
     Tc,qc = monta_Teq(CDC,xc)
     T_pintc = calc_T_pint(PONTOS_int,NOS_GEO,ELEM,Tc,qc,FR,CW,qsi,w,inc)
     println("tmatrixc = ", tmatrixc,", tsolvec = ",tsolvec)
@@ -68,13 +70,16 @@ for i in files
     max_elem=10
     #println("max_elem = $max_elem")
     ttree = @elapsed Tree,child,center_row,diam,inode,ileaf = cluster(NOS[:,2:3],max_elem)
+    println(ttree)
     ninterp=4 # Número de pontos de interpolação
     #η =.4 # Coeficiente relacionado a admissibilidade dos blocos
     η =.7 # Coeficiente relacionado a admissibilidade dos blocos
     allow=checa_admiss(η,center_row,diam,inode,ileaf) # mostra quais blocos são admissíveis
     block = blocks(Tree,child,allow) # Função que retorna os blocos admissiveis
     tmatrix = @elapsed hmati,bi =Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,qsi,w,CDC,FR,CW],ninterp)
-    tsolve = @elapsed xi = gmres(vet->matvec(hmati,vet,block,Tree),bi,5,tol=1e-8,maxIter=1000,out=0) 
+    println(tmatrix)
+    tsolve = @elapsed xi = gmres(vet->matvec(hmati,vet,block,Tree),bi,5,tol=1e-8,maxIter=1000,out=0)
+    println(tsolve)
     T,q=monta_Teq(CDC,xi[1])
     T_pint = calc_T_pint(PONTOS_int,NOS_GEO,ELEM,T,q,FR,CW,qsi,w,inc)
     println("ttree = ",ttree,", tmatrix = ", tmatrix,", tsolve = ",tsolve)    
