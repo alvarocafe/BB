@@ -6,12 +6,14 @@
 #applies the boundary conditions, solves the linear system and returns the
 #value of the potential and its gradient at boundary and domain points.
 using KrylovMethods, Statistics, LinearAlgebra, DelimitedFiles, PyCall, JLD
-filed = "../src/potconst3d/"
+filed = "../src/waveconst3d/"
 include(string(filed,"dad.jl"))
 include(string(filed,"hmat.jl"))
 include(string(filed,"bem_functions.jl"))
-include(string(filed,"lermsh.jl"))
 include(string(filed,"tree.jl"))
+### Analytical solution
+phi_closed(k,x) = sin.(k.*x)
+q_closed(k,x) = -k.*cos(k.*x)
 # Gaussian quadrature - generation of points and weights [-1,1]
 npg=4; # Number of integration points
 qsi,w = Gauss_Legendre(-1,1,npg) # Generation of the points and weights
