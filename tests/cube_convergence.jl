@@ -5,12 +5,13 @@
 #The main function is const2D.solve() which builds the influence matrices,
 #applies the boundary conditions, solves the linear system and returns the
 #value of the potential and its gradient at boundary and domain points.
-using KrylovMethods, Statistics, LinearAlgebra, DelimitedFiles, PyCall, JLD
-filed = "../src/waveconst3d/"
-include(string(filed,"dad.jl"))
-include(string(filed,"hmat.jl"))
-include(string(filed,"bem_functions.jl"))
-include(string(filed,"tree.jl"))
+using KrylovMethods, Statistics, LinearAlgebra, DelimitedFiles, PyCall, JLD, SharedArrays, DistributedArrays
+addprocs(Sys.CPU_THREADS -1)
+@everywhere filed = "/home/cafe/BB3/src/waveconst3d/"
+@everywhere include(string(filed,"dad.jl"))
+@everywhere include(string(filed,"hmat.jl"))
+@everywhere include(string(filed,"bem_functions.jl"))
+@everywhere include(string(filed,"tree.jl"))
 ### Analytical solution
 L = 10; # Square length
 n = 1; # First mode number
@@ -67,8 +68,12 @@ for i in files
     η =.7 # Coeficiente relacionado a admissibilidade dos blocos
     allow=checa_admiss(η,center_row,diam,inode,ileaf) # mostra quais blocos são admissíveis
     block = blocks(Tree,child,allow) # Função que retorna os blocos admissiveis
+    Parallel_tmatrix = @elapsed Parallel_hmati,parallel_bi = parallel_Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,qsi,w,CDC,FR,CW],ninterp)
+    println("Paralelo = ",Parallel_tmatrix)
+    parallel_tmatrix = @elapsed parallel_hmati,parallel_bi = parallel_Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,qsi,w,CDC,FR,CW],ninterp)
+    println("paralelo = ",parallel_tmatrix)
     tmatrix = @elapsed hmati,bi =Hinterp(Tree,block,[NOS,NOS_GEO,ELEM,qsi,w,CDC,FR,CW],ninterp)
-    println(tmatrix)
+    println("não paralelo = ",tmatrix)
     tsolve = @elapsed xi = gmres(vet->matvec(hmati,vet,block,Tree),bi,5,tol=1e-8,maxIter=1000,out=0)
     println(tsolve)
     T,q=monta_Teq(CDC,xi[1])
@@ -84,5 +89,5 @@ for i in files
     T_pintc = calc_T_pint(PONTOS_int,NOS_GEO,ELEM,Tc,qc,FR,CW,qsi,w,inc)
     println("tmatrixc = ", tmatrixc,", tsolvec = ",tsolvec)
     global t = append!(t,[ttree tmatrix tsolve tmatrixc tsolvec])
-    save(string(mshd,i,".jld"),"ttree",ttree,"tmatrix",tmatrix,"tsolve",tsolve, "T",T,"q",q,"Tc",Tc,"qc",qc)
+    #save(string(mshd,i,".jld"),"ttree",ttree,"tmatrix",tmatrix,"tsolve",tsolve, "T",T,"q",q,"Tc",Tc,"qc",qc)
 end # files for
