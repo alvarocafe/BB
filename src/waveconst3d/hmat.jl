@@ -102,16 +102,16 @@ function Parallel_Hinterp(Tree,block,arg,ninterp)
         b2 = Tree[block[i,2]]       # Nós J da malha que formam a submatriz (Pontos Campo) (Colunas)
         # Submatriz = Produto cartesiano I x J
         if block[i,3]==0                # Se esses blocos não são admissiveis
-            Aaca[i,1],B = cal_Aeb(b1,b2,arg)
+            DAaca[i,1],B = cal_Aeb(b1,b2,arg)
             
-            b[b1] = b[b1] + B*arg[6][b2,3]
+            Db[b1] = Db[b1] + B*arg[6][b2,3]
         else                              # Caso contrario (Se blocos são admissiveis)
-            Aaca[i,1],Aaca[i,2],B=cal_Aeb_interp(b1,b2,arg,ninterp)
-            b[b1] = b[b1] + Aaca[i,1]*(B*arg[6][b2,3])
+            DAaca[i,1],DAaca[i,2],B=cal_Aeb_interp(b1,b2,arg,ninterp)
+            Db[b1] = Db[b1] + DAaca[i,1]*(B*arg[6][b2,3])
             
         end
     end
-    return Aaca,b
+    return DAaca,Db
 end
 
 

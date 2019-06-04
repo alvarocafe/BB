@@ -47,7 +47,7 @@ BCFace = [1. 1. 0.
           6. 1. 0.];
 mshd = "./tests/data/"
 files = ["cube_coarsest.msh" "cube_coarse.msh"  "cube_fine.msh" "cube_finest.msh"]
-#i = files[1];
+#filesi = [files[1] files[4]];
 t = [];
 for i in files
     mesh = meshio.read(string(mshd,i))
