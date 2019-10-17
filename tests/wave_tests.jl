@@ -1,13 +1,16 @@
 ## Test cases for wave problems
 # This script tests the BEM models against known problems
 #for which analytical solutions are readily obtained.
-include("../BEM_base.jl")
+#include("../BEM_base.jl")
 #################### Test case n ####################
 ### Problem description
 ### Analytical solution
 ### BEM model
 ### return error
-
+using Plots
+gr()
+xs = 0.01:0.01:1
+# p1 = contour(xs,xs,f,fill=true) 
 #################### Test case 1-4 ####################
 ### Acoustic tube
 # Consider a square acoustic domain in which the speed of
