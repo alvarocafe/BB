@@ -77,4 +77,4 @@ for i = 1:n_pint
     PONTOS_dom[i,:] = [i delta+(i-1)*passo L/2];
 end
 
-Tdom = calc_pintpot(indfonte, crv, kmat,PONTOS_dom,Tc,qc)
+Tdom = calc_pintpot(PONTOS_dom,indcoluna,indbezier, crv, kmat,Tc,qc)

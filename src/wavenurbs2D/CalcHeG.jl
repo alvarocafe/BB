@@ -97,12 +97,18 @@ function  integra_sing(xfonte, yfonte, crv, qsi, w, C, conn, k, eet)
         nr = nx * rx + ny * ry; # Produto escalar dos vetores unit�rios r e n
         # Tast = -1 / (2 * pi * k) * log(r) # Soluções fundamentais para o problema potencial
         # qast = 1 / (2 * pi) * (rx * nx + ry * ny) / r
-        ZR=real(k*r);
-        Z=complex(0.,ZR);
-        F0C=SpecialFunctions.besselk(0,Z);
-        F1C=SpecialFunctions.besselk(1,Z);
-        qast=-(Z/r*nr*F1C)/(2*pi); #Solução Fundamental da pressão acústica
-        Tast=F0C/(2*pi);    #Solução Fundamental do fluxo de pressão acústica
+        ZR=real(k*r);
+
+        Z=complex(0.,ZR);
+
+        F0C=SpecialFunctions.besselk(0,Z);
+
+        F1C=SpecialFunctions.besselk(1,Z);
+
+        qast=-(Z/r*nr*F1C)/(2*pi); #Solução Fundamental da pressão acústica
+
+        Tast=F0C/(2*pi);    #Solução Fundamental do fluxo de pressão acústica
+
 
         h = h + R * qast * dgamadqsi * w[i] * Jt[i]
         g = g + R * Tast * dgamadqsi * w[i] * Jt[i]
@@ -305,63 +311,128 @@ function CalcAeb(indfonte,indcoluna,indbezier, crv, kmat,E,CDC)
     return H , G
 end
 
-function calc_phi_pint(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
-    n = length(crv);	# Number of curves
-    ncollocpoints = size(collocCoord,1)
-    n_pint=size(PONTOS_int,1)
-
-    H=complex(zeros(n_pint,ncollocpoints));
-    G=complex(zeros(n_pint,ncollocpoints));
-    npgauss=12;
-    qsi,w=gausslegendre(npgauss)
-    # qsi,w=gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
-    for i = 1 : n #Laço sobre as curvas (elementos)
-        uk=unique(crv[i].knots)
-        ne=length(uk)-1;
-        for j=1:ne
-            range=uk[j+1]-uk[j]
-            mid=(uk[j+1]+uk[j])/2
-            for k=1:n_pint
-                xfonte=PONTOS_int[k,2]
-                yfonte=PONTOS_int[k,3]
-                # Integrais de dom�nio
-                g,h,id=integra_elem(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
-                #  element (I = int F n.r/r dGama)
-                H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;
-                G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
-            end
-
-        end
-    end
-
-    phi_pint = H*Tc - G*qc;
-    return phi_pint
+function calc_phi_pint(PONTOS_int,collocCoord,nnos,crv,dcrv,kmat,Tc,qc)
+
+    n = length(crv);	# Number of curves
+
+    ncollocpoints = size(collocCoord,1)
+
+    n_pint=size(PONTOS_int,1)
+
+
+
+    H=complex(zeros(n_pint,ncollocpoints));
+
+    G=complex(zeros(n_pint,ncollocpoints));
+
+    npgauss=12;
+
+    qsi,w=gausslegendre(npgauss)
+
+    # qsi,w=gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
+
+    for i = 1 : n #Laço sobre as curvas (elementos)
+
+        uk=unique(crv[i].knots)
+
+        ne=length(uk)-1;
+
+        for j=1:ne
+
+            range=uk[j+1]-uk[j]
+
+            mid=(uk[j+1]+uk[j])/2
+
+            for k=1:n_pint
+
+                xfonte=PONTOS_int[k,2]
+
+                yfonte=PONTOS_int[k,3]
+
+                # Integrais de dom�nio
+
+                g,h,id=integra_elem(xfonte,yfonte,crv[i],dcrv[i],range,mid,qsi,w,kmat); # Integra��o sobre o
+
+                #  element (I = int F n.r/r dGama)
+
+                H[k,id+nnos[i]]=H[k,id+nnos[i]]+h;
+
+                G[k,id+nnos[i]]=G[k,id+nnos[i]]+g;
+
+            end
+
+
+
+        end
+
+    end
+
+
+
+    phi_pint = H*Tc - G*qc;
+
+    return phi_pint
+
 end
 
-function calc_pintpot(nnos, crv, kmat,PONTOS_int,desl,tra,npgauss = 12)
+# function calc_pintpot(nnos, crv, kmat,PONTOS_int,desl,tra,npgauss = 12)
+#     n = length(crv);    # Number of curves
+#     ncollocpoints = size(collocCoord, 1)
+#     n_p_int=size(PONTOS_int,1)
+#     H=zeros(n_p_int,ncollocpoints)
+#     G=zeros(n_p_int,ncollocpoints)
+
+#     qsi, w = gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
+#     for i = 1:n # Corre as NURBS para variar o elemento
+#         p = crv[i].order - 1
+#         shapes  = zeros(npgauss, (p + 1));
+#         derivs  = zeros(npgauss, (p + 1), 2);
+#         for gp = 1:size(w, 1) # Função de forma das Bézier
+#             shapes[gp,:], derivs[gp,:,:] = bernsteinbasis(p, 0, qsi[gp], 0);
+#         end
+#         for j = 1:size(crv[i].conn, 1)  # Corre as curvas de Bézier
+#             for k = 1:n_p_int  # Corre as NURBS para variar os pontos fontes
+#                 xfonte = PONTOS_int[k,2]
+#                 yfonte = PONTOS_int[k,3]
+#                 g, h = integra_elem(xfonte,yfonte, crv[i], qsi, w, shapes, derivs, crv[i].C[:,:,j], crv[i].conn[j], kmat);
+#                 H[k,crv[i].conn[j] .+ nnos[i]] += h;
+#                 G[k,crv[i].conn[j] .+ nnos[i]] += g;
+#             end
+#         end
+#     end
+#     # desl_pint=-H*desl+G*tra
+#     # return desl_pint
+#     return H,G
+# end
+
+
+
+
+function calc_pintpot(PONTOS_int,indcoluna,indbezier, crv, kmat,desl,tra)
     n = length(crv);    # Number of curves
     ncollocpoints = size(collocCoord, 1)
     n_p_int=size(PONTOS_int,1)
-    H=zeros(n_p_int,ncollocpoints)
-    G=zeros(n_p_int,ncollocpoints)
-
+    H = complex(zeros(n_p_int, ncollocpoints));
+    G = complex(zeros(n_p_int, ncollocpoints));
+    npgauss = 12;
     qsi, w = gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
-    for i = 1:n # Corre as NURBS para variar o elemento
+    for ibezier = 1:size(indbezier,1)
+        i,j=indbezier[ibezier,:]
         p = crv[i].order - 1
         shapes  = zeros(npgauss, (p + 1));
         derivs  = zeros(npgauss, (p + 1), 2);
-        for gp = 1:size(w, 1) # Função de forma das Bézier
+        for gp = 1:size(w, 1)
             shapes[gp,:], derivs[gp,:,:] = bernsteinbasis(p, 0, qsi[gp], 0);
+
         end
-        for j = 1:size(crv[i].conn, 1)  # Corre as curvas de Bézier
-            for k = 1:n_p_int  # Corre as NURBS para variar os pontos fontes
-                xfonte = PONTOS_int[k,2]
-                yfonte = PONTOS_int[k,3]
-                g, h = integra_elem(xfonte,yfonte, crv[i], qsi, w, shapes, derivs, crv[i].C[:,:,j], crv[i].conn[j], kmat);
-                H[k,crv[i].conn[j] .+ nnos[i]] += h;
-                G[k,crv[i].conn[j] .+ nnos[i]] += g;
-            end
+        for ifonte = 1:size(PONTOS_int,1)
+            xfonte = PONTOS_int[ifonte,2]
+            yfonte = PONTOS_int[ifonte,3]
+            g, h = integra_elem(xfonte, yfonte, crv[i], qsi, w, shapes, derivs, crv[i].C[:,:,j], crv[i].conn[j], kmat); # Integra��o sobre o
+            H[ifonte,indcoluna[ibezier]] += h;
+            G[ifonte,indcoluna[ibezier]] += g;   
         end
+     
     end
     desl_pint=-H*desl+G*tra
     return desl_pint

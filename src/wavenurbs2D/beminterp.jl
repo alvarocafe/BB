@@ -3,7 +3,7 @@ function Hinterp(Tree1,Tree2,block,crv,kmat,tipoCDC,valorCDC,collocCoord;ninterp
     #         1      2        3      4        5     6   7
     n = size(block,1)               # Quantidade de Submatrizes
     Aaca = Array{Any}(undef,n,2)          # Cria vetor{Any} que armazena submatrizes [Nº de submatrizes x 2]
-    b = zeros(size(valorCDC,1))       # Cria matriz b, Ax=b, de zeros [Nº de nos x 1]
+    b = complex(zeros(size(valorCDC,1)))       # Cria matriz b, Ax=b, de zeros [Nº de nos x 1]
     for i=1:n                       # Para cada Submatriz
         # @timeit to "Para cada Submatriz" begin
         b1 = Tree1[block[i,1]]       # Nós I da malha que formam a submatriz (Pontos Fonte) (linhas)
