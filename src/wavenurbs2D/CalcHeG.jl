@@ -4,8 +4,8 @@ function CalcHeG(nnos, crv, kmat)
     ncollocpoints = size(collocCoord, 1)
 
     E = zeros(ncollocpoints, ncollocpoints);
-    H = zeros(ncollocpoints, ncollocpoints);
-    G = zeros(ncollocpoints, ncollocpoints);
+    H = complex(zeros(ncollocpoints, ncollocpoints));
+    G = complex(zeros(ncollocpoints, ncollocpoints));
     npgauss = 12;
     qsi, w = gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
     for i = 1:n
@@ -48,8 +48,8 @@ function CalcHeG(nnos, crv, kmat)
 end
 function integra_elem(xfonte, yfonte, crv, qsi, w, shapes, derivs, C, conn, k)
     # Integra��o sobre os elementos (integral I)
-    g = zeros(crv.order)
-    h = zeros(crv.order)
+    g = complex(zeros(crv.order))
+    h = complex(zeros(crv.order))
     for i = 1:size(w, 1) # Percorre os pontos de integra��o
         R, dRdxi = basisfundecomp(shapes[i,:], derivs[i,:,:], C, crv.coefs[4,conn])
         # derivadas das fun��es de forma
@@ -65,8 +65,19 @@ function integra_elem(xfonte, yfonte, crv, qsi, w, shapes, derivs, C, conn, k)
         rx = x / r; # Componente x do vetor unit�rio r
         ry = y / r; # Componente y do vetor unit�rio r
         nr = nx * rx + ny * ry; # Produto escalar dos vetores unit�rios r e n
-        Tast = -1 / (2 * pi * k) * log(r)
-        qast = 1 / (2 * pi) * (rx * nx + ry * ny) / r
+        # Tast = -1 / (2 * pi * k) * log(r)
+        # qast = 1 / (2 * pi) * (rx * nx + ry * ny) / r
+        ZR=real(k*r);
+
+        Z=complex(0.,ZR);
+
+        F0C=SpecialFunctions.besselk(0,Z);
+
+        F1C=SpecialFunctions.besselk(1,Z);
+
+        qast=-(Z/r*nr*F1C)/(2*pi); #Solução Fundamental da pressão acústica
+
+        Tast=F0C/(2*pi);    #Solução Fundamental do fluxo de pressão acústica
 
         h = h + R * qast * dgamadqsi * w[i]
         g = g + R * Tast * dgamadqsi * w[i]
@@ -77,8 +88,8 @@ end
 function  integra_sing(xfonte, yfonte, crv, qsi, w, C, conn, k, eet)
     # Integra��o sobre os elementos (integral I)
     eta, Jt = telles(qsi, eet)
-    g = zeros(crv.order)
-    h = zeros(crv.order)
+    g = complex(zeros(crv.order))
+    h = complex(zeros(crv.order))
     for i = 1:size(w, 1) # Percorre os pontos de integra��o
         shapes, derivs = bernsteinbasis(crv.order - 1, 0, eta[i], 0);
         R, dRdxi = basisfundecomp(shapes, derivs, C, crv.coefs[4,conn])
@@ -291,7 +302,7 @@ function CalcAeb(indfonte,indcoluna,indbezier, crv, kmat,E,CDC)
                 g, h = integra_sing(xfonte, yfonte, crv[i], qsi, w, crv[i].C[:,:,j], crv[i].conn[j], kmat, eet); # Integra��o sobre o
                 # h=h-crv[k1].fontes[k2].basis/2
                 if crv[k1].fontes[k2].pts != crv[i].range[j,2]
-                    h=h-E[ifonte,indcoluna[ibezier]] /2
+                    h=h+E[ifonte,indcoluna[ibezier]] /2
                 end
                 # @show h
                 # @show crv[k1].fontes[k2].basis
@@ -405,9 +416,6 @@ end
 #     return H,G
 # end
 
-
-
-
 function calc_pintpot(PONTOS_int,indcoluna,indbezier, crv, kmat,desl,tra)
     n = length(crv);    # Number of curves
     ncollocpoints = size(collocCoord, 1)
@@ -423,7 +431,6 @@ function calc_pintpot(PONTOS_int,indcoluna,indbezier, crv, kmat,desl,tra)
         derivs  = zeros(npgauss, (p + 1), 2);
         for gp = 1:size(w, 1)
             shapes[gp,:], derivs[gp,:,:] = bernsteinbasis(p, 0, qsi[gp], 0);
-
         end
         for ifonte = 1:size(PONTOS_int,1)
             xfonte = PONTOS_int[ifonte,2]

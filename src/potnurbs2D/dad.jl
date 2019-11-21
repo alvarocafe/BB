@@ -108,8 +108,6 @@ CCSeg=[1 1 0
 
  k=1;
 
-	
-
 return PONTOS,SEGMENTOS,CCSeg,k
 end
 

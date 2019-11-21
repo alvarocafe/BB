@@ -13,6 +13,7 @@ using LinearAlgebra
 using SparseArrays
 using Statistics
 using KrylovMethods
+using Test
 #gr()
 # O número de nós (knots), m, o número de pontos de controle, k, e a ordem da
 # curva, n , estão relacionados por:
@@ -68,3 +69,15 @@ T=E*Tc
 q=E*qc
 # norm(A2-A)#erro na aproximação
 #plot(T)
+L=1
+n_pint = 100; # Number of domain points
+PONTOS_dom = zeros(n_pint,3);
+delta = 0.01; # distance from both ends 
+passo = (L-2*delta)/(n_pint-1);
+for i = 1:n_pint
+    PONTOS_dom[i,:] = [i delta+(i-1)*passo L/2];
+end
+
+Tdom = calc_pintpot(PONTOS_dom,indcoluna,indbezier, crv, kmat,Tc,qc)
+Tan(x,L=1) = x./L
+@test norm(Tdom.^2 .- Tan(PONTOS_dom[:,2]).^2)./size(PONTOS_dom,1) < 10^(-3)

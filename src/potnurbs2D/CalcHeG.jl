@@ -297,3 +297,33 @@ function CalcAeb(indfonte,indcoluna,indbezier, crv, kmat,E,CDC)
    end
     return H , G
 end
+
+function calc_pintpot(PONTOS_int,indcoluna,indbezier, crv, kmat,desl,tra)
+    n = length(crv);    # Number of curves
+    ncollocpoints = size(collocCoord, 1)
+    n_p_int=size(PONTOS_int,1)
+    H = complex(zeros(n_p_int, ncollocpoints));
+    G = complex(zeros(n_p_int, ncollocpoints));
+    npgauss = 12;
+    qsi, w = gausslegendre(npgauss) # Calcula pesos e pontos de Gauss
+    for ibezier = 1:size(indbezier,1)
+        i,j=indbezier[ibezier,:]
+        p = crv[i].order - 1
+        shapes  = zeros(npgauss, (p + 1));
+        derivs  = zeros(npgauss, (p + 1), 2);
+        for gp = 1:size(w, 1)
+            shapes[gp,:], derivs[gp,:,:] = bernsteinbasis(p, 0, qsi[gp], 0);
+
+        end
+        for ifonte = 1:size(PONTOS_int,1)
+            xfonte = PONTOS_int[ifonte,2]
+            yfonte = PONTOS_int[ifonte,3]
+            g, h = integra_elem(xfonte, yfonte, crv[i], qsi, w, shapes, derivs, crv[i].C[:,:,j], crv[i].conn[j], kmat); # Integra��o sobre o
+            H[ifonte,indcoluna[ibezier]] += h;
+            G[ifonte,indcoluna[ibezier]] += g;   
+        end
+     
+    end
+    desl_pint=H*desl-G*tra
+    return desl_pint
+end

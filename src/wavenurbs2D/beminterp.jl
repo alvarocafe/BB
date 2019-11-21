@@ -47,7 +47,7 @@ function cal_Aeb(indfonte,indbezier,indcoluna, crv, kmat,CDC,E)
                 g, h = integra_sing(xfonte, yfonte, crv[i], qsi, w, crv[i].C[:,:,j], crv[i].conn[j], kmat, eet); # Integra��o sobre o
 
                 if crv[k1].fontes[k2].pts != crv[i].range[j,2]
-                    h=h-E[ifonte,indcoluna[ibezier]] /2
+                    h=h+E[ifonte,indcoluna[ibezier]] /2
                 end
             else
                 g, h = integra_elem(xfonte, yfonte, crv[i], qsi, w, shapes, derivs, crv[i].C[:,:,j], crv[i].conn[j], kmat); # Integra��o sobre o
@@ -67,8 +67,8 @@ function cal_Aeb(indfonte,indbezier,indcoluna, crv, kmat,CDC,E)
     H , G
 end
 function cal_Aeb_interp(indfonte,indbezier,indcoluna, crv, kmat,CDC,E,collocCoord,ninterp=2,compressão=true,ϵ=1e-3)
-    G = zeros(ninterp*ninterp,0)      # Dimensiona matriz G
-    H = zeros(ninterp*ninterp,0)      # Dimensiona matriz H
+    G = complex(zeros(ninterp*ninterp,0))      # Dimensiona matriz G
+    H = complex(zeros(ninterp*ninterp,0))      # Dimensiona matriz H
     xmax=maximum(collocCoord,dims=1)
     xmin=minimum(collocCoord,dims=1)
     xs=criapontosinterp(ninterp)
@@ -85,8 +85,8 @@ function cal_Aeb_interp(indfonte,indbezier,indcoluna, crv, kmat,CDC,E,collocCoor
         for gp = 1:size(w, 1)
             shapes[gp,:], derivs[gp,:,:] = bernsteinbasis(p, 0, qsi[gp], 0);
         end
-        h1 = zeros(ninterp*ninterp,p+1);
-        g1 = zeros(ninterp*ninterp,p+1);
+        h1 = complex(zeros(ninterp*ninterp,p+1));
+        g1 = complex(zeros(ninterp*ninterp,p+1));
         ci=0
         for i2 =1:ninterp # Laco sobre os pontos fontes
             for i1 =1:ninterp # Laco sobre os pontos fontes

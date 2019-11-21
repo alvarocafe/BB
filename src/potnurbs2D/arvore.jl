@@ -92,14 +92,14 @@ function matvec(hmat,b,block,Tree1,Tree2,indcoluna)
         if block[i,3]==1
             v[b1]+=hmat[i,1]*(hmat[i,2]*b[vcat(indcoluna[b2]...)])
         else
-            println(typeof(hmat[i,1]))
-            println(typeof(b[vcat(indcoluna[b2]...)]))
-            println(size(hmat[i,1]))
-            println(size(b[vcat(indcoluna[b2]...)]))
-            println(hmat[i,1])
-            println((b[vcat(indcoluna[b2]...)]))
+            # println(typeof(hmat[i,1]))
+            # println(typeof(b[vcat(indcoluna[b2]...)]))
+            # println(size(hmat[i,1]))
+            # println(size(b[vcat(indcoluna[b2]...)]))
+            # println(hmat[i,1])
+            # println((b[vcat(indcoluna[b2]...)]))
             v[b1]+=hmat[i,1]*b[vcat(indcoluna[b2]...)]
-            print(aaaa)
+#            print(aaaa)
         end
     end
     v

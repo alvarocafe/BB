@@ -7,12 +7,15 @@ include("telles.jl")
 include("arvore.jl")
 include("formatiso.jl")
 include("beminterp.jl")
-using FastGaussQuadrature, LinearAlgebra, SparseArrays, Statistics, KrylovMethods, Test, SpecialFunctions
-#gr()
+using FastGaussQuadrature, LinearAlgebra, SparseArrays, Statistics, KrylovMethods, Test, SpecialFunctions, Plots
+gr()
 # O número de nós (knots), m, o número de pontos de controle, k, e a ordem da
 # curva, n , estão relacionados por:
 #                           m = k + n + 1
 PONTOS,SEGMENTOS,CCSeg,kmat=dad_0() #Arquivo de entrada de dados
+kopen2D(L=1,n=1) = (2 .*n - 1).*π./(2 .*L)
+fopen2D(x=1,k=1,L=1) = sin.(k.*x./L)
+kmat = kopen2D()
 # PONTOS,SEGMENTOS,MALHA,CCSeg,kmat=dad_2() #Arquivo de entrada de dados
 # NOS,ELEM=format_dad(PONTOS,SEGMENTOS,MALHA)# formata os dados (cria as
 crv=format_dad_iso(PONTOS,SEGMENTOS)# formata os dados
@@ -51,9 +54,7 @@ indfonte,indcoluna,indbezier,tipoCDC,valorCDC,E,collocCoord,collocPts=indices(cr
 HA,bi=Hinterp(Tree1,Tree2,block,crv,kmat,tipoCDC,valorCDC,collocCoord,compressão=false)
 A2=montacheia(HA,block,Tree1,Tree2,length(collocPts))
 A,B=CalcAeb(indfonte,indcoluna,indbezier, crv, kmat,E,tipoCDC)
-
 #@test norm(A2-A) < 10^(-2) #erro na aproximação
-
 b=(B*(E\valorCDC))[:]
 xi,f = gmres(vet->matvec(HA,vet,block,Tree1,Tree2,indcoluna),bi,5,tol=1e-5,maxIter=1000,out=0) #GMRES nas matrizes hierarquicas
 # xi,f = gmres(A,b,5,tol=1e-5,maxIter=1000,out=0) #GMRES na matriz padrão
@@ -65,9 +66,6 @@ Tc,qc=monta_Teq(tipoCDC,valorCDC,crv, xi) # Separa temperatura e fluxo
 T=E*Tc
 q=E*qc
 
-kopen2D(L=1,n=1) = (2 .*n - 1).*π./(2 .*L)
-fopen2D(x=1,k=1) = sin(k.*x)
-
 L=1
 n_pint = 100; # Number of domain points
 PONTOS_dom = zeros(n_pint,3);
@@ -78,3 +76,8 @@ for i = 1:n_pint
 end
 
 Tdom = calc_pintpot(PONTOS_dom,indcoluna,indbezier, crv, kmat,Tc,qc)
+
+plot(PONTOS_dom[:,2],real(Tdom))
+plot!(PONTOS_dom[:,2],fopen2D(PONTOS_dom[:,2],k))
+
+@test norm(Tdom.^2 .- fopen2D(PONTOS_dom[:,2],k).^2)./size(PONTOS_dom,1) < 10^(-3)
