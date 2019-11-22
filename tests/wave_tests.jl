@@ -20,10 +20,12 @@ xs = 0.01:0.01:1
 # ω [rads], so that the wave number is k = ω/c, with
 #relative amplitude P = 1.
 ### Analytical solution
-phi_closed(k,x) = sin.(k.*x)
-q_closed(k,x) = -k.*cos(k.*x)
+phi_closed(k,x) = cos.(k.*x./L)
+q_closed(k,x) = -k.*sin(k.*x)
+kclosed(L=1,n=1) = n*π./L
+
 ### BEM model
-function closed2D(ne=10,L=1,k=1)
+function closed2D(ne=10,L=1,k=kclosed())
     #L = 1; # length of the square
     #k = 1; # wave number of the problem
     #The points and segments which describe this geometry are
@@ -56,7 +58,7 @@ function closed2D(ne=10,L=1,k=1)
     nnos = size(NOS,1)  # Number of physical nodes, same as elements when using constant elements
     #    info = [NOS_GEO,NOS,ELEM,CDC]
     #    tH = @elapsed phiH,qH,phi_domH,phi_domH = const2D.solveH(info,PONTOS_dom,fc,BCSeg,k)    
-    return norm(phi_dom-phi_closed(k,PONTOS_dom[1,2]))
+    return norm(phi_dom.^2 .- phi_closed(k,PONTOS_dom[1,2]).^2)./size(PONTOS_dom,1)
 end
 
 ### Analytical solution
