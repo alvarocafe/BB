@@ -227,6 +227,42 @@ end
 phi_cylinder(k,r,x) = (1/k).*(SpecialFunctions.besselh(0,2,k.*x)./SpecialFunctions.besselh(1,2,k.*r));
 #at a distance x from the cylinder of radius r.
 ### BEM models
+function nurbscylinder(r=0.5,c=[0 0],k=1)
+    #L = 1; # length of the square
+    #k = 1; # wave number of the problem
+    #The points and segments which describe this geometry are
+    POINTS =[1  c[1,1]-r	c[1,2]
+       	     2	c[1,1]		c[1,2]+r
+       	     3	c[1,1]+r	c[1,2]
+       	     4	c[1,1]		c[1,2]-r];
+    SEGMENTS = [1 1 2 -r
+                2 2 3 -r
+                3 3 4 -r
+                4 4 1 -r];
+    BCSeg = [1 1 1 0
+             2 1 1 0
+             3 1 1 0
+             4 1 1 0];
+    #PONTOS_dom = [1 L/2 L/2]
+    n_pint = 100; # Number of domain points
+    PONTOS_dom = zeros(n_pint,3);
+    delta = 10*r; # distance from both ends 
+    passo = delta/10
+    for i = 1:n_pint
+        PONTOS_dom[i,:] = [i delta+(i-1)*passo r];
+    end
+    fc = [0 0 0]
+    BCSeg = [1 1 0
+	     2 1 0
+	     3 1 0
+	     4 0 1];
+    info = [POINTS,SEGMENTS,BCSeg,k];
+    t = @elapsed phi,q,phi_dom = wavenurbs2D.solveH(info, PONTOS_dom, fc, k)  
+    #return norm(phi_dom.^2 .- phi_cylinder(k,r,PONTOS_dom[:,2]).^2)./size(PONTOS_dom,1)
+    return phi,q,phi_dom, PONTOS_dom
+end
+
+
 function const2Dcylinder(ne = 100,r=0.5,c=[0 0],k=1)
     t=0; ϵ=0; phi=0; q=0; phi_dom=0;  
     POINTS =[1  c[1,1]-r	c[1,2]
