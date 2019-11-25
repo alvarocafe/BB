@@ -39,28 +39,14 @@ for i=1:n
 end
 
 Tree1,Tree2,block= cluster(crv,max_elem=8,η = 1.0)#cluster(crv, max_elem=3,η = 1.0)
-# E=zeros(length(collocPts),length(collocPts));
-# for i=1:length(collocPts)
-#     collocCoord[i,:]=nrbeval(crv[numcurva[i]], collocPts[i]);
-#     B, id = nrbbasisfun(crv[numcurva[i]],collocPts[i])
-#     E[i,id+nnos2[numcurva[i]]]=B
-# end
-#plot(collocCoord[:,1],collocCoord[:,2])
-#legend('Curva resultante','Polígono de controle','Pontos de controle','Pontos fonte')
-# H,G,~=CalcHeG(nnos2,crv,kmat)
-
-indfonte,indcoluna,indbezier,tipoCDC,valorCDC,E,collocCoord,collocPts=indices(crv)
-
-HA,bi=Hinterp(Tree1,Tree2,block,crv,kmat,tipoCDC,valorCDC,collocCoord,compressão=false)
+indfonte,indcoluna,indbezier,tipoCDC,valorCDC,E,collocCoord,collocPts=indices(crv,CCSeg)
+#indfonte,indcoluna,indbezier,tipoCDC,valorCDC,E,collocCoord,collocPts=indices(crv)
+HA,bi=Hinterp(indfonte,indbezier,indcoluna,E,Tree1,Tree2,block,crv,kmat,tipoCDC,valorCDC,collocCoord,compressão=false)
+#HA,bi=Hinterp(Tree1,Tree2,block,crv,kmat,tipoCDC,valorCDC,collocCoord,compressão=false)
 A2=montacheia(HA,block,Tree1,Tree2,length(collocPts))
 A,B=CalcAeb(indfonte,indcoluna,indbezier, crv, kmat,E,tipoCDC)
-#@test norm(A2-A) < 10^(-2) #erro na aproximação
 b=(B*(E\valorCDC))[:]
-xi,f = gmres(vet->matvec(HA,vet,block,Tree1,Tree2,indcoluna),bi,5,tol=1e-5,maxIter=1000,out=0) #GMRES nas matrizes hierarquicas
-# xi,f = gmres(A,b,5,tol=1e-5,maxIter=1000,out=0) #GMRES na matriz padrão
-# x=A\b # Calcula o vetor x
-
-#
+xi,f = gmres(vet->matvec(HA,vet,block,Tree1,Tree2,indcoluna),bi,5,tol=1e-5,maxIter=1000,out=0) # x=A\b # Calcula o vetor x
 Tc,qc=monta_Teq(tipoCDC,valorCDC,crv, xi) # Separa temperatura e fluxo
 #
 T=E*Tc
@@ -74,10 +60,11 @@ passo = (L-2*delta)/(n_pint-1);
 for i = 1:n_pint
     PONTOS_dom[i,:] = [i delta+(i-1)*passo L/2];
 end
+Tdom = calc_pintpot(PONTOS_dom,indcoluna,indbezier, crv,collocCoord, kmat,Tc,qc)
 
-Tdom = calc_pintpot(PONTOS_dom,indcoluna,indbezier, crv, kmat,Tc,qc)
+#Tdom = calc_pintpot(PONTOS_dom,indcoluna,indbezier, crv, kmat,Tc,qc)
 
 plot(PONTOS_dom[:,2],real(Tdom))
-plot!(PONTOS_dom[:,2],fopen2D(PONTOS_dom[:,2],k))
+plot!(PONTOS_dom[:,2],fopen2D(PONTOS_dom[:,2],kmat))
 
-@test norm(Tdom.^2 .- fopen2D(PONTOS_dom[:,2],k).^2)./size(PONTOS_dom,1) < 10^(-3)
+@test norm(Tdom.^2 .- fopen2D(PONTOS_dom[:,2],kmat).^2)./size(PONTOS_dom,1) < 10^(-3)

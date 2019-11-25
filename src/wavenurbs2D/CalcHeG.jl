@@ -189,7 +189,7 @@ function monta_Teq(tipoCDC,valorCDC, x)
 end
 
 
-function indices(crv)
+function indices(crv,CCSeg)
     n = length(crv);    # Number of curves
 
     z=0;#ncollocpoints
@@ -416,7 +416,7 @@ end
 #     return H,G
 # end
 
-function calc_pintpot(PONTOS_int,indcoluna,indbezier, crv, kmat,desl,tra)
+function calc_pintpot(PONTOS_int,indcoluna,indbezier, crv,collocCoord, kmat,desl,tra)
     n = length(crv);    # Number of curves
     ncollocpoints = size(collocCoord, 1)
     n_p_int=size(PONTOS_int,1)
