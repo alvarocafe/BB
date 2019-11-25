@@ -35,17 +35,14 @@ function solveH(info, PONTOS_dom, fc, kmat)
         coefs,knots = bspkntins(degree,crv[i].coefs,crv[i].knots,novosnos[2:end-1])
         crv[i] = nrbmak(coefs,knots)
     end
-
     Tree1,Tree2,block= cluster(crv,max_elem=8,η = 1.0)#cluster(crv, max_elem=3,η = 1.0)
     indfonte,indcoluna,indbezier,tipoCDC,valorCDC,E,collocCoord,collocPts=indices(crv,CCSeg)
-    HA,bi=Hinterp(indfonte,indbezier,indcoluna,E,Tree1,Tree2,block,crv,kmat,tipoCDC,valorCDC,collocCoord,compressão=false)
+    HA,bi=Hinterp(indfonte,indbezier,indcoluna,E,Tree1,Tree2,block,crv,kmat,tipoCDC,valorCDC,collocCoord)
     xi,f = gmres(vet->matvec(HA,vet,block,Tree1,Tree2,indcoluna),bi,5,tol=1e-5,maxIter=1000,out=0) #GMRES nas matrizes hierarquicas
     Tc,qc=monta_Teq(tipoCDC,valorCDC,crv, xi) # Separa temperatura e fluxo
     T=E*Tc
     q=E*qc
-
     Tdom = calc_pintpot(PONTOS_dom,indcoluna,indbezier, crv,collocCoord, kmat,Tc,qc)
-
     return T,q,Tdom
 end # end function solveH
 
@@ -80,6 +77,4 @@ function solve(info, PONTOS_dom, fc, kmat)
 
     return T,q,Tdom
 end # end function solve
-
-
 end # end module wavenurbs2D

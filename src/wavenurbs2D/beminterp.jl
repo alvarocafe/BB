@@ -1,4 +1,4 @@
-function Hinterp(indfonte,indbezier,indcoluna,E,Tree1,Tree2,block,crv,kmat,tipoCDC,valorCDC,collocCoord;ninterp=2,compressão=true,ϵ=1e-3)
+function Hinterp(indfonte,indbezier,indcoluna,E,Tree1,Tree2,block,crv,kmat,tipoCDC,valorCDC,collocCoord,ninterp=2,compressão=false,ϵ=1e-3)
     # arg = [NOS1,NOS_GEO1,tipoCDC,valorCDC,normal,ELEM1,k]
     #         1      2        3      4        5     6   7
     n = size(block,1)               # Quantidade de Submatrizes

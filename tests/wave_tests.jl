@@ -22,7 +22,7 @@ xs = 0.01:0.01:1
 ### Analytical solution
 phi_closed(k,x) = cos.(k.*x./L)
 q_closed(k,x) = -k.*sin(k.*x)
-kclosed(L=1,n=1) = n*π./L
+kclosed(L=1,n=1) = n*π./(L)
 
 function nurbsclosed2D(ne=10,L=1,k=kclosed())
     #L = 1; # length of the square
@@ -36,12 +36,19 @@ function nurbsclosed2D(ne=10,L=1,k=kclosed())
 	        2 2 3 0
 	        3 3 4 0
 	        4 4 1 0];
-    PONTOS_dom = [1 L/2 L/2]
+    #PONTOS_dom = [1 L/2 L/2]
+    n_pint = 100; # Number of domain points
+    PONTOS_dom = zeros(n_pint,3);
+    delta = 0.01; # distance from both ends 
+    passo = (L-2*delta)/(n_pint-1);
+    for i = 1:n_pint
+        PONTOS_dom[i,:] = [i delta+(i-1)*passo L/2];
+    end
     fc = [0 0 0]
     BCSeg = [1 1 0
-	     2 0 1
+	     2 1 0
 	     3 1 0
-	     4 0 0];
+	     4 0 1];
     info = [POINTS,SEGMENTS,BCSeg,k];
     t = @elapsed phi,q,phi_dom = wavenurbs2D.solveH(info, PONTOS_dom, fc, k)  
     return norm(phi_dom.^2 .- phi_closed(k,PONTOS_dom[1,2]).^2)./size(PONTOS_dom,1)
@@ -66,7 +73,14 @@ function constclosed2D(ne=10,L=1,k=kclosed())
 	    2 ne
 	    3 ne
 	    4 ne];
-    PONTOS_dom = [1 L/2 L/2]
+    # PONTOS_dom = [1 L/2 L/2]
+    n_pint = 100; # Number of domain points
+    PONTOS_dom = zeros(n_pint,3);
+    delta = 0.01; # distance from both ends 
+    passo = (L-2*delta)/(n_pint-1);
+    for i = 1:n_pint
+        PONTOS_dom[i,:] = [i delta+(i-1)*passo L/2];
+    end
     fc = [0 0 0]
     BCSeg = [1 1 0
 	     2 1 0
