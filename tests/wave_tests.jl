@@ -8,7 +8,8 @@
 ### BEM model
 ### return error
 using Plots
-gr()
+#gr()
+pyplot()
 xs = 0.01:0.01:1
 # p1 = contour(xs,xs,f,fill=true) 
 #################### Test case 1-4 ####################
@@ -247,7 +248,7 @@ function nurbscylinder(r=0.5,c=[0 0],k=1)
     n_pint = 100; # Number of domain points
     PONTOS_dom = zeros(n_pint,3);
     delta = 10*r; # distance from both ends 
-    passo = delta/10
+    passo = delta/25
     for i = 1:n_pint
         PONTOS_dom[i,:] = [i delta+(i-1)*passo r];
     end
@@ -497,3 +498,49 @@ function phi_sph_scat(k,r,θ,a)
 end
 #at a distance x from the cylinder of radius r.
 ### BEM model
+
+function TinyLev2D(r=60,k=40000*2*π/343000,l=20)
+    #L = 1; # length of the square
+    #k = 1; # wave number of the problem
+    #The points and segments which describe this geometry are
+    POINTS =[1 0 0
+       	     2 0 2*r
+       	     3 l 2*r 
+       	     4 l 0
+             5 l+2*r 0
+             6 l+2*r 2*r
+             7 2*l+2*r 2*r
+             8 2*l+2*r 0
+             ];
+    SEGMENTS = [1 1 2 0
+                2 2 3 0
+                3 3 4 r
+                4 4 1 0
+
+                5 5 6 r              
+                6 6 7 0
+                7 7 8 0
+                8 8 5 0
+                ];
+    BCSeg = [1 1 0 0
+             2 1 0 0
+             3 1 1 0
+             4 1 0 0
+             5 1 -1 0
+             6 1 0 0
+             7 1 0 0
+             8 1 0 0];
+    n_pint = 100; # Number of domain points
+    PONTOS_dom = zeros(n_pint,3);
+    inicio = 50; # distance from both ends 
+    final = 125
+    passo = (final-inicio)/n_pint
+    for i = 1:n_pint
+        PONTOS_dom[i,:] = [i inicio+(i-1)*passo r/2];
+    end
+    fc = [0 0 0]
+    info = [POINTS,SEGMENTS,BCSeg,k];
+    t = @elapsed phi,q,phi_dom = wavenurbs2D.solveH(info, PONTOS_dom, fc, k)  
+    #return norm(phi_dom.^2 .- phi_cylinder(k,r,PONTOS_dom[:,2]).^2)./size(PONTOS_dom,1)
+    return phi,q,phi_dom, PONTOS_dom
+end
