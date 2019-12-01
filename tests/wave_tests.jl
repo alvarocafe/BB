@@ -499,7 +499,7 @@ end
 #at a distance x from the cylinder of radius r.
 ### BEM model
 
-function TinyLev2D(r=60,k=40000*2*π/343000,l=20,h=60)
+function TinyLev2D(r=8.575*5,k=40000*2*π/343000,l=10,h=40)
     #L = 1; # length of the square
     #k = 1; # wave number of the problem
     #The points and segments which describe this geometry are
