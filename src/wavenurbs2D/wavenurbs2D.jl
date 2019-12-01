@@ -16,7 +16,8 @@ include("telles.jl")
 include("arvore.jl")
 include("formatiso.jl")
 include("beminterp.jl")
-using FastGaussQuadrature, LinearAlgebra, SparseArrays, Statistics, KrylovMethods, Test, SpecialFunctions
+using FastGaussQuadrature, LinearAlgebra, SparseArrays, Statistics, KrylovMethods, Test, SpecialFunctions, Plots
+pyplot()
 
 function solveH(info, PONTOS_dom, fc, kmat)
     PONTOS,SEGMENTOS,CCSeg,k = info
