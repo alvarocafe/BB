@@ -7,7 +7,7 @@
 ### Analytical solution
 ### BEM model
 ### return error
-using Plots
+ using Plots
 #gr()
 pyplot()
 xs = 0.01:0.01:1
@@ -532,13 +532,20 @@ function TinyLev2D(r=8.575*5,k=40000*2*π/343000,l=10,h=40)
              7 1 0 0
              8 1 0 0];
     crv =  wavenurbs2D.format_dad_iso(POINTS,SEGMENTS)
-    n_pint = 100; # Number of domain points
-    PONTOS_dom = zeros(n_pint,3);
-    inicio = POINTS[1,2];
-    final = POINTS[5,2]
-    passo = (final-inicio)/n_pint
-    for i = 1:n_pint
-        PONTOS_dom[i,:] = [i inicio+(i-1)*passo r/2];
+    n_pint = 50; # Number of domain points
+    PONTOS_dom = zeros(n_pint*n_pint,3);
+    iniciox = POINTS[1,2];
+    finalx = POINTS[5,2]
+    passox = (finalx-iniciox)/n_pint
+    inicioy = POINTS[1,3];
+    finaly = POINTS[4,3];
+    passoy = (finaly-inicioy)/n_pint
+    global iter = 1
+    for j = 1:n_pint
+        for i = 1:n_pint
+            PONTOS_dom[iter,:] = [iter iniciox+(i-1)*passox  inicioy+(j-1)*passoy];
+            iter +=1
+        end
     end
     fc = [0 0 0]
     info = [POINTS,SEGMENTS,BCSeg,k];
