@@ -5,9 +5,9 @@
 #The main function is const2D.solve() which builds the influence matrices,
 #applies the boundary conditions, solves the linear system and returns the
 #value of the potential and its gradient at boundary and domain points.
-using KrylovMethods, Statistics, LinearAlgebra, DelimitedFiles, PyCall, JLD, SharedArrays, DistributedArrays
+using KrylovMethods, Statistics, LinearAlgebra, DelimitedFiles, PyCall, JLD, SharedArrays, DistributedArrays, Distributed
 addprocs(Sys.CPU_THREADS -1)
-@everywhere filed = "/home/cafe/BB3/src/waveconst3d/"
+@everywhere filed = "../src/waveconst3d/"
 @everywhere include(string(filed,"dad.jl"))
 @everywhere include(string(filed,"hmat.jl"))
 @everywhere include(string(filed,"bem_functions.jl"))
@@ -45,7 +45,7 @@ BCFace = [1. 1. 0.
           4. 1. 0.
           5. 1. 0.
           6. 1. 0.];
-mshd = "./tests/data/"
+mshd = "./data/"
 files = ["cube_coarsest.msh" "cube_coarse.msh"  "cube_fine.msh" "cube_finest.msh"]
 #filesi = [files[1] files[4]];
 t = [];
