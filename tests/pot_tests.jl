@@ -15,8 +15,9 @@
 #its boundaries on opposites sides in the x direction.
 ### Analytical solution
 # A linear solution solves the problem.
+correction=1;
 T_square(x,L) = 1 - x./L;
-q_square(x,L) = -1./L;
+q_square(x,L) = -correction./L;
 k_res(L) = n*pi/L;
 
 ### BEM model
