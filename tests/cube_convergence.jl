@@ -52,8 +52,8 @@ t = [];
 for i in files
     mesh = meshio.read(string(mshd,i))
     NOS_GEO = [1:size(mesh.points,1) mesh.points]
-    nelem = size(mesh.cells["triangle"],1)
-    ELEM = [1:nelem mesh.cells["triangle"].+1 mesh.cell_data["triangle"]["gmsh:geometrical"]]
+    nelem = size(mesh.cells_dict["triangle"],1)
+    ELEM = [1:nelem mesh.cells_dict["triangle"].+1 mesh.cell_data["gmsh:geometrical"][3]]
     CDC,NOS = gera_vars(ELEM,BCFace,NOS_GEO)
     println(i," nelem = ",nelem)
     # H-BEM
