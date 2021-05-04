@@ -1,6 +1,7 @@
 function cal_Aeb(b1,b2,arg)
 # Builds the matrices for the linear system A x = b
-  NOS,NOS_GEO,ELEM,k,qsi,w,inc,CDC = arg
+#  NOS,NOS_GEO,ELEM,k,qsi,w,inc,CDC = arg
+  NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k=arg
   #NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k=arg
   nelem::Int64=size(ELEM)[1]; # Number of elements
   qsitelles,Jtelles = telles(qsi,0); # Evaluating the Telles' points and its Jacobian
@@ -40,17 +41,18 @@ function cal_Aeb(b1,b2,arg)
         #g,h = calcula_GeHs(x1,y1,x2,y2,1,k);	# Singular integration
 	#g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsitelles,w.*Jtelles,k);	# Singular integration using the Telles transformation
 	#h = 0.5;
-    G[i,j],H[i,j]= calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,qsiquad,wquad,k)#
+#    G[i,j],H[i,j]= calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,qsiquad,wquad,k)#
     g,h= calcula_HeGs(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,qsiquad,wquad,k)# Integra��o singular
 
         # println("Diferença entre g e gtelles = ", abs(g-gtelles))
         # println("Diferença entre h e htelles = ", abs(h-htelles))
       else # O ponto fonte n�o pertence ao elemento
-	    G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,qsi,w,k); # Integra��o singular
+#	    G[i,j],H[i,j]=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,qsi,w,k); # Integra��o singular
         g,h=calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,qsi,w,k); # Integra��o singular
         #g,h = calcula_GeHns(x1,y1,x2,y2,xd,yd,qsi,w,k); # Non singular integration
       end
 	# Applying the boundary conditions
+
       if CDC[j,2]==0	# The velocity potential is known
         B[ci,cj] = -h	# Matrix B receives the value from matrix h
         A[ci,cj] = -g	# Matrix A receives the value from matrix g
@@ -61,5 +63,5 @@ function cal_Aeb(b1,b2,arg)
     end
   end
 	b = B*(CDC[b2,3])  # Builds the b array for the linear system
-return A,b,G,H
+return A,b
 end

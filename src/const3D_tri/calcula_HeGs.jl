@@ -64,12 +64,12 @@ for kk=1:3
                          #  do elemento desgenerado)
             Tast,qast = calc_solfund(xd,yd,zd, xc, yc, zc, [0 0 0], k); # Sol.
             # fudamental de pressão acústica
-            g = g + w[jj]*w[ii]*J*Tast; # integra��o num�rica da matriz G
+            g = g .+ w[jj]*w[ii]*J*Tast; # integra��o num�rica da matriz G
         end
     end
 end
 
-h=1/2; # Integra��o anal�tica da matriz H
+h=-1; # Integra��o anal�tica da matriz H
 
 return g,h
 end

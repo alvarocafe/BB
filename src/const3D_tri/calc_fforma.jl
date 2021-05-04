@@ -11,7 +11,7 @@ function calc_fforma(qsi, eta)
 N = (1/4.)*[(1. - qsi).*(1. - eta);
                (1. + qsi).*(1. - eta);
                (1. + qsi).*(1. + eta);
-               (1. - qsi).*(1. + eta)];
+              (1. - qsi).*(1. + eta)];
 N1=N[1];N2=N[2];N3=N[3];N4=N[4];
 return N1,N2,N3,N4
 end

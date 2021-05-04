@@ -40,7 +40,8 @@ ax[:set_zlabel]("z")
 ax[:set_xlim](minimum(XYZ[:,2]),maximum(XYZ[:,2]))
 ax[:set_ylim](minimum(XYZ[:,3]),maximum(XYZ[:,3]))
 ax[:set_zlim](minimum(XYZ[:,4]),maximum(XYZ[:,4]))
-ax[:set_aspect]("equal")
+#ax[:set_aspect]("equal")
 ax[:view_init](elev=18., azim=43.)
+plt.show()
 return
 end

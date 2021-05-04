@@ -25,14 +25,14 @@ end
 function cal_Aeb_interp(b1,b2,arg,ninterp=3,compressão=true,ϵ=1e-3)
     NOS,NOS_GEO,ELEM,fc,qsi,w,CDC,k=arg
     nelem::Int64 = size(ELEM)[1]          # Numero de elementos de contorno
-    G = complex(zeros(ninterp*ninterp,length(b2)))      # Dimensiona matriz G
-    H = complex(zeros(ninterp*ninterp,length(b2)))      # Dimensiona matriz H
+    G = complex(zeros(ninterp*ninterp*ninterp,length(b2)))      # Dimensiona matriz G
+    H = complex(zeros(ninterp*ninterp*ninterp,length(b2)))      # Dimensiona matriz H
     q = complex(zeros(length(b1),1))               # Dimensiona matriz q
 
     xmax=maximum(NOS[b1,2:4],dims=1)
     xmin=minimum(NOS[b1,2:4],dims=1)
     xs=criapontosinterp(ninterp)
-    n1,n2,n3=calc_fforma(xs)
+    n1,n2,n3=calc_fformatri(xs,xs)
     xks=n1*xmin+n2*xmax+n3*xmin # porque n3*xmin
     ci=0
 
@@ -59,6 +59,9 @@ function cal_Aeb_interp(b1,b2,arg,ninterp=3,compressão=true,ϵ=1e-3)
 		z1=NOS_GEO[no1,4]; # Coordenada z do ponto inicial do elemento
 		z2=NOS_GEO[no2,4];  # Coordenada z do ponto final do elemento
 		z3=NOS_GEO[no3,4];  # Coordenada z do ponto final do elemento
+		
+		n = calc_vetnormal(x1,y1,z1,x2,y2,z2,x3,y3,z3)
+		
                 g,h = calcula_GeHns(x1,y1,z1,x2,y2,z2,x3,y3,z3,xd,yd,zd,n,qsi,w,k)
 
 		if CDC[j,2]==0
@@ -71,17 +74,17 @@ function cal_Aeb_interp(b1,b2,arg,ninterp=3,compressão=true,ϵ=1e-3)
 	    end
 	end
     end
-    if (xmax[1]-xmin[1]) == 0 && (xmax[2]-xmin[2])!=0
-	fontes=[0*(NOS[b1,2]-xmin[1])/(xmax[2]-xmin[2])-1 2*(NOS[b1,3]-xmin[2])/(xmax[2]-xmin[2])-1  2*(NOS[b1,4]-xmin[3])/(xmax[3]-xmin[3])-1]
-    elseif (xmax[1]-xmin[1]) != 0 && (xmax[2]-xmin[2])!=0
-	fontes=[2*(NOS[b1,2]-xmin[1])/(xmax[1]-xmin[1])-1 0*(NOS[b1,3]-xmin[2])/(xmax[1]-xmin[1])-1  2*(NOS[b1,4]-xmin[3])/(xmax[3]-xmin[3])-1]
-    elseif (xmax[1]-xmin[1]) != 0 && (xmax[2]-xmin[2])!=0
-	fontes=[2*(NOS[b1,2]-xmin[1])/(xmax[1]-xmin[1])-1 2*(NOS[b1,3]-xmin[2])/(xmax[2]-xmin[2])-1  2*(NOS[b1,4]-xmin[3])/(xmax[3]-xmin[3])-1]
+
+    if (xmax[1] .-xmin[1]) == 0 && (xmax[2] .-xmin[2])!=0
+	fontes=[0*(NOS[b1,2].-xmin[1])/(xmax[2].-xmin[2]).-1 2*(NOS[b1,3].-xmin[2])/(xmax[2].-xmin[2]).-1  2*(NOS[b1,4].-xmin[3])./(xmax[3].-xmin[3]).-1]
+    elseif (xmax[1].-xmin[1]) != 0 && (xmax[2].-xmin[2])!=0
+	fontes=[2*(NOS[b1,2].-xmin[1])./(xmax[1].-xmin[1]).-1 0*(NOS[b1,3].-xmin[2])./(xmax[1].-xmin[1]).-1  2*(NOS[b1,4].-xmin[3])./(xmax[3].-xmin[3]).-1]
+    elseif (xmax[1].-xmin[1]) != 0 && (xmax[2].-xmin[2])!=0
+	fontes=[2*(NOS[b1,2].-xmin[1])./(xmax[1].-xmin[1]).-1 2*(NOS[b1,3].-xmin[2])./(xmax[2].-xmin[2]).-1  2*(NOS[b1,4].-xmin[3])./(xmax[3].-xmin[3]).-1]
     else
-	fontes=[0*(NOS[b1,2]-xmin[1])/(1)-1
-                0*(NOS[b1,3]-xmin[2])/(1)-1
-                2*(NOS[b1,4]-xmin[3])/(xmax[3]-xmin[3])-1]
+	fontes=[0*(NOS[b1,2].-xmin[1])./(1).-1 0*(NOS[b1,3].-xmin[2])./(1).-1 2*(NOS[b1,4].-xmin[3])./(xmax[3].-xmin[3]).-1]
     end
+
     L=lagrange(fontes,xs,ninterp,xs,ninterp,xs,ninterp)
     #if b1[1] == 151 && b1[2]==152
     #	println("b1 = $(b1)")
@@ -128,7 +131,7 @@ function lagrange(pg,x,n)
     for j = 1:n
 	for i = 1:n
 	    if (i != j)
-		L[:,j] = L[:,j].*(pg - x[i])/(x[j]-x[i]);
+		L[:,j] = L[:,j].*(pg .- x[i])./(x[j] .-x[i]);
 	    end
 	end
     end
