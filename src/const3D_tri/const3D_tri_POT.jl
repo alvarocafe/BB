@@ -3,7 +3,7 @@
 # Module for the constant three-dimensional triangular element
 # Contains the dependencies for the triangular element integration. The main function is const3D_tri.solve() which builds the influence matrices, applies the boundary conditions, solves the linear system and returns the value of the velocity potential and its flux at boundary and domain points.
 
-module const3D_tri
+module const3D_tri_POT
 
 include("dep.jl") # Includes the dependencies
 function solve(info,PONTOS_int,BCFace,k)

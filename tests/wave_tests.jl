@@ -481,6 +481,10 @@ phi_sphere(k,r,a,ρ,c) = a/r*ρ*c*(-complex(0,1)*k*a/(1+complex(0,1)*k*a))*exp(c
 #at a distance x from the cylinder of radius r.
 ### BEM model
 
+function sphere3D()
+    
+    return ϵ
+end
 #################### Test case 8 ####################
 ### Plane wave scattering on a rigid sphere
 # An acoustically rigid sphere is let to vibrate in an
@@ -553,3 +557,4 @@ function TinyLev2D(r=8.575*5,k=40000*2*π/343000,l=10,h=40)
     #return norm(phi_dom.^2 .- phi_cylinder(k,r,PONTOS_dom[:,2]).^2)./size(PONTOS_dom,1)
     return phi,q,phi_dom, PONTOS_dom, crv
 end
+
