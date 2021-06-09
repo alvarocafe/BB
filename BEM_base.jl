@@ -25,7 +25,6 @@
 # Returns the potential and flux on boundary points and then on domain points.
 # 2-dimensional elements.
 include("src/const2D/const2D.jl")
-include("src/wavenurbs2D/wavenurbs2D.jl")
 #include("src/nurbs2D/nurbs2D.jl")
 # 3-dimensional elements.
 include("src/const3D_tri/const3D_tri.jl")
