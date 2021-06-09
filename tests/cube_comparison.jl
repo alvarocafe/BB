@@ -10,7 +10,7 @@ include("../BEM_base.jl")
 
 ### Analytical solution
 L = 10; # Square length
-T_square(x,L) = 1 - x./L;
+T_square(x,L) = 1 .- x./L;
 k = 0
 inc = [0]; # There'll be no incident wave
 
@@ -57,10 +57,14 @@ println("tsolve = ",tsolve)
 tsolvec = @elapsed pc,qpc,p_pint,qpz = const3D_tri.solve(info,PONTOS_int,BCFace,k,true)
 println("tsolvec = ",tsolvec)
 
-# Potencial
-#Hmatrix
-tsolve = @elapsed TH,qH,T_pintH,qzH = potconst3D.solveH(info,PONTOS_int,BCFace,k)
-println("tsolve = ",tsolve)
-#Conventional
-tsolvec = @elapsed Tc,qc,T_pint,qz = potconst3D.solve(info,PONTOS_int,BCFace,k)
-println("tsolvec = ",tsolvec)
+# # Potencial
+# #Hmatrix
+# tsolve = @elapsed TH,qH,T_pintH,qzH = potconst3D.solveH(info,PONTOS_int,BCFace,k)
+# println("tsolve = ",tsolve)
+# #Conventional
+# tsolvec = @elapsed Tc,qc,T_pint,qz = potconst3D.solve(info,PONTOS_int,BCFace,k)
+# println("tsolvec = ",tsolvec)
+
+plot(PONTOS_int[:,4],real(p_pint),label="BEM convencional")
+plot!(PONTOS_int[:,4],T_square(PONTOS_int[:,4],L),label="Solução analítica")
+plot!(PONTOS_int[:,4],real(p_pintH),label="Matrizes Hierárquicas")
