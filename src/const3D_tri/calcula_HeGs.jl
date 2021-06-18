@@ -69,7 +69,7 @@ for kk=1:3
     end
 end
 
-h=1/2; # Integra��o anal�tica da matriz H
+h=-1/2; # Integra��o anal�tica da matriz H
 
 return g,h
 end
