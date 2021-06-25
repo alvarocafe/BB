@@ -7,9 +7,9 @@
 ### Analytical solution
 ### BEM model
 ### return error
- using Plots
+#using Plots
 #gr()
-pyplot()
+#pyplot()
 xs = 0.01:0.01:1
 # p1 = contour(xs,xs,f,fill=true) 
 #################### Test case 1-4 ####################
@@ -476,7 +476,7 @@ end
 # An acoustically rigid sphere is let to vibrate in an
 #infinite acoustic domain at frequency ω so that the wavenumber is k = ω/c.
 ### Analytical solution
-#The analytical solution for the scattering cylinder is
+#The analytical solution for the pulsating sphere is
 phi_sphere(k,r,a,ρ,c) = a/r*ρ*c*(-complex(0,1)*k*a/(1+complex(0,1)*k*a))*exp(complex(0,1)*k*(r-a));
 #at a distance x from the cylinder of radius r.
 ### BEM model

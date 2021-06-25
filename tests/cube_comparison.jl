@@ -34,28 +34,32 @@ BCFace = [1. 0. 0.
           3. 0. 1.
           4. 1. 0.
           5. 1. 0.
-          6. 1. 0.]; #closed
+          6. 1. 0.]; 
 mshd = "./data/"
 files = ["cube_coarsest.msh" "cube_coarsest.msh" "cube_coarse.msh" "cube_fine.msh" "cube_finest2.msh" "cube_finest3.msh"]
 
-i = string(mshd,files[1])
-print(i)
-mesh = meshio.read(i)
-NOS_GEO = [1:size(mesh.points,1) mesh.points]
-nelem = size(mesh.cells_dict["triangle"],1)
-ELEM = [1:nelem mesh.cells_dict["triangle"].+1 mesh.cell_data["gmsh:geometrical"][1]]
-CDC,NOS = const3D_tri.gera_vars(ELEM,BCFace,NOS_GEO)
-println("Malha ",i,", nelem = ",nelem)
-elemint = []
-info = [NOS_GEO,ELEM,elemint,CDC] 
+#for i in files
+    i = files[4]
+    i = string(mshd,i)
+    println(i)
+    mesh = meshio.read(i)
+    NOS_GEO = [1:size(mesh.points,1) mesh.points]
+    nelem = size(mesh.cells_dict["triangle"],1)
+    ELEM = [1:nelem mesh.cells_dict["triangle"].+1 mesh.cell_data["gmsh:geometrical"][1]]
+    CDC,NOS = const3D_tri.gera_vars(ELEM,BCFace,NOS_GEO)
+    println("Malha ",i,", nelem = ",nelem)
+    elemint = []
+    info = [NOS_GEO,ELEM,elemint,CDC] 
 
-# Helmholtz
-#Hmatrix
-tsolve = @elapsed pH,qpH,p_pintH,qpzH = const3D_tri.solveH(info,PONTOS_int,BCFace,k,true)
-println("tsolve = ",tsolve)
-#Conventional
-tsolvec = @elapsed pc,qpc,p_pint,qpz = const3D_tri.solve(info,PONTOS_int,BCFace,k,true)
-println("tsolvec = ",tsolvec)
+    # Helmholtz
+    #Hmatrix
+    tsolve = @elapsed pH,qpH,p_pintH,qpzH = const3D_tri.solveH(info,PONTOS_int,BCFace,k,true)
+    println("tsolve = ",tsolve)
+    #Conventional
+    tsolvec = @elapsed pc,qpc,p_pint,qpz = const3D_tri.solve(info,PONTOS_int,BCFace,k,true)
+    println("tsolvec = ",tsolvec)
+
+#end
 
 # # Potencial
 # #Hmatrix
