@@ -15,13 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-# BEM_base follows the following scheme:
-#Start----Problem--------------Method-----------------post-processing
-#--^You are here!----------------------------------------------------
-# This is the start of the program, S. From here, you'll need to define the
-#problem P which will be solved and the method M for building and solving
-#the matricial system. The results then must be post-processed.
-# This is the main program of the BEM_base. Add here your new implementation!
 # Returns the potential and flux on boundary points and then on domain points.
 # 2-dimensional elements.
 include("src/const2D/const2D.jl")
