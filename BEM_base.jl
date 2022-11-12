@@ -23,6 +23,7 @@ include("src/const2D/const2D.jl")
 include("src/const3D_tri/const3D_tri.jl")
 include("src/const3D_tri/const3D_tri_POT.jl")
 include("src/potconst3D/potconst3D.jl")
+include("src/potconst3D/potconst2D.jl")
 
 # Tests
 include("tests/wave_tests.jl")
